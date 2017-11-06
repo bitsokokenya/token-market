@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="">
+    <meta name="google-signin-client_id" content="#{cid}">
+    <meta content="#{desc}" name="og:description">
+    <meta content="#{desc}" name="description">
+    <meta content="bits bitcoin mobilemoney cash africa blockchain ethereum decentralized payment processing gateway merchant services exchange" name="keywords">
+    <meta content="#0f5f76" name="theme-color">
+    <meta content="#0f5f76" name="msapplication-navbutton-color">
+
+    <meta content="#{name}" name="og:title">
+    <meta content="https://bitsoko.co.ke/app" name="og:url">
+    <meta content="#{img}" name="og:image">
+    <title>#{name}</title>
+
+
+    <link href="../app/web-manifest.json" rel="manifest">
+    <!-- Stylesheet -->
+    <link href="css/gallery-materialize.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/lightwallet/lightwallet.min.js"></script>
+    <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/ethjs-provider-signer.js"></script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "url": "https://bitsoko.co.ke",
+            "logo": "https://bitsoko.co.ke/favicon.png",
+            "contactPoint": [{
+                "@type": "ContactPoint",
+                "email": "support@bitsoko.co.ke",
+                "contactType": "customer service"
+            }],
+            "sameAs": [
+                "http://www.facebook.com/bitsoko",
+                "http://www.twitter.com/Bitsoko",
+                "http://plus.google.com/+BitsokoServices"
+            ]
+        }
+
+    </script>
+
+    <!-- Chart Resources -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <style>
+        body {
+            font-family: 'Lato', sans-serif !important;
+            overflow-x: hidden;
+        }
+        
+        @media screen and (max-width: 480px) {
+            .buyPoints {
+                width: 80% !important;
+            }
+            #logo {
+                width: 120px !important;
+            }
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(15, 95, 118, 0.84), rgba(15, 95, 118, 0.87)), url(./images/blockchain3.jpg);
+        }
+        
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+        
+        #chartdiv a {
+            display: none !important;
+        }
+        
+        .export-main {
+            display: none !important;
+        }
+        
+        #coins li {
+            display: inline-block;
+            padding: 20px;
+        }
+        
+        #coins {
+            color: white;
+        }
+        
+        #buyCoin {
+            display: block;
+        }
+        
+        .tabs .tab a.active {
+            color: white !important;
+        }
+        
+        .availableCoins li {
+            padding: 5px;
+            display: inline-block;
+        }
+        
+        @media screen and (min-width: 480px) {
+            .orderGraph {
+                padding: 0px 0px;
+            }
+        }
+        /***************** Spinner *************/
+        
+        .spinner {
+            position: relative;
+        }
+        
+        .spinner::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1em;
+            height: 1em;
+            transform: translate3d(-50%, -50%, 0);
+            border-radius: 50%;
+            color: white;
+            content: '';
+            will-change: box-shadow;
+            animation: spinner 1.3s infinite linear;
+        }
+        
+        @keyframes spinner {
+            0%,
+            100% {
+                box-shadow: 0 -3em 0 .2em, 2em -2em 0 0, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+            }
+            12.5% {
+                box-shadow: 0 -3em 0 0, 2em -2em 0 .2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+            }
+            25% {
+                box-shadow: 0 -3em 0 -.5em, 2em -2em 0 0, 3em 0 0 .2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+            }
+            37.5% {
+                box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 0, 2em 2em 0 .2em, 0 3em 0 0, -2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+            }
+            50% {
+                box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0, 0 3em 0 .2em, -2em 2em 0 0, -3em 0 0 -1em, -2em -2em 0 -1em;
+            }
+            62.5% {
+                box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 .2em, -3em 0 0 0, -2em -2em 0 -1em;
+            }
+            75% {
+                box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0 0 .2em, -2em -2em 0 0;
+            }
+            87.5% {
+                box-shadow: 0 -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0 0 0, -2em -2em 0 .2em;
+            }
+        }
+        
+        .spinner {
+            flex-basis: 33.333%;
+            height: 200px;
+        }
+
+    </style>
+    <!-- Lato Font -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
+    <script src="https://bitsoko.co.ke/bitsAssets/js/storeManager.js"></script>
+    <!--<script src="https://bitsoko.co.ke/bitsAssets/js/locationManager.js"></script> -->
+    <link href="https://bitsoko.co.ke/bitsAssets/html/connect.html" rel="import">
+</head>
+
+<body class="doc">
+    <bits-connect></bits-connect>
+    <!-- Mobile Verification Modal Start -->
+    <div id="mobiVeri" class="modal bottom-sheet MobileModal" style="width: 50%; display: block; margin-left: auto; margin-right: auto;">
+    </div>
+    <div id="notSignedIn" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 1000; position:fixed;background-size: cover; background-position-x: 75%;overflow: auto;">
+        <h5 style="color:white;font-size: 3em;font-weight: bold;text-align: center;padding: 8% 5% 1% 5%;">TOKEN MARKET</h5>
+        <h5 style="color:white;font-size: 1.5em;font-weight: bold;text-align: center;">a p2p ethereum exchange</h5>
+        <p style="color:white;font-size: 1em;font-weight: bold;text-align: center;padding: 4% 5% 1% 5%;">sign in to start trading any ERC20 digital currency or create your own token and start trading with your friends</p>
+        <div class="customGPlusSignIn" id="customBtn" style="text-align:center;padding:2%;">
+            <a class="waves-effect waves-light btn"><i class="material-icons left loginBtn--google" style="line-height: 35px;">email</i> google signin</a>
+        </div>
+        <ul style="text-align: center; padding-top:20px;" class="tradeableCoins">
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/bat.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">BASIC ATTENTION TOKEN</p>
+                </a>
+            </li>
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/eth.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">ETHEREUM</p>
+                </a>
+            </li>
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/gnt.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">GOLEM NETWORK TOKEN</p>
+                </a>
+            </li>
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/edg.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">EDGELESS</p>
+                </a>
+            </li>
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/omg.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">OMISEGO</p>
+                </a>
+            </li>
+            <li style="width:100px;display: inline-block; vertical-align: top;cursor: pointer;">
+                <a>
+                    <img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/new.png">
+                    <p style="margin: 0; color: white; text-transform: uppercase;">CREATE YOUR TOKEN</p>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <div id="tokenSelect" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 999; position:fixed;background-size: cover; background-position-x: 75%;">
+        <h5 style="color:white;font-size: 2em;font-weight: bold;text-align: center;padding: 5%;margin-top: 5%;">PICK A TOKEN TO START TRADING</h5>
+        <div class="row">
+            <div class="col s12 m6">
+                <p style="color:white;font-size: 1em;font-weight: bold;text-align: center;padding: 5%;">Available tokens</p>
+                <ul style="text-align: center;" class="availableCoins">
+                    <div class="spinner">
+                    </div>
+                </ul>
+            </div>
+            <div class="col s12 m6">
+                <p style="color:white;font-size: 1em;font-weight: bold;text-align: center;padding: 5%;">My Tokens</p>
+                <ul style="text-align: center;" class="myCoins">
+                    <div class="spinner">
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-fixed">
+        <nav style="background:white;">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo" style="height: inherit;">
+                    <img id="logo" src="./images/bitsoko3.png" style="width: 20%; margin-left: 15%; padding: 10px;">
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <section class="selectCoin">
+        <div class="row" style="margin-top:-10px;">
+            <div class="col s12" style="padding:0px;">
+                <ul class="tabs coinTab" style="background:transparent;margin: 0px 0%;overflow: hidden;">
+                </ul>
+            </div>
+            <div class="coinContent">
+            </div>
+        </div>
+    </section>
+    <!--
+<section class="row hero" style="height:35vh; margin-bottom:0px;display: flex; justify-content: center; /* align horizontal */ align-items: center; margin-top: -10px;">
+    <div class="col s12">
+
+        <h5 style="color:white; font-weight:bold;font-size: 2.5em;"><span style="border-left: solid white 15px; padding-right: 20px; margin-left: 15%;"></span>KOBO COIN</h5>
+    </div>
+</section>
+-->
+    <!-- 
+    <section style="text-align:center;">
+        
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal1">buy <span class="activeCoin imgCoin"></span></a>
+
+        
+        <div id="modal1" class="modal" style="width:40%;">
+            <div class="modal-content" style="padding:0px; border-radius:5px;">
+                <div style="text-align: center; background:#0F5F76; margin: 0px; padding: 10px; color: white; height: 18vh;">
+                    <h5 style="margin:0px;padding-top:1.2vh;font-size: 1.4rem;">BUY <span class="activeCoin" style="text-transform: uppercase;"></span></h5>
+                    <p style="margin:0px;">current price</p>
+                    <p style="margin:0px;">1 kobo = <span id="fetchedRate"> </span> kes</p>
+                </div>
+                <img id="tokenImg" src='' style="width: 70px; height: 70px; line-height: 0px; display: block; margin: 10px auto; border: solid white 2px; font-size: 2em; text-align: center; font-weight: bold; margin-top: -5vh; position: relative; color: white; border-radius: 50%; background: white;">
+                <p style="text-align: center; padding: 0% 5%;color: #575757;    margin: 0px;">Points bought will be deposited to the owners account. Credit card charges include 5% bank charges.</p>
+                <div style="padding:20px; text-aling:center:">
+                    <div>
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input placeholder="Buy Points" id="buyPoints" type="text" class="validate" value="1">
+                                    <label for="buyPoints" class="active">Enter Amount</label>
+                                </div>
+                            </div>
+                        </form>
+                        <a id="buyCoin" class="waves-effect waves-light btn" style="display: none;">BUY</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+<section class="buyPoints" style="width: 40%; display: block; margin-left: auto; margin-right: auto; background: #e9e9e9; margin-top: 60px; border-radius: 3px;text-align: center;">
+    <div>
+        <h6 style="background:#0F5F76;padding: 50px;font-size: 1.6em; color: white; font-weight: bold;">BUY POINTS</h6>
+    </div>
+    <div style="background: #E9E9E9; width: 75px; border-radius: 50%; height: 75px; display: block; margin-left: auto; margin-right: auto; margin-top: -43px; padding-top: 3px">
+        <img src="./images/kobo.png" style="width:70px;">
+    </div>
+    <div style="padding: 20px 20px;">
+        <p style="text-align: center; padding: 0% 5%;color: #575757;margin: 0px; padding-bottom: 25px;">Points bought will be deposited to the owners account. Credit card charges include 5% bank charges.</p>
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input placeholder="Buy Points" id="buyPoints" type="text" class="validate" value="1" style="margin:0px;">
+                    <label for="buyPoints" class="active">Enter Amount</label>
+                </div>
+            </div>
+        </form>
+        <a id="buyCoin" class="waves-effect waves-light btn">BUY</a>
+    </div>
+</section>
+
+-->
+
+    <!-- Modal Structure -->
+    <div id="tradeOrder" class="modal">
+        <div class="modal-content" style="text-align:center;">
+
+            <h5 class="tradeOrderSubTitle"></h5>
+            <img class="tradeOrderImg" src="" style="width: 50px;border-radius:50px;">
+            <br>
+            <h4 class="tradeOrderTitle"></h4>
+            <p class="tradeOrderBody"></p>
+
+            <form class="col s12 newTradeForm">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate">
+                        <label for="newTradeAmount" class="active">Amount</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
+                        <label for="newTradePrice" class="active">Price</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate" disabled>
+                        <label for="newTradeTotal" class="active">Total</label>
+                    </div>
+                </div>
+            </form>
+
+            <form class="col s12 confTradeForm">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: F5Y7U889E3 " id="newTradeConfirmation" type="text" class="validate">
+                        <label for="newTradeConfirmation" class="active">Reference Number</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h5>
+
+                            Transaction Status </h5><span class="transStat">waiting for seller to confirm payment..</span>
+                    </div>
+                </div>
+            </form>
+
+
+            <form class="col s12 newTransferForm">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: 0x323rdr4rhf83gf7c8fg6gfh8g6fc2g83 " id="newTransferConfirmation" type="text" class="newTrade validate">
+                        <label for="newTransferConfirmation" class="active">Sending to</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="newTransferAmount" type="number" min="0" step="any" class="newTrade validate">
+                        <label for="newTransferAmount" class="active">Amount</label>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="modal-footer tradeOrderFooter">
+
+        </div>
+    </div>
+
+    <div class="row orderGraph" style="height: calc(100% - 400px);">
+        <div class="col s12 m8" style="height: 100%;">
+            <section class="graph row" style="width: 100%; height: 100%;">
+                <h5>ORDERBOOK</h5>
+                <div class="row orderbook" style="max-height: 100%; overflow: scroll;">
+                    <table class="striped" id="blocks" style="height: 100%;">
+                        <tbody class="orderbookTbody">
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col s12 m4">
+            <section class="graph row" style="width:100%; height:65%;">
+                <h5>MY ORDERS</h5>
+                <div class="row">
+                    <table class="striped" id="blocks">
+                        <tbody id="myOrders">
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <section class="chart row" style="width: 60%;
+    margin: 0 2%;
+    float: left;display:none;">
+        <h5>PRICE INDEX</h5>
+        <div id="chartdiv"></div>
+    </section>
+    <!--
+    <section>
+        <div class="row" style="width:70%;">
+            <div class="col s6">
+                <h5>New to Kobo Coin</h5>
+                <p>Like paper money and gold before it, kobo coin is a currency that allows parties to exchange value. Unlike it predecessors, kobocoin is digital and decentralized. For the first time in history, people can exchange value without intermediaries which translates to greater control of funds and lower fees.</p>
+                <p>BUY KOBO COIN <span><svg width="13px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+<g>
+    <path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5   c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z   "/>
+</g>
+</svg></span> LEARN MORE <span><svg width="13px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+<g>
+    <path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5   c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z   "/>
+</g>
+</svg></span> GET A FREE WALLET</p>
+            </div>
+            <div class="col s6">
+                <div class="row" style="background: #F5F7F9; padding: 20px; border-radius: 2px; color: #636363;">
+                    <h5>SEARCH</h5>
+                    <p>You may enter a block height, address, block hash, transaction hash, hash160, or ipv4 address...</p>
+                    <nav style="background:white;">
+                        <div class="nav-wrapper">
+                            <form>
+                                <div class="input-field">
+                                    <input id="search" type="search" required>
+                                    <label class="label-icon" for="search"><i class="material-icons" style="color:black;">search</i></label>
+                                    <i class="material-icons" style="color:black;">close</i>
+                                </div>
+                            </form>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/materialize/0.98.0/js/materialize.min.js"></script>
+    <script src="https://bitsoko.co.ke/bitsAssets/js/moment.js"></script>
+    <script src="https://bitsoko.co.ke/bitsAssets/js/web3/web3.js"></script>
+    <script src="https://bitsoko.co.ke/bitsAssets/js/hooked-web3-provider/build/hooked-web3-provider.js"></script>
+
+    <script src="./js/globalServices.js"></script>
+    <script src="https://bitsoko.co.ke/bitsAssets/js/google.js"></script>
+    <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
+
+    <script>
+        var chart = AmCharts.makeChart("chartdiv", {
+            "type": "serial",
+            "theme": "light",
+            "marginRight": 40,
+            "marginLeft": 40,
+            "autoMarginOffset": 20,
+            "mouseWheelZoomEnabled": true,
+            "dataDateFormat": "YYYY-MM-DD",
+            "valueAxes": [{
+                "id": "v1",
+                "axisAlpha": 0,
+                "position": "left",
+                "ignoreAxisWidth": true
+            }],
+            "balloon": {
+                "borderThickness": 1,
+                "shadowAlpha": 0
+            },
+            "graphs": [{
+                "id": "g1",
+                "balloon": {
+                    "drop": true,
+                    "adjustBorderColor": false,
+                    "color": "#ffffff"
+                },
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "bulletSize": 5,
+                "hideBulletsCount": 50,
+                "lineThickness": 2,
+                "title": "red line",
+                "useLineColorForBulletBorder": true,
+                "valueField": "value",
+                "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+            }],
+            "chartScrollbar": {
+                "graph": "g1",
+                "oppositeAxis": false,
+                "offset": 30,
+                "scrollbarHeight": 80,
+                "backgroundAlpha": 0,
+                "selectedBackgroundAlpha": 0.1,
+                "selectedBackgroundColor": "#888888",
+                "graphFillAlpha": 0,
+                "graphLineAlpha": 0.5,
+                "selectedGraphFillAlpha": 0,
+                "selectedGraphLineAlpha": 1,
+                "autoGridCount": true,
+                "color": "#AAAAAA"
+            },
+            "chartCursor": {
+                "pan": true,
+                "valueLineEnabled": true,
+                "valueLineBalloonEnabled": true,
+                "cursorAlpha": 1,
+                "cursorColor": "#258cbb",
+                "limitToGraph": "g1",
+                "valueLineAlpha": 0.2,
+                "valueZoomable": true
+            },
+            "valueScrollbar": {
+                "oppositeAxis": false,
+                "offset": 50,
+                "scrollbarHeight": 10
+            },
+            "categoryField": "date",
+            "categoryAxis": {
+                "parseDates": true,
+                "dashLength": 1,
+                "minorGridEnabled": true
+            },
+            "export": {
+                "enabled": true
+            },
+            "dataProvider": [{
+                "date": "2016-11-26",
+                "value": 75
+            }, {
+                "date": "2016-11-27",
+                "value": 79
+            }, {
+                "date": "2016-11-28",
+                "value": 70
+            }, {
+                "date": "2016-11-29",
+                "value": 73
+            }]
+        });
+
+        chart.addListener("rendered", zoomChart);
+
+        zoomChart();
+
+        function zoomChart() {
+            chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+        }
+
+    </script>
+    <script>
+        if (localStorage.getItem("bits-user-name") != null) {
+            document.getElementById('notSignedIn').style.display = 'none';
+        }
+
+    </script>
+    <script src="./js/rewards.js"></script>
+    <script src="./js/bits-addMobiVeri.js"></script>
+
+    <script>
+        function profileLoaded(p) {
+
+
+            $("#notSignedIn").hide();
+            starting();
+        }
+        startGoogle();
+        Promise.all([indexDbReady, gDriveReady]).then(values => {
+            if (localStorage.getItem('bits-user-name') == null) {
+                console.log('signed out!');
+            } else {
+
+                $("#notSignedIn").hide();
+                starting();
+            }
+        });
+
+
+        $(document).on('click', '.availableCoins a', function(event) {
+            var selectedCoin = $(this).attr("coin");
+            $("#tokenSelect").hide();
+            $('ul.tabs').tabs('select_tab', selectedCoin);
+        })
+
+    </script>
+</body>
+
+</html>
