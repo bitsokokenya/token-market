@@ -85,8 +85,8 @@ function setOrderCallbacks() {
 
             transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val()))).then(function (r) {
 
-                        $('#tradeOrder').modal('close');
- Materialize.toast('<span >sent succesfully!</span><a href="https://etherscan.io/tx/'+r+'" target="_blank" class="btn-flat green-text">verify<a>', 15000);
+                $('#tradeOrder').modal('close');
+                Materialize.toast('<span >sent succesfully!</span><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a>', 15000);
 
             }).catch(function (e) {
                 console.log(e);
@@ -766,29 +766,29 @@ function getAvailableCoins() {
     //var tokenTab = makerTokens;
     var tokenTab = allTokens['balanceTokens'];
     $(".myCoins").html('');
-    
+
     $(".availableCoins").html('');
-    
-    if(ownerTab.length==0){
-     $(".myCoins").append('<li style="cursor: pointer;"><a coin="createNew"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/new.png"><p style="margin: 0; color: white; text-transform: uppercase;">create new</p></a></li>')
-        
+
+    if (ownerTab.length == 0) {
+        $(".myCoins").append('<li style="cursor: pointer;"><a coin="createNew"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/new.png"><p style="margin: 0; color: white; text-transform: uppercase;">create new</p></a></li>')
+
     }
-    
-    if(tokenTab.length==0){
-     $(".availableCoins").append('<li><a coin="noCoin"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/none.png"><p style="margin: 0; color: white; text-transform: uppercase;">no tokens in your wallet</p></a></li>')
-        
+
+    if (tokenTab.length == 0) {
+        $(".availableCoins").append('<li><a coin="noCoin"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/none.png"><p style="margin: 0; color: white; text-transform: uppercase;">no tokens in your wallet</p></a></li>')
+
     }
-    
+
     for (i = 0; i < ownerTab.length; i++) {
-        
+
     }
-    
-    
+
+
     for (i = 0; i < tokenTab.length; i++) {
 
         $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:white;">' + tokenTab[i] + '</a></li>')
-               $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + tokenTab[i] + '</p></a></li>')
-        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan','') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + tokenTab[i] + '</p></div></div></div><div class="col s12 m4"><table class="striped coinInfo coinDataHolda" id="blocks" style="line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
+        $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + tokenTab[i] + '</p></a></li>')
+        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + tokenTab[i] + '</p></div></div></div><div class="col s12 m4"><table class="striped coinInfo coinDataHolda" id="blocks" style="line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
             '<tbody style="height: 350px;"><tr><th style="">Capitalization</th><th class="coindata-' + tokenTab[i] + '-mcap">0.00</th>' +
             '</tr><tr><th>Volume</th><th class="coindata-' + tokenTab[i] + '-vol">0.00</th></tr>' +
             '<tr><th>Price</th><th class="coindata-' + tokenTab[i] + '-price">0.00</th></tr>' +
@@ -798,10 +798,10 @@ function getAvailableCoins() {
             '<tbody style="height: 350px;"><tr><th style="">wallet</th><th class="wallet-' + tokenTab[i] + '-Balance">0.00</th></tr>' +
             '<tr><th>exchange</th><th class="exchange-' + tokenTab[i] + '-Balance">0.00</th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
-            '<tr><th><a class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px;" oid="new" act="buy"><i class="material-icons left">file_download</i>BUY</a></th>' +
-            '<th><a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px;" oid="new" act="sell"><i class="material-icons right">file_upload</i>SELL</a></th></tr>' +
+            '<tr><th><div class="popup" style="position: absolute;left: -115%;z-index:10;bottom: -50px;"> <span class="buyPopupText" id="myPopup"><p style=" text-transform: initial; padding: 10px; font-size: 1em; font-weight: 500; margin: 0;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style=" float: right;">next</a> </div></span><p class="blink" style="font-size: 5em;position: absolute;color: red;top: 0px;line-height: 0;margin:0px;z-index:10;">&nbsp;.</p></div><a class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative; overflow:initial;" oid="new" act="buy"><i class="material-icons left">file_download</i>BUY</a></th>' +
+            '<th><div class="popup" style=" position: absolute; z-index: 10; bottom: -245%; right: 42%;"><span class="sellPopupText" id="myPopup"><p style=" margin: 10px; font-size: 1em; font-weight: 500; text-transform: initial;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style="float: right;font-size: 0.85em;">next</a> </div></span></div><a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative;" oid="new" act="sell"><i class="material-icons right">file_upload</i><p class="blink" style="font-size: 6em;position: absolute;color: red;top: 0px;line-height: 0;margin: 0;">&nbsp;.</p>SELL</a></th></tr>' +
             '</tr></tbody></table><table class="striped trnsf" id="blocks" style="line-height: 20px;width: 275px;float: right;font-size: 14px;background-color: transparent!important;position: relative;top: 90px;right: 28px;">' +
-            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
+            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup" style=" position: absolute; z-index: 10; bottom: -410%;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div>');
 
         $('ul.tabs').tabs('select_tab', 'tab_id');
