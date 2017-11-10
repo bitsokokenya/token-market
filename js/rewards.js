@@ -956,17 +956,47 @@ $(document).on("click", "#rewardsPage", function () {
 
 
 //TOUR
-$("#startTour").click(function () {
-    $(".buyTour").css("display", "block")
-});
+$('#startTour').click(function () {
+    var buyTour = $(".buyTour");
+    var ctr = 1;
+    buyTour.className = buyTour.className !== 'show' ? 'show' : 'hide';
+    if (buyTour.className === 'show') {
+        buyTour.css("display", "block");
+        window.setTimeout(function () {
+            buyTour.css("opacity", "1");
+            buyTour.css("transform", "scale(1)");
+        }, 0);
+    }
+})
 $(document).on('touchstart click', '.openSellTour', function (event) {
-    $(".buyTour").css("display", "none")
-    $(".sellTour").css("display", "block")
+    $(".buyTour").css("opacity", "0");
+    $(".buyTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".buyTour").css("display", "none");
+    }, 700);
+
+    $(".sellTour").css("display", "block");
+    window.setTimeout(function () {
+        $(".sellTour").css("opacity", "1");
+        $(".sellTour").css("transform", "scale(1)");
+    }, 0);
 });
 $(document).on('touchstart click', '.openTransferTour', function (event) {
-    $(".sellTour").css("display", "none")
-    $(".transferTour").css("display", "block")
+    $(".sellTour").css("opacity", "0");
+    $(".sellTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".sellTour").css("display", "none");
+    }, 700);
+    $(".transferTour").css("display", "block");
+    window.setTimeout(function () {
+        $(".transferTour").css("opacity", "1");
+        $(".transferTour").css("transform", "scale(1)");
+    }, 0);
 });
 $(document).on('touchstart click', '.finishTour', function (event) {
-    $(".transferTour").css("display", "none")
+    $(".transferTour").css("opacity", "0");
+    $(".transferTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".transferTour").css("display", "none");
+    }, 700);
 });

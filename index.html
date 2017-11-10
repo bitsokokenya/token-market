@@ -241,6 +241,24 @@
             margin-left: -57px;
         }
         
+        .buyTour {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: .6s ease opacity, .6s ease transform;
+        }
+        
+        .sellTour {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: .6s ease opacity, .6s ease transform;
+        }
+        
+        .transferTour {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: .6s ease opacity, .6s ease transform;
+        }
+        
         .buyPopupText::after {
             content: "";
             position: absolute;
@@ -583,10 +601,10 @@
                 </div>
             </section>
         </div>
-        <div class="col s12 m4">
-            <section class="graph row" style="width:100%; height:65%;">
+        <div class="col s12 m4" style="height:100%;">
+            <section class="graph row" style="width:100%; height:100%;">
                 <h5>MY ORDERS</h5>
-                <div class="row">
+                <div class="row" style="overflow: scroll; height: 100%;">
                     <table class="striped" id="blocks">
                         <tbody id="myOrders">
 
