@@ -798,10 +798,10 @@ function getAvailableCoins() {
             '<tbody style="height: 350px;"><tr><th style="">wallet</th><th class="wallet-' + tokenTab[i] + '-Balance">0.00</th></tr>' +
             '<tr><th>exchange</th><th class="exchange-' + tokenTab[i] + '-Balance">0.00</th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
-            '<tr><th><div class="popup" style="position: absolute;left: -115%;z-index:10;bottom: -50px;"> <span class="buyPopupText" id="myPopup"><p style=" text-transform: initial; padding: 10px; font-size: 1em; font-weight: 500; margin: 0;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style=" float: right;">next</a> </div></span><p class="blink" style="font-size: 5em;position: absolute;color: red;top: 0px;line-height: 0;margin:0px;z-index:10;">&nbsp;.</p></div><a class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative; overflow:initial;" oid="new" act="buy"><i class="material-icons left">file_download</i>BUY</a></th>' +
-            '<th><div class="popup" style=" position: absolute; z-index: 10; bottom: -245%; right: 42%;"><span class="sellPopupText" id="myPopup"><p style=" margin: 10px; font-size: 1em; font-weight: 500; text-transform: initial;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style="float: right;font-size: 0.85em;">next</a> </div></span></div><a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative;" oid="new" act="sell"><i class="material-icons right">file_upload</i><p class="blink" style="font-size: 6em;position: absolute;color: red;top: 0px;line-height: 0;margin: 0;">&nbsp;.</p>SELL</a></th></tr>' +
+            '<tr><th><div class="popup buyTour" style="position: absolute;left: -115%;z-index:10;bottom: -50px;display:none;"> <span class="buyPopupText" id="myPopup"><p style=" text-transform: initial; padding: 10px; font-size: 1em; font-weight: 500; margin: 0;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openSellTour" style=" float: right;">next</a> </div></span><p class="blink" style="font-size: 5em;position: absolute;color: red;top: 0px;line-height: 0;margin:0px;z-index:10;">&nbsp;.</p></div><a class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative; overflow:initial;" oid="new" act="buy"><i class="material-icons left">file_download</i>BUY</a></th>' +
+            '<th><div class="popup sellTour" style=" position: absolute; z-index: 10; bottom: -245%; right: 42%; display:none;"><span class="sellPopupText" id="myPopup"><p style=" margin: 10px; font-size: 1em; font-weight: 500; text-transform: initial;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openTransferTour" style="float: right;font-size: 0.85em;">next</a> </div></span></div><a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative;" oid="new" act="sell"><i class="material-icons right">file_upload</i>SELL</a></th></tr>' +
             '</tr></tbody></table><table class="striped trnsf" id="blocks" style="line-height: 20px;width: 275px;float: right;font-size: 14px;background-color: transparent!important;position: relative;top: 90px;right: 28px;">' +
-            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup" style=" position: absolute; z-index: 10; bottom: -410%;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat " style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
+            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div>');
 
         $('ul.tabs').tabs('select_tab', 'tab_id');
@@ -952,4 +952,21 @@ function instrumentToJsonString(instrument) {
 
 $(document).on("click", "#rewardsPage", function () {
     $(".navbar-color").css("box-shadow", "none");
+});
+
+
+//TOUR
+$("#startTour").click(function () {
+    $(".buyTour").css("display", "block")
+});
+$(document).on('touchstart click', '.openSellTour', function (event) {
+    $(".buyTour").css("display", "none")
+    $(".sellTour").css("display", "block")
+});
+$(document).on('touchstart click', '.openTransferTour', function (event) {
+    $(".sellTour").css("display", "none")
+    $(".transferTour").css("display", "block")
+});
+$(document).on('touchstart click', '.finishTour', function (event) {
+    $(".transferTour").css("display", "none")
 });
