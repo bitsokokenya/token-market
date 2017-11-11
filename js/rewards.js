@@ -955,6 +955,11 @@ $(document).on("click", "#rewardsPage", function () {
 });
 
 
+//Clear Local Storage
+$("#reload").click(function () {
+    localStorage.clear();
+    location.reload();
+})
 //TOUR
 $('#startTour').click(function () {
     var buyTour = $(".buyTour");
