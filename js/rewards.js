@@ -748,7 +748,8 @@ function starting() {
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
-
+                //user wants to trade so hide default landing page
+if(getBitsWinOpt('uid'))$("#tokenSelect").hide();
 
             } else {
                 console.log("error");
