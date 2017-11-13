@@ -84,7 +84,7 @@ function setOrderCallbacks() {
             console.log('transferring from wallet');
 
             transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val()))).then(function (r) {
-
+ console.log(r);
                 $('#tradeOrder').modal('close');
                 Materialize.toast('<span >sent succesfully!</span><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a>', 15000);
 
@@ -748,7 +748,8 @@ function starting() {
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
-
+                //user wants to trade so hide default landing page
+if(getBitsWinOpt('uid'))$("#tokenSelect").hide();
 
             } else {
                 console.log("error");

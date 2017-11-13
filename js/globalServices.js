@@ -20,7 +20,7 @@ function transferTokenValue(to, coin, fiat) {
                 signTransaction: (rawTx, cb) => cb(null, ethSigner.sign(rawTx, '0x' + sessionStorage.getItem('walletKey'))),
                 accounts: (cb) => cb(null, [myWalt]),
             }));
-            var chID = 0x01;
+	var chID=0x03;
         } else {
 
 
