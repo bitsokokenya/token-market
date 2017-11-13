@@ -801,7 +801,7 @@ function getAvailableCoins() {
             '<tr><th><div class="popup buyTour" style="position: absolute;left: -115%;z-index:10;bottom: -50px;display:none;"> <span class="buyPopupText" id="myPopup"><p style=" text-transform: initial; padding: 10px; font-size: 1em; font-weight: 500; margin: 0;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openSellTour" style=" float: right;">next</a> </div></span><p class="blink" style="font-size: 5em;position: absolute;color: red;top: 0px;line-height: 0;margin:0px;z-index:10;">&nbsp;.</p></div><a class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative; overflow:initial;" oid="new" act="buy"><i class="material-icons left">file_download</i>BUY</a></th>' +
             '<th><div class="popup sellTour" style=" position: absolute; z-index: 10; bottom: -245%; right: 42%; display:none;"><span class="sellPopupText" id="myPopup"><p style=" margin: 10px; font-size: 1em; font-weight: 500; text-transform: initial;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openTransferTour" style="float: right;font-size: 0.85em;">next</a> </div></span></div><a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: 130px; position:relative;" oid="new" act="sell"><i class="material-icons right">file_upload</i>SELL</a></th></tr>' +
             '</tr></tbody></table><table class="striped trnsf" id="blocks" style="line-height: 20px;width: 275px;float: right;font-size: 14px;background-color: transparent!important;position: relative;top: 90px;right: 28px;">' +
-            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
+            '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openOrderBookTour" style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div>');
 
         $('ul.tabs').tabs('select_tab', 'tab_id');
@@ -958,6 +958,21 @@ $(document).on("click", "#rewardsPage", function () {
 //Clear Local Storage
 $("#reload").click(function () {
     localStorage.clear();
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+        var spcook = cookies[i].split("=");
+        deleteCookie(spcook[0]);
+    }
+
+    function deleteCookie(cookiename) {
+        var d = new Date();
+        d.setDate(d.getDate() - 1);
+        var expires = ";expires=" + d;
+        var name = cookiename;
+        //alert(name);
+        var value = "";
+        document.cookie = name + "=" + value + expires + "; path=/acc/html";
+    }
     location.reload();
 })
 //TOUR
@@ -972,6 +987,20 @@ $('#startTour').click(function () {
             buyTour.css("transform", "scale(1)");
         }, 0);
     }
+    $(".transferTour").css("opacity", "0");
+    $(".transferTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".transferTour").css("display", "none");
+    }, 700);
+    $(".sellTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".sellTour").css("display", "none");
+    }, 700);
+    $(".orderBookTour").css("opacity", "0");
+    $(".orderBookTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".orderBookTour").css("display", "none");
+    }, 700);
 })
 $(document).on('touchstart click', '.openSellTour', function (event) {
     $(".buyTour").css("opacity", "0");
@@ -998,10 +1027,22 @@ $(document).on('touchstart click', '.openTransferTour', function (event) {
         $(".transferTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.finishTour', function (event) {
+$(document).on('touchstart click', '.openOrderBookTour', function (event) {
     $(".transferTour").css("opacity", "0");
     $(".transferTour").css("transform", "scale(0)");
     window.setTimeout(function () {
         $(".transferTour").css("display", "none");
+    }, 700);
+    $(".orderBookTour").css("display", "block");
+    window.setTimeout(function () {
+        $(".orderBookTour").css("opacity", "1");
+        $(".orderBookTour").css("transform", "scale(1)");
+    }, 0);
+});
+$(document).on('touchstart click', '.finishTour', function (event) {
+    $(".orderBookTour").css("opacity", "0");
+    $(".orderBookTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".orderBookTour").css("display", "none");
     }, 700);
 });
