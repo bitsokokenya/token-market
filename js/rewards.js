@@ -84,7 +84,7 @@ function setOrderCallbacks() {
             console.log('transferring from wallet');
 
             transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val()))).then(function (r) {
- console.log(r);
+                console.log(r);
                 $('#tradeOrder').modal('close');
                 Materialize.toast('<span >sent succesfully!</span><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a>', 15000);
 
@@ -749,7 +749,7 @@ function starting() {
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
                 //user wants to trade so hide default landing page
-if(getBitsWinOpt('uid'))$("#tokenSelect").hide();
+                if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
 
             } else {
                 console.log("error");
@@ -787,7 +787,7 @@ function getAvailableCoins() {
 
     for (i = 0; i < tokenTab.length; i++) {
 
-        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:white;">' + tokenTab[i] + '</a></li>')
+        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:white;position: relative;"><img class="imgTab" src="https://bitsoko.co.ke/bitsAssets/images/currencies/' + tokenTab[i] + '.png" style="width: 30px; position: absolute; left: 40%; top: 10px;">' + tokenTab[i] + '</a></li>')
         $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + tokenTab[i] + '</p></a></li>')
         $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + tokenTab[i] + '</p></div></div></div><div class="col s12 m4"><table class="striped coinInfo coinDataHolda" id="blocks" style="line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
             '<tbody style="height: 350px;"><tr><th style="">Capitalization</th><th class="coindata-' + tokenTab[i] + '-mcap">0.00</th>' +
@@ -795,7 +795,7 @@ function getAvailableCoins() {
             '<tr><th>Price</th><th class="coindata-' + tokenTab[i] + '-price">0.00</th></tr>' +
             '<tr><th></th><th></th></tr>' +
             '<tr><th>Website</th><th><a href="" target="_blank" style="text-transform:lowercase;color: #ffffff;" class="coindata-' + tokenTab[i] + '-wpage"></a></th></tr>' +
-            '</tbody></table></div><div class="col s12 m4"><table class="striped buySell" id="blocks" style="line-height: 20px;width: 50px;float: right;font-size: 14px;top: 10%;background-color: transparent!important;position: relative;right:10%;top:80px;">' +
+            '</tbody></table></div><div class="col s12 m4" style="text-align: center; position: relative;"><h5 style="font-size: 1em; font-weight: bold; width: 136px; position: absolute; top: 45px; font-size: 0.6em; display: block; right: 117px;">BALANCES</h5><table class="striped buySell" id="blocks" style="line-height: 20px;width: 50px;float: right;font-size: 14px;top: 10%;background-color: transparent!important;position: relative;right:10%;top:80px;">' +
             '<tbody style="height: 350px;"><tr><th style="">wallet</th><th class="wallet-' + tokenTab[i] + '-Balance">0.00</th></tr>' +
             '<tr><th>exchange</th><th class="exchange-' + tokenTab[i] + '-Balance">0.00</th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
@@ -1047,3 +1047,16 @@ $(document).on('touchstart click', '.finishTour', function (event) {
         $(".orderBookTour").css("display", "none");
     }, 700);
 });
+
+
+
+//Get Profile Image
+function profileImg() {
+    var userId = localStorage.getItem("bits-user-name")
+    getObjectStore('data', 'readwrite').get("user-profile-" + userId + "").onsuccess = function (event) {
+        var userProfImg = JSON.parse(event.srcElement.result).image;
+        var userProfName = JSON.parse(event.srcElement.result).name;
+        $("#userImg").attr("src", userProfImg);
+        $("#userProfName").text(userProfName);
+    }
+}
