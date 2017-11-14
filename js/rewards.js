@@ -686,6 +686,8 @@ function orderBookManager(baseX, baseCd) {
 
 function starting() {
 
+                //user wants to trade so hide default landing page
+                if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
 
         /////////////////////////////////// start update exchange rates
@@ -748,8 +750,6 @@ function starting() {
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
-                //user wants to trade so hide default landing page
-                if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
 
             } else {
                 console.log("error");

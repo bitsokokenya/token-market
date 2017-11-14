@@ -8,6 +8,11 @@ td, th {
 table.striped>tbody>tr:nth-child(odd) {
     background-color: transparent;
 }
+
+.tradeOrderTitle{
+ display: none!important;
+}
+
 @media only screen and (max-width: 500px) {
     
     .coinDataHolda {
