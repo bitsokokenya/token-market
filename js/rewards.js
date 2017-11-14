@@ -501,18 +501,6 @@ function orderBookManager(baseX, baseCd) {
 
                     makerTokens.push(oDs[igg].coin);
    
-                
-if (allTokens[oDs[igg].coin].balance>0){
-
-
-            $('.trade-' + oDs[igg].coin + '-Button').attr('disabled', false)
-
-}else{
-
-            $('.trade-' + oDs[igg].coin + '-Button').attr('disabled', true)
-
-}
-
                     if (parseInt(oDs[igg].tranFrom) == 0) {
                         buys.push(oDs[igg]);
                     } else {
