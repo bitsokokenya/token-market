@@ -491,7 +491,8 @@ function orderBookManager(baseX, baseCd) {
                     '<th>TOTAL</th>' +
                     '<th></th>' +
                     '</tr>');
-
+             
+                
                 $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs">PRICE</th><th>TOTAL</th><th></th></tr>');
                 var sells = [];
                 var buys = [];
@@ -499,7 +500,18 @@ function orderBookManager(baseX, baseCd) {
                 for (var igg in oDs) {
 
                     makerTokens.push(oDs[igg].coin);
+   
+                
+if (allTokens[oDs[igg].coin].balance>0){
 
+
+            $('.trade-' + oDs[igg].coin + '-Button').attr('disabled', false)
+
+}else{
+
+            $('.trade-' + oDs[igg].coin + '-Button').attr('disabled', true)
+
+}
 
                     if (parseInt(oDs[igg].tranFrom) == 0) {
                         buys.push(oDs[igg]);
