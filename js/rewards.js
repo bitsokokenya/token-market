@@ -613,6 +613,7 @@ function orderBookManager(baseX, baseCd) {
 
                             var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                         } else {
+                            try{
                             if (allTokens[oDs[ii].coin].balance < 1) {
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
@@ -620,6 +621,11 @@ function orderBookManager(baseX, baseCd) {
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
 
                             }
+                            }catch(err){
+                              var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+
+                            }
+                            
                         }
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
