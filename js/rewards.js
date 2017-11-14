@@ -811,7 +811,7 @@ function getAvailableCoins() {
             '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openOrderBookTour" style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div>');
 
-        $('ul.tabs').tabs('select_tab', 'tab_id');
+       // $('ul.tabs').tabs('select_tab', 'tab_id');
         $('ul.tabs').tabs();
 
         if (allTokens[tokenTab[i]].balance > 0) {
