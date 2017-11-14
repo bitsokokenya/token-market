@@ -759,7 +759,7 @@ function starting() {
         ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
 
     })
-
+    profileImg();
 }
 
 function getAvailableCoins() {
@@ -1056,7 +1056,18 @@ function profileImg() {
     getObjectStore('data', 'readwrite').get("user-profile-" + userId + "").onsuccess = function (event) {
         var userProfImg = JSON.parse(event.srcElement.result).image;
         var userProfName = JSON.parse(event.srcElement.result).name;
-        $("#userImg").attr("src", userProfImg);
-        $("#userProfName").text(userProfName);
+        $(".userImg").attr("src", userProfImg);
+        $(".userProfName").text(userProfName);
     }
+}
+
+
+
+//Side Nav
+function openNav() {
+    document.getElementById("mySidenav").style.width = "300px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
 }

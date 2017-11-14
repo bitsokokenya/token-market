@@ -386,7 +386,7 @@
         
         @media screen and (max-width: 480px) {
             .coinInfo {
-                margin-bottom: 25px;
+                margin-bottom: 35px;
                 margin-top: 30px;
             }
             .hero {
@@ -397,6 +397,56 @@
             }
             .coinTab {
                 position: fixed;
+            }
+            .myOrdersSec {
+                margin-top: 80px
+            }
+            #sideMenu {
+                display: block !important;
+            }
+        }
+        /******* Side Nav ******/
+        
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            background-color: white;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+        
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+        
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+        
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+            .sidenav a {
+                font-size: 18px;
             }
         }
 
@@ -492,6 +542,11 @@
     <div class="navbar-fixed">
         <nav style="background:white;">
             <div class="nav-wrapper">
+                <span style="font-size:30px;cursor:pointer;position: absolute;" onclick="openNav()">
+                    <svg id="sideMenu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 56 56" style="enable-background:new 0 0 56 56;width: 40px;margin: 8px 20px; display: none;" xml:space="preserve">
+                        <path d="M28,0C12.561,0,0,12.561,0,28s12.561,28,28,28s28-12.561,28-28S43.439,0,28,0z M40,41H16c-1.104,0-2-0.896-2-2s0.896-2,2-2  h24c1.104,0,2,0.896,2,2S41.104,41,40,41z M40,30H16c-1.104,0-2-0.896-2-2s0.896-2,2-2h24c1.104,0,2,0.896,2,2S41.104,30,40,30z   M40,19H16c-1.104,0-2-0.896-2-2s0.896-2,2-2h24c1.104,0,2,0.896,2,2S41.104,19,40,19z" fill="#005E76"></path>
+                    </svg>
+                </span>
                 <a href="#" class="brand-logo" style="height: inherit;">
                     <img id="logo" src="./images/bitsoko3.png" style="width: 20%; margin-left: 15%; padding: 10px;">
                 </a>
@@ -521,8 +576,8 @@
 -->
                     <li>
                         <div style="width: 200px;">
-                            <img id="userImg" class='dropdown-button' href='#' data-activates='dropdown1' style="width: 30px; border-radius: 50%;margin: 11px 10px 0px 0px;float:left;">
-                            <p style="color: black;margin:0px;"><span id="userProfName"></span></p>
+                            <img class='dropdown-button userImg' href='#' data-activates='dropdown1' style="width: 30px; border-radius: 50%;margin: 11px 10px 0px 0px;float:left;">
+                            <p style="color: black;margin:0px;"><span class="userProfName"></span></p>
                         </div>
                     </li>
                 </ul>
@@ -690,7 +745,7 @@
             </section>
         </div>
         <div class="col s12 m4" style="height:100%;">
-            <section class="graph row" style="width:100%; height:100%;">
+            <section class="graph row myOrdersSec" style="width:100%; height:100%;">
                 <h5>MY ORDERS</h5>
                 <div class="row" style="overflow: scroll; height: 100%;">
                     <table class="striped" id="blocks">
@@ -786,6 +841,18 @@
         <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
         <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
     </ul>
+
+
+    <!------- Side Navigation -------->
+    <div id="mySidenav" class="sidenav" style="width: 0px;">
+        <div style="background: linear-gradient(#005e76bf,#005e76a6) ,url(./images/material.jpg); position: absolute; width: 100%; top: 0px; height: 165px; background-size: cover;">
+            <img class='userImg' href='#' data-activates='dropdown1' style="width: 50px; border-radius: 50%;margin: 11px 10px 0px 0px;float:left;margin-top: 60px; margin-left: 20px;">
+            <p class="userProfName" style="color: white; margin-top: 120px; margin-left: 23px; font-size: 1.2em;"></p>
+        </div><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    </div>
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/materialize/0.98.0/js/materialize.min.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/moment.js"></script>
@@ -920,7 +987,6 @@
 
                 $("#notSignedIn").hide();
                 starting();
-                profileImg();
             }
         });
 
