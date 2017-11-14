@@ -825,13 +825,18 @@ function getAvailableCoins() {
 
        // $('ul.tabs').tabs('select_tab', 'tab_id');
         $('ul.tabs').tabs();
-
-        if (allTokens[tokenTab[i]].balance > 0) {
+try{
+if (allTokens[tokenTab[i]].balance > 0) {
             $('.trade-' + tokenTab[i] + '-Button').attr('disabled', false)
         } else {
             $('.trade-' + tokenTab[i] + '-Button').attr('disabled', true)
         }
 
+}catch(err){
+   // probably the users wallets are unloaded/locked
+console.log(err);
+}
+        
 
     }
 
