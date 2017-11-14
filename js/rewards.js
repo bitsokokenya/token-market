@@ -764,8 +764,14 @@ function starting() {
 
 function getAvailableCoins() {
     var ownerTab = allTokens['ownerTokens'];
-    //var tokenTab = makerTokens;
-    var tokenTab = allTokens['balanceTokens'];
+   
+    
+                if (getBitsWinOpt('uid')) {
+                    var tokenTab = makerTokens;
+                 }else{
+                 var tokenTab = allTokens['balanceTokens'];
+                };
+    
     $(".myCoins").html('');
 
     $(".availableCoins").html('');
