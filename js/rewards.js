@@ -491,7 +491,8 @@ function orderBookManager(baseX, baseCd) {
                     '<th>TOTAL</th>' +
                     '<th></th>' +
                     '</tr>');
-
+             
+                
                 $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs">PRICE</th><th>TOTAL</th><th></th></tr>');
                 var sells = [];
                 var buys = [];
@@ -499,8 +500,7 @@ function orderBookManager(baseX, baseCd) {
                 for (var igg in oDs) {
 
                     makerTokens.push(oDs[igg].coin);
-
-
+   
                     if (parseInt(oDs[igg].tranFrom) == 0) {
                         buys.push(oDs[igg]);
                     } else {
@@ -595,7 +595,7 @@ function orderBookManager(baseX, baseCd) {
 
 
                         $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
-                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;border-radius:50px;margin-left: 15%;float: left;"><span style="float: right;margin: 10px 40px 0 0;">' + oDs[ii].tranFrom.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;position: relative;left: 20px;top: 5px;display: inline-block;"><span class="odbk-txt">' + oDs[ii].tranFrom.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
@@ -613,6 +613,7 @@ function orderBookManager(baseX, baseCd) {
 
                             var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                         } else {
+                            try{
                             if (allTokens[oDs[ii].coin].balance < 1) {
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
@@ -620,10 +621,15 @@ function orderBookManager(baseX, baseCd) {
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
 
                             }
+                            }catch(err){
+                              var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+
+                            }
+                            
                         }
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
-                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;border-radius:50px;margin-left: 15%;float: left;"><span style="float: right;margin: 10px 40px 0 0;">' + oDs[ii].tranTo.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;position: relative;left: 20px;top: 5px;display: inline-block;"><span class="odbk-txt">' + oDs[ii].tranTo.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
@@ -764,8 +770,21 @@ function starting() {
 
 function getAvailableCoins() {
     var ownerTab = allTokens['ownerTokens'];
-    //var tokenTab = makerTokens;
-    var tokenTab = allTokens['balanceTokens'];
+   
+    
+                if (getBitsWinOpt('uid')) {
+                    var tokenTab = makerTokens;
+                 }else{
+                 var tokenTab = allTokens['balanceTokens'];
+                };
+    
+    
+    if (getBitsWinOpt('uid') == CryptoJS.MD5(CryptoJS.MD5(localStorage.getItem('bits-user-name')).toString()).toString()) {
+
+        var tokenTab = squash(makerTokens.concat(allTokens['balanceTokens']));
+
+    }
+    
     $(".myCoins").html('');
 
     $(".availableCoins").html('');
@@ -787,7 +806,7 @@ function getAvailableCoins() {
 
     for (i = 0; i < tokenTab.length; i++) {
 
-        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:white;position: relative;"><img class="imgTab" src="https://bitsoko.co.ke/bitsAssets/images/currencies/' + tokenTab[i] + '.png" style="width: 30px; position: absolute; left: 40%; top: 10px;">' + tokenTab[i] + '</a></li>')
+        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;"><img class="imgTab" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png" style="width: 30px; position: absolute; left: 40%; top: 10px;">' + tokenTab[i] + '</a></li>')
         $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + tokenTab[i] + '</p></a></li>')
         $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + tokenTab[i] + '</p></div></div></div><div class="col s12 m4"><table class="striped coinInfo coinDataHolda" id="blocks" style="line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
             '<tbody style="height: 350px;"><tr><th style="">Capitalization</th><th class="coindata-' + tokenTab[i] + '-mcap">0.00</th>' +
@@ -805,20 +824,25 @@ function getAvailableCoins() {
             '<tbody style="height: 350px;"><tr><td style="width: 200%;padding: 5px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openOrderBookTour" style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div>');
 
-        $('ul.tabs').tabs('select_tab', 'tab_id');
+       // $('ul.tabs').tabs('select_tab', 'tab_id');
         $('ul.tabs').tabs();
-
-        if (allTokens[tokenTab[i]].balance > 0) {
+try{
+if (allTokens[tokenTab[i]].balance > 0) {
             $('.trade-' + tokenTab[i] + '-Button').attr('disabled', false)
         } else {
             $('.trade-' + tokenTab[i] + '-Button').attr('disabled', true)
         }
 
+}catch(err){
+   // probably the users wallets are unloaded/locked
+console.log(err);
+}
+        
 
     }
 
-    activeCoin = 'eth';
-    $('.wallet-' + activeCoin + '-Balance').html('0.00');
+    activeCoin = tokenTab[0];
+    $('.wallet-' + activeCoin + '-Balance').html('loading..');
 
     $(".activeCoin").text(activeCoin)
     $(document).on("click", ".coinTab li a", function () {
