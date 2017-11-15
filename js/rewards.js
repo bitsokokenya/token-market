@@ -595,7 +595,7 @@ function orderBookManager(baseX, baseCd) {
 
 
                         $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
-                            '<td style="width:100%;" ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt">' + oDs[ii].tranFrom.name + '</span></td>' +
+                            '<td style="width:100%;" ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
@@ -629,7 +629,7 @@ function orderBookManager(baseX, baseCd) {
                         }
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
-                            '<td style="width:100%;" ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt">' + oDs[ii].tranTo.name + '</span></td>' +
+                            '<td style="width:100%;" ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
