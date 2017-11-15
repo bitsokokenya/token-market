@@ -595,7 +595,7 @@ function orderBookManager(baseX, baseCd) {
 
 
                         $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
-                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;border-radius:50px;margin-left: 15%;float: left;"><span style="float: right;margin: 10px 40px 0 0;">' + oDs[ii].tranFrom.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="    width: 35px;border-radius: 50px;float: left;position: absolute;left: 10px;"><span style="float: right;margin: 0px 30px 0px 65px;">' + oDs[ii].tranFrom.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
