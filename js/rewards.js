@@ -629,7 +629,7 @@ function orderBookManager(baseX, baseCd) {
                         }
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
-                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;border-radius:50px;margin-left: 15%;float: left;"><span style="float: right;margin: 10px 40px 0 0;">' + oDs[ii].tranTo.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="    width: 35px;border-radius: 50px;float: left;position: absolute;left: 10px;"><span style="float: right;margin: 0px 30px 0px 65px;">' + oDs[ii].tranTo.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
