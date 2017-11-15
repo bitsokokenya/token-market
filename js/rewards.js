@@ -686,8 +686,8 @@ function orderBookManager(baseX, baseCd) {
 
 function starting() {
 
-                //user wants to trade so hide default landing page
-                if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
+    //user wants to trade so hide default landing page
+    if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
 
         /////////////////////////////////// start update exchange rates
@@ -1002,6 +1002,11 @@ $('#startTour').click(function () {
     window.setTimeout(function () {
         $(".orderBookTour").css("display", "none");
     }, 700);
+    $(".myOrdersTour").css("opacity", "0");
+    $(".myOrdersTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".myOrdersTour").css("display", "none");
+    }, 700);
 })
 $(document).on('touchstart click', '.openSellTour', function (event) {
     $(".buyTour").css("opacity", "0");
@@ -1040,11 +1045,23 @@ $(document).on('touchstart click', '.openOrderBookTour', function (event) {
         $(".orderBookTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.finishTour', function (event) {
+$(document).on('touchstart click', '.openMyOrderTour', function (event) {
     $(".orderBookTour").css("opacity", "0");
     $(".orderBookTour").css("transform", "scale(0)");
     window.setTimeout(function () {
         $(".orderBookTour").css("display", "none");
+    }, 700);
+    $(".myOrdersTour").css("display", "block");
+    window.setTimeout(function () {
+        $(".myOrdersTour").css("opacity", "1");
+        $(".myOrdersTour").css("transform", "scale(1)");
+    }, 0);
+});
+$(document).on('touchstart click', '.finishTour', function (event) {
+    $(".myOrdersTour").css("opacity", "0");
+    $(".myOrdersTour").css("transform", "scale(0)");
+    window.setTimeout(function () {
+        $(".myOrdersTour").css("display", "none");
     }, 700);
 });
 
