@@ -778,6 +778,13 @@ function getAvailableCoins() {
                  var tokenTab = allTokens['balanceTokens'];
                 };
     
+    
+    if (getBitsWinOpt('uid') == CryptoJS.MD5(CryptoJS.MD5(localStorage.getItem('bits-user-name')).toString()).toString()) {
+
+        var tokenTab = squash(makerTokens.concat(allTokens['balanceTokens']));
+
+    }
+    
     $(".myCoins").html('');
 
     $(".availableCoins").html('');
@@ -834,8 +841,8 @@ console.log(err);
 
     }
 
-    activeCoin = 'eth';
-    $('.wallet-' + activeCoin + '-Balance').html('0.00');
+    activeCoin = tokenTab[0];
+    $('.wallet-' + activeCoin + '-Balance').html('loading..');
 
     $(".activeCoin").text(activeCoin)
     $(document).on("click", ".coinTab li a", function () {
