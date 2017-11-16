@@ -486,14 +486,14 @@ function orderBookManager(baseX, baseCd) {
                 $("#myOrders").html('');
                 $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
                     '<th></th>' +
-                    '<th class="hidden-xs">AMOUNT</th>' +
+                    '<th class="hidden-xs">'+baseCd.toUpperCase()+'</th>' +
                     '<th class="hidden-xs">PRICE</th>' +
                     '<th>TOTAL</th>' +
                     '<th></th>' +
                     '</tr>');
              
                 
-                $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs">PRICE</th><th>TOTAL</th><th></th></tr>');
+                $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs">'+baseCd.toUpperCase()+'</th><th>TOTAL</th><th></th></tr>');
                 var sells = [];
                 var buys = [];
                 makerTokens = [];
@@ -557,8 +557,8 @@ function orderBookManager(baseX, baseCd) {
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>BUY</td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
-                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
 
                             '</tr>');
@@ -567,8 +567,8 @@ function orderBookManager(baseX, baseCd) {
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>SELL</td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
-                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
                             '</tr>');
 
@@ -595,10 +595,10 @@ function orderBookManager(baseX, baseCd) {
 
 
                         $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
-                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
-                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td>' + bAc +
                             '</td></tr>');
 
@@ -629,10 +629,10 @@ function orderBookManager(baseX, baseCd) {
                         }
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
-                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;top: 5px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
+                            '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
                             '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + ' ' + baseCd.toUpperCase() + '</td>' +
-                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ' ' + baseCd.toUpperCase() + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                            '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td>' + bAc +
                             '</td></tr>');
                     }
