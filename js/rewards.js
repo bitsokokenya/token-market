@@ -143,8 +143,8 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-			M.toast({displayLength:5000, html: '<span >order posted! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a></button>'});
-			orderBookManager(baseX, baseCd);
+			M.toast({displayLength:50000, html: '<span >order posted! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a></button>'});
+			//orderBookManager(baseX, baseCd);
                         }
                     });
 
@@ -152,7 +152,6 @@ function setOrderCallbacks() {
 
                 }).catch(function (e) {
                     console.log(e);
-                    Materialize.toast('', 5000);
                 M.toast({displayLength:5000, html: '<span >error adding order. does your wallet have enough gas?</span>'});
 	
                 })
@@ -255,38 +254,38 @@ function updateNewOrderDet(oid, action) {
 
 
     var orderPrice = parseFloat($("#newTradePrice").val());
-    var orderAmount = parseFloat($("#newTradeAmount").val());
+    var orderTotal = parseFloat($("#newTradeTotal").val());
 
-    if (orderAmount == NaN || $("#newTradeAmount").val() == "") {
+    if (orderTotal == NaN || $("#newTradeTotal").val() == "") {
         var orderAmount = 0;
     }
     if (orderPrice == NaN || $("#newTradePrice").val() == "") {
         var orderPrice = 0;
     }
 
-    var res = orderAmount * orderPrice;
+    var res = orderTotal / orderPrice;
 
 
     if (action == 'buy') {
-        $("#newTradeAmount").attr("placeholder", 'eg: 1150');
-        $("#newTradeAmount").attr("max", '');
+        $("#newTradeTotal").attr("placeholder", 'eg: 1150');
+        $("#newTradeTotal").attr("max", '');
 
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + orderAmount + ' ' + (activeCoin + sss).toUpperCase());
-        $(".tradeOrderBody").html('Buy ' + (activeCoin + sss) + ' worth ' + numberify(res));
+        $(".tradeOrderBody").html('Buy ' + (activeCoin + sss) + ' worth ' + numberify(orderTotal));
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         //$(".tradeOrderFooter").append('<a href="#!" oid="new" action="buy" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
 
     } else if (action == 'sell') {
 
-        $("#newTradeAmount").attr("placeholder", 'Max: ' + (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2));
-        $("#newTradeAmount").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2));
+        $("#newTradeTotal").attr("placeholder", 'Max: ' + (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice);
+        $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice);
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + orderAmount + ' ' + (activeCoin + sss).toUpperCase());
         $(".tradeOrderBody").html('you will recieve ' + numberify(res) + ' ' + baseCd.toUpperCase());
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
-    $("#newTradeTotal").val(res);
+    $("#newTradeAmount").val(res);
     $(".tradeOrderTitle").html('');
     $(".completeOrderBut").prop("oid", '');
     $(".transStat").html('placing new order..');
