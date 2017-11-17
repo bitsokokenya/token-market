@@ -753,7 +753,7 @@ function starting() {
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
-
+		startPushManager();
             } else {
                 console.log("error");
             }
