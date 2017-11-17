@@ -839,7 +839,7 @@ console.log(err);
     }
 
     activeCoin = tokenTab[0];
-    $('.wallet-' + activeCoin + '-Balance').html('loading..');
+    $('.wallet-' + activeCoin + '-Balance').html('locked');
 
     $(".activeCoin").text(activeCoin)
     $(document).on("click", ".coinTab li a", function () {
