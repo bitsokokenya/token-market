@@ -143,11 +143,8 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-
-                            
-                    M.toast({displayLength:5000, html: '<span >order posted! waiting for buyer..</span>'});
-	refreshOrderBook();
-
+			M.toast({displayLength:5000, html: '<span >order posted! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a></button>'});
+			orderBookManager(baseX, baseCd);
                         }
                     });
 
