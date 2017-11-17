@@ -41,8 +41,9 @@ function orderWatch() {
                 //$('#tradeOrder').modal('close');
 
                 $(".transStat").html(e.msg);
-                Materialize.toast('order confirmed! completing trade', 5000);
-
+                M.toast({displayLength:5000, html: '<span class="toastlogin">order confirmed! completing trade</span>'});
+	
+           
             } else {
 
                 $(".transStat").html(e.msg);
@@ -86,12 +87,12 @@ function setOrderCallbacks() {
             transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val()))).then(function (r) {
                 console.log(r);
                 $('#tradeOrder').modal('close');
-                Materialize.toast('<span >sent succesfully!</span><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a>', 15000);
-
+                 M.toast({displayLength:50000, html: '<span >sent succesfully!</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a></button>'});
+	
             }).catch(function (e) {
                 console.log(e);
-                Materialize.toast('Error adding order. Does your wallet have enough gas?', 5000);
-
+                M.toast({displayLength:5000, html: '<span >error adding order. does your wallet have enough gas?</span>'});
+	
             });
 
         } else if ($(this).attr("oid") == 'new') {
@@ -111,8 +112,8 @@ function setOrderCallbacks() {
                     if (e.status == 'ok') {
                         $('#tradeOrder').modal('close');
                         refreshOrderBook();
-                        Materialize.toast('order posted! waiting for seller..', 5000);
-
+                        M.toast({displayLength:5000, html: '<span >order posted! waiting for seller..</span>'});
+	
                     }
                 });
 
@@ -126,8 +127,8 @@ function setOrderCallbacks() {
 
                 transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2)).then(function (r) {
 
-                    Materialize.toast('adding order..', 5000);
-
+                    M.toast({displayLength:5000, html: '<span >adding order..</span>'});
+	
 
                     doFetch({
                         action: 'manageTradeOrder',
@@ -143,8 +144,9 @@ function setOrderCallbacks() {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
 
-                            Materialize.toast('order posted! waiting for buyer..', 5000);
-                            refreshOrderBook();
+                            
+                    M.toast({displayLength:5000, html: '<span >order posted! waiting for buyer..</span>'});
+	refreshOrderBook();
 
                         }
                     });
@@ -153,8 +155,9 @@ function setOrderCallbacks() {
 
                 }).catch(function (e) {
                     console.log(e);
-                    Materialize.toast('Error adding order. Does your wallet have enough gas?', 5000);
-
+                    Materialize.toast('', 5000);
+                M.toast({displayLength:5000, html: '<span >error adding order. does your wallet have enough gas?</span>'});
+	
                 })
 
             }
@@ -189,12 +192,11 @@ function setOrderCallbacks() {
                 if (e.status == 'ok') {
                     $('#tradeOrder').modal('close');
                     refreshOrderBook();
-                    Materialize.toast('order modified! waiting for seller..', 5000);
-
+                    M.toast({displayLength:5000, html: '<span >order modified! waiting for seller..</span>'});
+	
                 } else {
-
-                    Materialize.toast('order not modified!', 5000);
-
+                    M.toast({displayLength:5000, html: '<span >order not modified!</span>'});
+	
                 }
             });
 
@@ -215,8 +217,8 @@ function setOrderCallbacks() {
         }).then(function (e) {
             if (e.status == 'ok') {
                 $('#tradeOrder').modal('close');
-
-                Materialize.toast('order cancelled!', 5000);
+ M.toast({displayLength:5000, html: '<span >order cancelled!</span>'});
+	
             }
         });
 
