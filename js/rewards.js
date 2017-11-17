@@ -321,7 +321,9 @@ function manageOrderDet(oid) {
         for (var ix in allOrds) {
 
             if (parseInt(allOrds[ix].id) == parseInt(oid)) {
-
+		
+		console.log(allOrds[ix], parseInt(oid), parseInt(localStorage.getItem('bits-user-name')));
+		    
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
