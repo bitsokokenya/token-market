@@ -5,6 +5,23 @@ var xKobo = "";
 var baseX;
 var baseCd;
 
+function sortOrderBookColor(){
+var x = document.querySelectorAll('.element-' + activeCoin + '-coin');
+                var i;
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = 'table-row';
+                }
+
+
+                $($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).css({
+                    "background-color": "rgb(255, 188, 188)"
+                });
+                $($("#orderbookSep").nextAll("tr.element-" + activeCoin + "-coin")[0]).css({
+                    "background-color": "rgb(153, 255, 153)"
+                });
+
+}
+
 function doNewTransfer() {
 
     $(".tradeOrderSubTitle").html('New Transfer');
@@ -657,21 +674,7 @@ function orderBookManager(baseX, baseCd) {
                 for (i = 0; i < x.length; i++) {
                     x[i].style.display = 'none';
                 }
-                var x = document.querySelectorAll('.element-' + activeCoin + '-coin');
-                var i;
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = 'table-row';
-                }
-
-
-                $($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).css({
-                    "background-color": "rgb(255, 188, 188)"
-                });
-                $($("#orderbookSep").nextAll("tr.element-" + activeCoin + "-coin")[0]).css({
-                    "background-color": "rgb(153, 255, 153)"
-                });
-
-
+                sortOrderBookColor()
 
                 $('.orderbook').animate({
                     scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
@@ -865,7 +868,7 @@ console.log(err);
                 $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * e.data.baseEx) * allTokens[activeCoin].supply)) + ' ' + e.data.baseCd.toUpperCase());
                 $('.coindata-' + activeCoin + '-price').html((allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
-
+		sortOrderBookColor();
 
             } else {
                 console.log("error");
