@@ -724,20 +724,21 @@
             <p class="tradeOrderBody"></p>
 
             <form class="col s12 newTradeForm">
+                
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
+                        <label for="newTradeTotal" class="active">Total</label>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate">
+                        <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
                         <label for="newTradeAmount" class="active">Amount</label>
                     </div>
                     <div class="input-field col s6">
                         <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
                         <label for="newTradePrice" class="active">Price</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate" disabled>
-                        <label for="newTradeTotal" class="active">Total</label>
                     </div>
                 </div>
             </form>
