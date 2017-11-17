@@ -112,7 +112,7 @@ function setOrderCallbacks() {
                     if (e.status == 'ok') {
                         $('#tradeOrder').modal('close');
                         refreshOrderBook();
-                        M.toast({displayLength:5000, html: '<span >order posted! waiting for seller..</span>'});
+                        M.toast({displayLength:5000, html: '<span >ok! waiting for seller..</span>'});
 	
                     }
                 });
@@ -143,7 +143,7 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-			M.toast({displayLength:50000, html: '<span >order posted! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" class="btn-flat green-text">verify<a></button>'});
+			M.toast({displayLength:50000, html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'});
 			//orderBookManager(baseX, baseCd);
                         }
                     });
