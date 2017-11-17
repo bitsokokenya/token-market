@@ -325,13 +325,33 @@ function manageOrderDet(oid) {
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
-                    $(".tradeOrderFooterCancel").attr("disabled", false);
+                  
+                   	if (parseInt(allOrds[ix].state) == 'pending'){
+				$(".tradeOrderFooterCancel").html("cancel");
+				$(".tradeOrderFooterCancel").attr("action","cancel");
 
+		    
+			    }else{
+			     $(".tradeOrderFooterCancel").html("dispute");
+ 				$(".tradeOrderFooterCancel").attr("action","dispute");
+
+			    }
+			
+			 $(".tradeOrderFooterCancel").attr("disabled", false);
                 } else {
 
-                    //this is
-
+                  
+                   	if (parseInt(allOrds[ix].state) == 'pending'){
+				
                     $(".tradeOrderFooterCancel").attr("disabled", true);
+		    
+			    }else{
+			     $(".tradeOrderFooterCancel").html("dispute");
+ 				$(".tradeOrderFooterCancel").attr("action","dispute");
+
+                    $(".tradeOrderFooterCancel").attr("disabled", false);
+			    }
+
                 }
 
                 //END enable or diasble cancel button
