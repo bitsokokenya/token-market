@@ -55,7 +55,9 @@ function orderWatch() {
             orderRef: $("#newTradeConfirmation").val()
         }).then(function (e) {
             if (e.status == 'ok') {
-                //$('#tradeOrder').modal('close');
+		    
+ $(".tradeOrderFooterCancel").html("dispute");
+ 				$(".tradeOrderFooterCancel").attr("action","dispute");
 
                 $(".transStat").html(e.msg);
                 M.toast({displayLength:5000, html: '<span class="toastlogin">order confirmed! completing trade</span>'});
@@ -64,15 +66,15 @@ function orderWatch() {
             } else {
 
                 $(".transStat").html(e.msg);
-                Materialize.toast('order not confirmed!', 2000);
-
+                 M.toast({displayLength:2000, html: '<span class="toastlogin">order not confirmed!</span>'});
+	
             }
         });
 
     } else {
 
-        Materialize.toast('enter transaction code', 2000);
-    }
+    M.toast({displayLength:2000, html: '<span class="toastlogin">enter transaction code</span>'});
+	}
 
 
 
