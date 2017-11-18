@@ -593,7 +593,7 @@ function orderBookManager(baseX, baseCd) {
 
                         var icon = 'attach_money';
                     }
-                    if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+                    if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>BUY</td>' +
@@ -603,7 +603,7 @@ function orderBookManager(baseX, baseCd) {
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
 
                             '</tr>');
-                    } else if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+                    } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>SELL</td>' +
