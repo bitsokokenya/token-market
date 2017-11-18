@@ -31,6 +31,8 @@
     <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/lightwallet/lightwallet.min.js"></script>
     <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/ethjs-provider-signer.js"></script>
     <script async="" defer="" src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
+    <script async="" src="https://bitsoko.co.ke/bitsAssets/js/raphQR.js"></script>
+    <script async="" src="https://bitsoko.co.ke/bitsAssets/js/qrcodesvg.js"></script>
 
     <script type="application/ld+json">
         {
@@ -640,7 +642,7 @@
 -->
                     <li>
                         <div style="">
-                            <img class='dropdown-button userImg' href='#' data-activates='dropdown1' style="width: 30px; border-radius: 50%;margin: 11px 10px 0px 0px;float:left;">
+                            <img class='dropdown-button userImg modal-trigger' href="#userAccount" data-activates='dropdown1' style="width: 30px; border-radius: 50%;margin: 11px 10px 0px 0px;float:left;">
                             <p style="color:black;margin:0px;width: 200px;" class="hide-on-med-and-down"><span class="userProfName"></span></p>
                         </div>
                     </li>
@@ -871,6 +873,20 @@
     </section>
     -->
 
+    <!-- Modal Structure -->
+    <div id="userAccount" class="modal" style="width: 45%;top: 20% !important; overflow: initial;">
+        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
+           
+        </div>
+        <h4 style="text-align: center; font-size: 2em; padding-top: 10px;">wallet address</h4>
+        <p></p>
+        <div class="modal-content">
+          <div id="qrcode" style="height:200px;width:200px;display:none;"></div>  
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
+        </div>
+    </div>
     <!-- Modal Structure -->
     <div id="orderHistory" class="modal" style="width: 45%;top: 20% !important; overflow: initial;">
         <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
