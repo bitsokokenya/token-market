@@ -760,7 +760,7 @@ new M.Modal(document.querySelector('#userAccount'), {
                     scrollTop: 40
                 }, 1000);
 
-                $('.modal').modal({
+                $('#tradeOrder').modal({
                     dismissible: true, // Modal can be dismissed by clicking outside of the modal
                     opacity: .5, // Opacity of modal background
                     inDuration: 300, // Transition in duration
