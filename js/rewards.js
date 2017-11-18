@@ -731,11 +731,12 @@ function orderBookManager(baseX, baseCd) {
 }
 function discoverExchange(e){
 	if(e=='dnb'){
-	document.querySelector('.new-discovery-data').setAttribute("data-target","new-"+activeCoin+"-buy-button");
+		
+	document.querySelector('.tap-target').setAttribute("data-target","new-"+activeCoin+"-buy-button");
 	
 	}
 	
-newDisc.open();
+	newDisc.open();
 }
 
 
@@ -753,7 +754,7 @@ new M.Modal(document.querySelector('#userAccount'), {
 		}
 });
 
-  newDisc = new M.FeatureDiscovery(document.querySelector('.new-discovery-data'), {});
+newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 	    
 	  
 
