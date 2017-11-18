@@ -390,7 +390,7 @@ function manageOrderDet(oid) {
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone + ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('confirm payment below');
+                    $(".transStat").html('enter your transaction code..');
                 }
                 //    $(".tradeOrderTitle").html(action.toUpperCase() + ' ' + allOrds[ix].amount + ' ' + (allOrds[ix].coin + sss).toUpperCase())
                 $(".completeOrderBut").prop("oid", allOrds[ix].id);
