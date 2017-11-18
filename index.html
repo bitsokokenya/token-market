@@ -875,15 +875,17 @@
 
     <!-- Modal Structure -->
     <div id="userAccount" class="modal" style="top: 20% !important; overflow: initial;">
-        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
+        <div style="display:none;background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
            
         </div>
         <h4 style="text-align: center; font-size: 2em; padding-top: 10px;">wallet address</h4>
         <p></p>
-        <div class="modal-content">
-          <div id="qrcode" style="height:200px;width:200px;"></div>  
+        <div class="modal-content" style="text-align: center; ">
+          <div id="qrcode" style="height:200px;width:200px;margin-left: calc(50% - 100px);"></div>  
+            <span style="font-size: 2em; padding-top: 10px;">wallet address</span>
+        
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="display:none;">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
         </div>
     </div>
