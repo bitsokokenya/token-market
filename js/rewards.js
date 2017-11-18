@@ -732,7 +732,7 @@ function orderBookManager(baseX, baseCd) {
 function discoverExchange(e){
 	if(e=='dnb'){
 		
-	document.querySelector('.tap-target').setAttribute("data-target","new-"+activeCoin+"-buy-button");
+	document.querySelector('.tap-target').setAttribute("data-target","add-"+activeCoin+"-buy-button");
 	
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 	}
