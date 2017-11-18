@@ -328,7 +328,7 @@ function manageOrderDet(oid) {
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                   
-                   	if (parseInt(allOrds[ix].state) == 'pending'){
+                   	if (allOrds[ix].state == 'pending'){
 				$(".tradeOrderFooterCancel").html("cancel");
 				$(".tradeOrderFooterCancel").attr("action","cancel");
 
@@ -405,7 +405,7 @@ function tradeManager(oid, action) {
     $(".confTradeForm").css("display", 'none');
     $(".newTransferForm").css("display", 'none');
 
-    $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel modal-action modal-close red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
+    $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
     $(".tradeOrderFooter").append('<a href="#!" action="' + action + '" oid="' + oid + '" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
 
 
