@@ -390,7 +390,7 @@ function manageOrderDet(oid) {
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone + ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('enter your transaction code..');
+                    $(".transStat").html('confirm payment below');
                 }
                 //    $(".tradeOrderTitle").html(action.toUpperCase() + ' ' + allOrds[ix].amount + ' ' + (allOrds[ix].coin + sss).toUpperCase())
                 $(".completeOrderBut").prop("oid", allOrds[ix].id);
@@ -735,6 +735,12 @@ function starting() {
     //user wants to trade so hide default landing page
     if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
+	    
+new M.Modal(document.querySelector('#userAccount'), {
+	ready:function(e){
+		showAddr('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')))
+		}
+});
 
         /////////////////////////////////// start update exchange rates
 
