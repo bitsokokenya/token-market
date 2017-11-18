@@ -140,14 +140,13 @@ function setOrderCallbacks() {
             } else {
 
 
-                console.log('creating transaction');
-
+                M.toast({displayLength:5000, html: '<span >adding order, please wait..</span>'});
+	
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
 
                 transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2)).then(function (r) {
 
-                    M.toast({displayLength:5000, html: '<span >adding order..</span>'});
-	
+                   
 
                     doFetch({
                         action: 'manageTradeOrder',
