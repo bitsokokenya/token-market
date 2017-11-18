@@ -778,7 +778,12 @@ function starting() {
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
-		startPushManager();
+		    try{
+		   
+		startPushManager(); 
+		    }catch(er){
+		    console.log('INFO! not started messaging ',er)
+		    }
             } else {
                 console.log("error");
             }
