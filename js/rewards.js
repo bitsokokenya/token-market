@@ -734,6 +734,7 @@ function discoverExchange(e){
 		
 	document.querySelector('.tap-target').setAttribute("data-target","new-"+activeCoin+"-buy-button");
 	
+newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 	}
 	
 	newDisc.open();
@@ -753,8 +754,7 @@ new M.Modal(document.querySelector('#userAccount'), {
 		$(".userWalletAddress").html('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
 		}
 });
-
-newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+var newDisc;
 	    
 	  
 
