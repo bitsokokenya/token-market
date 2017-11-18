@@ -619,11 +619,16 @@ function orderBookManager(baseX, baseCd) {
 
                         if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                             myOrdCount++;
-                            allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
+				try{
+			
+				allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
 
+                            	allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + (oDs[ii].amount * 2);
 
-                            allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + (oDs[ii].amount * 2);
-
+				}catch(er){
+				console.log('INFO! unable to update exchange balance. is wallet locked? ',er);
+				}
+                           
                             var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                         } else {
                             var bAc = '<a class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
@@ -649,8 +654,16 @@ function orderBookManager(baseX, baseCd) {
 
                             var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                         } else {
+				try{
+			var coinba = allTokens[oDs[ii].coin].balance;
+				}catch(er){
+					
+			var coinba = 0;
+				console.log('INFO! unable to update exchange balance. is wallet locked? ',er);
+				}
+				
                             try{
-                            if (allTokens[oDs[ii].coin].balance < 1) {
+                            if (coinba < 1) {
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                             } else {
