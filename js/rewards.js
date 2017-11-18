@@ -738,7 +738,9 @@ function starting() {
 	    
 new M.Modal(document.querySelector('#userAccount'), {
 	ready:function(e){
-		showAddr('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')))
+		showAddr('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
+		
+		$(".userWalletAddress").html('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
 		}
 });
 
