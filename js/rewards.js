@@ -45,6 +45,13 @@ function doFirstBuy(){
 }
 
 function sortOrderBookColor(){
+	
+
+                var x = document.querySelectorAll(".element-all-coin");
+                var i;
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = 'none';
+                }
 var x = document.querySelectorAll('.element-' + activeCoin + '-coin');
                 var i;
                 for (i = 0; i < x.length; i++) {
@@ -759,12 +766,6 @@ activeCoin = oDs[0].coin;
                 for (i = 0; i < tokenTab.length; i++) {
 
                     $('.exchange-' + tokenTab[i] + '-Balance').html(((allTokens[tokenTab[i]].exchange / Math.pow(10, allTokens[tokenTab[i]].decimals)) * (allTokens[tokenTab[i]].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
-                }
-
-                var x = document.querySelectorAll(".element-all-coin");
-                var i;
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = 'none';
                 }
                 sortOrderBookColor()
 
