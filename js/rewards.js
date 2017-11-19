@@ -28,6 +28,8 @@ function doFirstBuy(){
 		    }
 		   
 		  }catch(er){
+			  M.toast({displayLength:1000000000, html: '<span class="toastlogin">your wallet is locked</span><button onclick="loadGdrive()" class="btn-flat toast-action" ><span style="pointer-events:none;">Unlock</span></button>'});
+
 		    console.log('INFO! not started firstbuy, is wallet locked? ',er)
 		    }  
 	
