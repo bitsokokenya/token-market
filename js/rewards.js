@@ -951,6 +951,10 @@ console.log(err);
 		      window.setTimeout(function () {
         
 		discoverExchange('dfb');
+			            window.setTimeout(function () {
+        
+		discoverExchange('dfb');
+    }, 200);
     }, 2000);
 		    }
 
