@@ -946,8 +946,10 @@ console.log(err);
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
 		sortOrderBookColor();
 		    if(allTokens[activeCoin].balance==0){
-		    
+		      window.setTimeout(function () {
+        
 		discoverExchange('dfb');
+    }, 2000);
 		    }
 
             } else {
