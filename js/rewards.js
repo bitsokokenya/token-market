@@ -824,12 +824,41 @@ var newDisc;
                 		*/
 
                 orderBookManager(e.data.baseEx, e.data.baseCd);
+		    
+		    
+		    
+		    //start push messaging
 		    try{
 		   
 		startPushManager(); 
 		    }catch(er){
 		    console.log('INFO! not started messaging ',er)
 		    }
+		    
+		  // start first transaction
+		   try{ 
+		    
+		    $("#newFirstBuy").attr('id','notNewFirstBuy');
+		$("#newFirstBuyBut").attr('id','notNewFirstBuyBut');
+	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
+		
+		$("#newFirstBuy td:last-child").attr('id','newFirstBuyBut')
+		    
+		    if(allTokens[activeCoin].balance==0){
+		      window.setTimeout(function () {
+        
+		discoverExchange('dfb');
+			            window.setTimeout(function () {
+        
+		discoverExchange('dfb');
+    }, 200);
+    }, 2000);
+		    }
+		   
+		  }catch(er){
+		    console.log('INFO! not started firstbuy, is wallet locked? ',er)
+		    }  
+		    
             } else {
                 console.log("error");
             }
