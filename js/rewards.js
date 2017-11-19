@@ -652,7 +652,7 @@ function orderBookManager(baseX, baseCd) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>BUY</td>' +
-                            '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(allTokens[oDs[ii].coin].decimals) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
@@ -662,7 +662,7 @@ function orderBookManager(baseX, baseCd) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>SELL</td>' +
-                            '<td class="hidden-xs">' + oDs[ii].amount + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(allTokens[oDs[ii].coin].decimals) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
