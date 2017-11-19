@@ -1012,6 +1012,8 @@ console.log(err);
             }
 	    
     });
+    	    
+    });
     // $('.modal').modal();
     doFetch({
         action: 'userVerified',
