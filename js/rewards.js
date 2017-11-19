@@ -653,8 +653,12 @@ function orderBookManager(baseX, baseCd) {
                             '</tr>');
 
                     }
-
-
+if (getBitsWinOpt('uid') != undefined) {
+     
+activeCoin = oDs[0].coin;
+	
+    }
+    
 
                     if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
 
