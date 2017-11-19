@@ -598,8 +598,6 @@ function orderBookManager(baseX, baseCd) {
                 makerTokens = uniqueArray(makerTokens);
 
 
-                getAvailableCoins();
-
                 sells.sort(function (a, b) {
 
                     return parseFloat(b.rate) - parseFloat(a.rate);
@@ -852,7 +850,9 @@ var newDisc;
                             }
                 		
                 		*/
+		
 
+                getAvailableCoins();
                 orderBookManager(e.data.baseEx, e.data.baseCd);
 		    
 		    
