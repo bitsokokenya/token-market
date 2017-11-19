@@ -5,6 +5,34 @@ var xKobo = "";
 var baseX;
 var baseCd;
 
+function doFirstBuy(){
+
+		  // start first transaction
+		   try{ 
+		    
+		    $("#newFirstBuy").attr('id','notNewFirstBuy');
+		$("#newFirstBuyBut").attr('id','notNewFirstBuyBut');
+	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
+		
+		$("#newFirstBuy td:last-child").attr('id','newFirstBuyBut')
+		    
+		    if(allTokens[activeCoin].balance==0){
+		      window.setTimeout(function () {
+        
+		discoverExchange('dfb');
+			            window.setTimeout(function () {
+        
+		discoverExchange('dfb');
+    }, 200);
+    }, 2000);
+		    }
+		   
+		  }catch(er){
+		    console.log('INFO! not started firstbuy, is wallet locked? ',er)
+		    }  
+	
+}
+
 function sortOrderBookColor(){
 var x = document.querySelectorAll('.element-' + activeCoin + '-coin');
                 var i;
@@ -836,28 +864,7 @@ var newDisc;
 		    }
 		    
 		  // start first transaction
-		   try{ 
-		    
-		    $("#newFirstBuy").attr('id','notNewFirstBuy');
-		$("#newFirstBuyBut").attr('id','notNewFirstBuyBut');
-	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
-		
-		$("#newFirstBuy td:last-child").attr('id','newFirstBuyBut')
-		    
-		    if(allTokens[activeCoin].balance==0){
-		      window.setTimeout(function () {
-        
-		discoverExchange('dfb');
-			            window.setTimeout(function () {
-        
-		discoverExchange('dfb');
-    }, 200);
-    }, 2000);
-		    }
-		   
-		  }catch(er){
-		    console.log('INFO! not started firstbuy, is wallet locked? ',er)
-		    }  
+		   doFirstBuy();
 		    
             } else {
                 console.log("error");
@@ -970,22 +977,7 @@ console.log(err);
                 $('.coindata-' + activeCoin + '-price').html((allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
 		sortOrderBookColor();
-		    $("#newFirstBuy").attr('id','notNewFirstBuy');
-		$("#newFirstBuyBut").attr('id','notNewFirstBuyBut');
-	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
-		
-		$("#newFirstBuy td:last-child").attr('id','newFirstBuyBut')
-		    
-		    if(allTokens[activeCoin].balance==0){
-		      window.setTimeout(function () {
-        
-		discoverExchange('dfb');
-			            window.setTimeout(function () {
-        
-		discoverExchange('dfb');
-    }, 200);
-    }, 2000);
-		    }
+		  doFirstBuy();
 
             } else {
                 console.log("error");
