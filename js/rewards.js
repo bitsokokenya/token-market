@@ -735,6 +735,15 @@ function discoverExchange(e){
 	document.querySelector('.tap-target').setAttribute("data-target","add-"+activeCoin+"-buy-button");
 	
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+	}else if(e=='dfb'){
+		$("#newFirstBuy").attr('id','notNewFirstBuy');
+	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
+		
+		
+	document.querySelector('.tap-target').setAttribute("data-target","newFirstBuy");
+	
+newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+		
 	}
 	
 	newDisc.open();
@@ -929,13 +938,16 @@ console.log(err);
         }
         fetchRates().then(function (e) {
             if (e.status == "ok") {
-
                 $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * e.data.baseEx) * allTokens[activeCoin].supply)) + ' ' + e.data.baseCd.toUpperCase());
                 $('.coindata-' + activeCoin + '-price').html((allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * e.data.baseEx).toFixed(2) + ' ' + e.data.baseCd.toUpperCase());
 		sortOrderBookColor();
+		    if(allTokens[activeCoin].balance==0){
+		    
+		discoverExchange('dfb');
+		    }
 
             } else {
                 console.log("error");
