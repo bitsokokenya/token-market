@@ -1007,6 +1007,7 @@ console.log(err);
             if (e.status == "ok") {
                 upDtokenD();
 		  doFirstBuy();
+		 sortOrderBookColor();
 
             } else {
                 console.log("error");
