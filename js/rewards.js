@@ -6,19 +6,13 @@ var baseX;
 var baseCd;
 
 function upDtokenD(){
-fetchRates().then(function (e) {
-            if (e.status == "ok") {
                 $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
                 $('.coindata-' + activeCoin + '-price').html((allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
 		sortOrderBookColor();
-		  doFirstBuy();
 
-            } else {
-                console.log("error");
-            }
 }
 function doFirstBuy(){
 
@@ -1007,8 +1001,16 @@ console.log(err);
         for (i = 0; i < x.length; i++) {
             x[i].style.display = 'table-row';
         }
-        
-	    upDtokenD();
+	    
+        fetchRates().then(function (e) {
+            if (e.status == "ok") {
+                upDtokenD();
+		  doFirstBuy();
+
+            } else {
+                console.log("error");
+            }
+	    
     });
     // $('.modal').modal();
     doFetch({
