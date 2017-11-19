@@ -737,10 +737,11 @@ function discoverExchange(e){
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 	}else if(e=='dfb'){
 		$("#newFirstBuy").attr('id','notNewFirstBuy');
+		$("#newFirstBuyBut").attr('id','notNewFirstBuyBut');
 	$($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id','newFirstBuy');
 		
-		
-	document.querySelector('.tap-target').setAttribute("data-target","newFirstBuy");
+		$("#newFirstBuy td:last-child").attr('id','newFirstBuyBut')
+	document.querySelector('.tap-target').setAttribute("data-target","newFirstBuyBut");
 	
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 		
