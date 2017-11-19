@@ -111,8 +111,14 @@ function orderWatch() {
 }
 
 function refreshOrderBook() {
-    console.log('should be updating order book!!!!!!');
-    orderBookManager(baseX, baseCd);
+    
+                orderBookManager(baseX, baseCd).then(function(e){
+		
+
+                getAvailableCoins();
+		
+		});
+		    
 
 
 }
@@ -535,6 +541,11 @@ function tradeManager(oid, action) {
 }
 
 function orderBookManager(baseX, baseCd) {
+	
+		return new Promise(function(resolve, reject) {
+	
+	
+	
     if (getBitsWinOpt('uid') == undefined) {
 
         var maker = CryptoJS.MD5(CryptoJS.MD5(localStorage.getItem('bits-user-name')).toString()).toString();
@@ -750,12 +761,15 @@ function orderBookManager(baseX, baseCd) {
 
 
                 //end for loop orders
+		    
+		    resolve('orderBook updated');
             }
 
 
         };
 
     });
+				});
 }
 function discoverExchange(e){
 	if(e=='dnb'){
@@ -851,9 +865,12 @@ var newDisc;
                 		
                 		*/
 		
+                orderBookManager(e.data.baseEx, e.data.baseCd).then(function(e){
+		
 
                 getAvailableCoins();
-                orderBookManager(e.data.baseEx, e.data.baseCd);
+		
+		});
 		    
 		    
 		    
