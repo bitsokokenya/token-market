@@ -33,7 +33,7 @@ function doFirstBuy(){
         
 		discoverExchange('dfb');
     }, 200);
-    }, 2000);
+    }, 200);
 		    }
 		   
 		  }catch(er){
@@ -880,6 +880,7 @@ var newDisc;
 		
 
                 getAvailableCoins();
+			sortOrderBookColor();
 		
 		});
 		    
