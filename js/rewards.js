@@ -588,7 +588,7 @@ function orderBookManager(baseX, baseCd) {
                     '</tr>');
              
                 
-                $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs">'+baseCd.toUpperCase()+'</th><th>TOTAL</th><th></th></tr>');
+                $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs"> PRICE '+baseCd.toUpperCase()+'</th><th>TOTAL</th><th></th></tr>');
                 var sells = [];
                 var buys = [];
                 makerTokens = [];
