@@ -295,12 +295,9 @@ function setOrderCallbacks() {
 
 
 
-
-
-
-$(".newTrade").change(function () {
-
-    updateNewOrderDet($('.tradeOrderFooterComplete').attr("oid"), $('.tradeOrderFooterComplete').attr("action"));
+document.querySelector('.newTrade').addEventListener("input", function(){
+	
+  updateNewOrderDet($('.tradeOrderFooterComplete').attr("oid"), $('.tradeOrderFooterComplete').attr("action"));
 
 });
 
