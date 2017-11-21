@@ -680,6 +680,13 @@ if (getBitsWinOpt('uid') != undefined) {
 activeCoin = oDs[0].coin;
 	
     }
+			
+if (getBitsOpt('coin') != undefined) {
+     
+activeCoin = getBitsOpt('coin');
+	
+    }
+			
     
 
                     if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
