@@ -947,6 +947,26 @@ function getAvailableCoins() {
     for (i = 0; i < ownerTab.length; i++) {
 
     }
+	
+	if (getBitsWinOpt('uid') != undefined) {
+     
+
+    activeCoin = tokenTab[0];
+	
+    }
+			
+if (getBitsOpt('coin') != undefined) {
+     
+activeCoin = getBitsOpt('coin');
+	tokenTab.indexOf(getBitsOpt('coin'));
+	if (index > -1) {
+    tokenTab.splice(index, 1);
+		
+}
+	tokenTab.unshift(getBitsOpt('coin'));
+	
+    }
+			
 
 
     for (i = 0; i < tokenTab.length; i++) {
@@ -985,19 +1005,7 @@ console.log(err);
         
 
     }
-	if (getBitsWinOpt('uid') != undefined) {
-     
-
-    activeCoin = tokenTab[0];
 	
-    }
-			
-if (getBitsOpt('coin') != undefined) {
-     
-activeCoin = getBitsOpt('coin');
-	
-    }
-			
     
 
     $('.wallet-' + activeCoin + '-Balance').html('locked');
