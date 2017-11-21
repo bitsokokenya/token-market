@@ -958,7 +958,7 @@ function getAvailableCoins() {
 if (getBitsOpt('coin') != undefined) {
      
 activeCoin = getBitsOpt('coin');
-	tokenTab.indexOf(getBitsOpt('coin'));
+	var index = tokenTab.indexOf(getBitsOpt('coin'));
 	if (index > -1) {
     tokenTab.splice(index, 1);
 		
