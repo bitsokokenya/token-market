@@ -573,7 +573,7 @@ function orderBookManager(baseX, baseCd) {
         user: maker
     }).then(function (e) {
         if (e.status == 'ok') {
-
+$('.preloader-wrapper').css('display','none');
             getObjectStore('data', 'readwrite').put(JSON.stringify(e.data), 'market-orders').onsuccess = function (event) {
 
 
