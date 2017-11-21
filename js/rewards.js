@@ -675,19 +675,7 @@ function orderBookManager(baseX, baseCd) {
                             '</tr>');
 
                     }
-if (getBitsWinOpt('uid') != undefined) {
-     
-activeCoin = oDs[0].coin;
-	
-    }
-			
-if (getBitsOpt('coin') != undefined) {
-     
-activeCoin = getBitsOpt('coin');
-	
-    }
-			
-    
+
 
                     if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
 
@@ -996,8 +984,21 @@ console.log(err);
         
 
     }
+	if (getBitsWinOpt('uid') != undefined) {
+     
 
     activeCoin = tokenTab[0];
+	
+    }
+			
+if (getBitsOpt('coin') != undefined) {
+     
+activeCoin = getBitsOpt('coin');
+	
+    }
+			
+    
+
     $('.wallet-' + activeCoin + '-Balance').html('locked');
 
     $(".activeCoin").text(activeCoin)
