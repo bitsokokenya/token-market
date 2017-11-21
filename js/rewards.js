@@ -624,9 +624,18 @@ function orderBookManager(baseX, baseCd) {
 
                 sells.sort(function (a, b) {
 
+                    return parseFloat(b.amount) - parseFloat(a.amount);
+                });
+
+                sells.sort(function (a, b) {
+
                     return parseFloat(b.rate) - parseFloat(a.rate);
                 });
 
+                buys.sort(function (a, b) {
+
+                    return parseFloat(b.amount) + parseFloat(a.amount);
+                });
                 buys.sort(function (a, b) {
 
                     return parseFloat(b.rate) + parseFloat(a.rate);
