@@ -566,6 +566,7 @@ function orderBookManager(baseX, baseCd) {
     } else {
         var maker = getBitsWinOpt('uid');
     };
+			
     doFetch({
         action: 'getMarketOrders',
         tk: localStorage.getItem('bits-user-name'),
@@ -768,7 +769,7 @@ function orderBookManager(baseX, baseCd) {
 
                     $('.exchange-' + tokenTab[i] + '-Balance').html(((allTokens[tokenTab[i]].exchange / Math.pow(10, allTokens[tokenTab[i]].decimals)) * (allTokens[tokenTab[i]].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
                 }
-                sortOrderBookColor()
+		    
 
                 $('.orderbook').animate({
                     scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
