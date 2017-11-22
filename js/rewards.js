@@ -688,7 +688,7 @@ $('.preloader-wrapper').css('display','none');
                             myOrdCount++;
 				try{
 			
-				allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
+				//allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
 
                             	allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + (oDs[ii].amount * 2);
 
@@ -753,7 +753,8 @@ $('.preloader-wrapper').css('display','none');
                             '</td></tr>');
                     }
 
-
+     $('.exchange-' + oDs[ii].coin + '-Balance').html(((allTokens[oDs[ii].coin].exchange / Math.pow(10, allTokens[oDs[ii].coin].decimals)) * (allTokens[oDs[ii].coin].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
+               
 
                 }
 
@@ -765,11 +766,11 @@ $('.preloader-wrapper').css('display','none');
                     $(".trade-new-Button").attr("disabled", false);
                 }
 
-                var tokenTab = allTokens['allTokens'];
-                for (i = 0; i < tokenTab.length; i++) {
+               // var tokenTab = allTokens['allTokens'];
+               // for (i = 0; i < tokenTab.length; i++) {
 
-                    $('.exchange-' + tokenTab[i] + '-Balance').html(((allTokens[tokenTab[i]].exchange / Math.pow(10, allTokens[tokenTab[i]].decimals)) * (allTokens[tokenTab[i]].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
-                }
+               //     $('.exchange-' + tokenTab[i] + '-Balance').html(((allTokens[tokenTab[i]].exchange / Math.pow(10, allTokens[tokenTab[i]].decimals)) * (allTokens[tokenTab[i]].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
+               // }
 		    
 
                 $('.orderbook').animate({
