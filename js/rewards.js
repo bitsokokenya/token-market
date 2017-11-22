@@ -72,7 +72,8 @@ function doNewTransfer() {
 
     $(".tradeOrderSubTitle").html('New Transfer');
     $(".tradeOrderBody").html('transfer ' + activeCoin + ' to a different address');
-
+$(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
+        
     $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)) + ' ' + baseCd);
     $("#newTransferAmount").attr("max", ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)));
 
