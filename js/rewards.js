@@ -752,8 +752,12 @@ $('.preloader-wrapper').css('display','none');
                             '<td>' + bAc +
                             '</td></tr>');
                     }
-
-     $('.exchange-' + oDs[ii].coin + '-Balance').html(((allTokens[oDs[ii].coin].exchange / Math.pow(10, allTokens[oDs[ii].coin].decimals)) * (allTokens[oDs[ii].coin].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
+try{
+$('.exchange-' + oDs[ii].coin + '-Balance').html(((allTokens[oDs[ii].coin].exchange / Math.pow(10, allTokens[oDs[ii].coin].decimals)) * (allTokens[oDs[ii].coin].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
+     
+}catch(err){
+console.log('!INFO did not update exchange balances')
+}
                
 
                 }
