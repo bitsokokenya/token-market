@@ -865,6 +865,7 @@ var newDisc;
 
 
                         $("#newTradePrice").val(allTokens[activeCoin].rate * baseX);
+			    setOrderCallbacks();
                     },
                     complete: function () {
                         stopOrderWatch()
