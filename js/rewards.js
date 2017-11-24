@@ -656,11 +656,14 @@ $('.preloader-wrapper').css('display','none');
 
                         var icon = 'attach_money';
                     }
+			
+			var deci =allTokens[activeCoin].decimals ? allTokens[activeCoin].decimals : 0;
+
                     if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>BUY</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(allTokens[oDs[ii].coin].decimals) + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
@@ -670,7 +673,7 @@ $('.preloader-wrapper').css('display','none');
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>SELL</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(allTokens[oDs[ii].coin].decimals) + '</td>' +
+                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
