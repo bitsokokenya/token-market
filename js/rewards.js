@@ -657,13 +657,13 @@ $('.preloader-wrapper').css('display','none');
                         var icon = 'attach_money';
                     }
 			
-			var deci =allTokens[oDs[ii].coin] ? allTokens[oDs[ii].coin].decimals : 0;
+			var deci =allTokens[oDs[ii].coin] ? allTokens[oDs[ii].coin].decimals : 5;
 			
                     if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>BUY</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
+                            '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount),(deci/-1)) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
@@ -673,7 +673,7 @@ $('.preloader-wrapper').css('display','none');
 
                         $("#myOrders").append('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin">' +
                             '<td>SELL</td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
+                            '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount),(deci/-1)) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
@@ -707,7 +707,7 @@ $('.preloader-wrapper').css('display','none');
 
                         $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
                             '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
+                            '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount),(deci/-1)) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td>' + bAc +
@@ -749,7 +749,7 @@ $('.preloader-wrapper').css('display','none');
 
                         $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
                             '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
-                            '<td class="hidden-xs">' + parseFloat(oDs[ii].amount).toFixed(deci) + '</td>' +
+                            '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount),(deci/-1)) + '</td>' +
                             '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
                             '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
                             '<td>' + bAc +
