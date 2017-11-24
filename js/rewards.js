@@ -989,7 +989,7 @@ activeCoin = getBitsOpt('coin');
             '<tr><th>Price</th><th class="coindata-' + tokenTab[i] + '-price">0.00</th></tr>' +
             '<tr><th></th><th></th></tr>' +
             '<tr><th>Website</th><th><a href="" target="_blank" style="text-transform:lowercase;color: #ffffff;" class="coindata-' + tokenTab[i] + '-wpage"></a></th></tr>' +
-            '</tbody></table></div><div class="col s12 m4 " style="text-align: center; position: relative;margin-top: 50px;"><h5 style="font-size: 1em; font-weight: bold; width: 136px; position: absolute; top: 45px; font-size: 0.6em; display: block; right: 117px;">BALANCES</h5><table class="striped buySell" id="blocks" style="line-height: 20px;width: 50px;float: right;font-size: 14px;top: 10%;background-color: transparent!important;position: relative;right:10%;top:80px;">' +
+            '</tbody></table></div><div class="col s12 m4 " style="text-align: center; position: relative;"><h5 style="font-size: 1em; font-weight: bold; width: 136px; position: absolute; top: 45px; font-size: 0.6em; display: block; right: 117px;">BALANCES</h5><table class="striped buySell" id="blocks" style="line-height: 20px;width: 50px;float: right;font-size: 14px;top: 10%;background-color: transparent!important;position: relative;right:10%;top:80px;">' +
             '<tbody style="height: 350px;"><tr><th style="">wallet</th><th class="wallet-' + tokenTab[i] + '-Balance">locked</th></tr>' +
             '<tr><th>exchange</th><th class="exchange-' + tokenTab[i] + '-Balance">locked</th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
