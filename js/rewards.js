@@ -657,7 +657,7 @@ $('.preloader-wrapper').css('display','none');
                         var icon = 'attach_money';
                     }
 			
-			var deci =allTokens[activeCoin].decimals ? allTokens[activeCoin].decimals : 0;
+			var deci =allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 0;
 
                     if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
