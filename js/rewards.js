@@ -896,10 +896,7 @@ var newDisc;
 
                 getAvailableCoins();
 			sortOrderBookColor();
-		
-		});
-		    
-		    
+			
 		    
 		    //start push messaging
 		    try{
@@ -911,6 +908,10 @@ var newDisc;
 		    
 		  // start first transaction
 		   doFirstBuy();
+		
+		});
+		    
+		    
 		    
             } else {
                 console.log("error");
