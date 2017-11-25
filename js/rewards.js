@@ -9,7 +9,7 @@ function upDtokenD(){
                 $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
-                $('.coindata-' + activeCoin + '-price').html((allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
+                $('.coindata-' + activeCoin + '-price').html(numberify((allTokens[activeCoin].rate * baseX).toFixed(2)) + ' ' + baseCd.toUpperCase());
                 $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
 		sortOrderBookColor();
 
@@ -905,7 +905,7 @@ var newDisc;
 		    }catch(er){
 		    console.log('INFO! not started messaging ',er)
 		    }
-		    
+		    upDtokenD();
 		  // start first transaction
 		   doFirstBuy();
 		
