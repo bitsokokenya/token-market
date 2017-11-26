@@ -871,6 +871,9 @@ var newDisc;
 			    setOrderCallbacks();
                     },
                     complete: function () {
+			    $("#newTransferTotal").val('');
+			    $("#newTransferAmount").val('');
+			    $("#newTransferPrice").val('');
                         stopOrderWatch()
                     } // Callback for Modal close
                 });
