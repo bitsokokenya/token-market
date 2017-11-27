@@ -1079,7 +1079,7 @@ function getTradableCoins(){
         $(".tradableCoins").append(' <li class="collection-item avatar">'+
       '<img src="/bitsAssets/images/currencies/'+tTab[i]+'.png" alt="" class="circle">'+
       '<span class="title">'+allTokens[tTab[i]].fullname+'</span>'+
-      '<p>'+allTokens[tTab[i]].rate*baseX+' '+baseCd.toUppercase()+'<br>'+allTokens[tTab[i]].website+' </p>'+
+      '<p>'+allTokens[tTab[i]].rate*baseX+' '+baseCd.toUpperCase()+'<br>'+allTokens[tTab[i]].website+' </p>'+
       '<a href="#!" class="secondary-content"><i class="material-icons">trending_up</i></a>'+
     '</li>')
        
