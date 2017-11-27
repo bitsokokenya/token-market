@@ -1075,11 +1075,15 @@ function getTradableCoins(){
 		var tTab = allTokens['allTokens'];
    
 	 for (i = 0; i < tTab.length; i++) {
+		 
+		 if(allTokens[tTab[i]].chain!='eth'){
+		 continue;
+		 }
 
-        $(".tradableCoins").append(' <li class="collection-item avatar">'+
+        $(".tradableCoins").append(' <li class="collection-item avatar" style=" background: rgba(255, 255, 255, 0.7686274509803922);margin: 10px;">'+
       '<img src="/bitsAssets/images/currencies/'+tTab[i]+'.png" alt="" class="circle">'+
       '<span class="title">'+allTokens[tTab[i]].fullname+'</span>'+
-      '<p>'+allTokens[tTab[i]].rate*baseX+' '+baseCd.toUpperCase()+'<br>'+allTokens[tTab[i]].website+' </p>'+
+      '<p>'+(allTokens[tTab[i]].rate*baseX).toFixed(2)+' '+baseCd.toUpperCase()+'</p>'+
       '<a href="#!" class="secondary-content"><i class="material-icons">trending_up</i></a>'+
     '</li>')
        
