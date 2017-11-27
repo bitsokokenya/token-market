@@ -1080,7 +1080,7 @@ function getTradableCoins(){
 		 continue;
 		 }
 
-        $(".tradableCoins").append(' <li class="collection-item avatar" style=" background: rgba(255, 255, 255, 0.7686274509803922);margin: 10px;">'+
+        $(".tradableCoins").append(' <li class="collection-item avatar" style=" background: rgba(255, 255, 255, 0.7686274509803922);margin: 10px; height: 60px; min-height: 60px;">'+
       '<img src="/bitsAssets/images/currencies/'+tTab[i]+'.png" alt="" class="circle">'+
       '<span class="title">'+allTokens[tTab[i]].fullname+'</span>'+
       '<p>'+(allTokens[tTab[i]].rate*baseX).toFixed(2)+' '+baseCd.toUpperCase()+'</p>'+
