@@ -425,7 +425,7 @@ function manageOrderDet(oid) {
                 $("#newTradeAmount").val(allOrds[ix].amount);
                 $("#newTradeTotal").val((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
 
-                if (parseInt(allOrds[ix].tranFrom) == 0) {
+                if (parseInt(allOrds[ix].tranTo) == 0) {
 								
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount),Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
                     $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -434,7 +434,7 @@ function manageOrderDet(oid) {
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
                     $(".transStat").html('waiting for seller to confirm payment..');
-                } else if (parseInt(allOrds[ix].tranTo) == 0) {
+                } else if (parseInt(allOrds[ix].tranFrom) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount),Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone + ' then enter the transaction code below.');
