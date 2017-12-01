@@ -861,7 +861,13 @@ var newDisc;
                     opacity: .5, // Opacity of modal background
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
-                    ready: function (modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+                    ready: function (modal, trigger) {
+			    
+			    $("#newTransferTotal").val('');
+			    $("#newTransferAmount").val('');
+			    $("#newTransferPrice").val('');
+			    M.updateTextFields();
+			    // Callback for Modal open. Modal and trigger parameters available.
                         tradeManager($(trigger).attr('oid'), $(trigger).attr('act'));
                         if ($(trigger).attr('oid') == "new") {
 
@@ -878,9 +884,6 @@ var newDisc;
 			    setOrderCallbacks();
                     },
                     complete: function () {
-			    $("#newTransferTotal").val('');
-			    $("#newTransferAmount").val('');
-			    $("#newTransferPrice").val('');
                         stopOrderWatch()
                     } // Callback for Modal close
                 });
