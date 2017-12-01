@@ -830,9 +830,17 @@ function starting() {
 new M.Modal(document.querySelector('#userAccount'), {
 	ready:function(e){
 		showAddr('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
-		
-		$(".userWalletAddress").html('0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
+
+		if(localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'))){
+
+			var adr='0x'+localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'));
+		}else{
+	var adr='wallet locked';
+
 		}
+		
+		$(".userWalletAddress").html(adr);
+	}
 });
 var newDisc;
 	    
