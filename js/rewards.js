@@ -810,14 +810,6 @@ console.log('!INFO did not update exchange balances')
 
                 //end for loop orders
 		    
-		    // start open requested order
-		    if (getBitsOpt('oid')){
-		    
-		    openOrder(getBitsOpt('oid'));
-		    }
-		    
-		    // end open requested order
-		    
 		     
 		    resolve('orderBook updated');
 		   
@@ -955,6 +947,16 @@ var newDisc;
 		    upDtokenD();
 		  // start first transaction
 		   doFirstBuy();
+			
+			
+		    // start open requested order
+		    if (getBitsOpt('oid')){
+		    
+		    openOrder(getBitsOpt('oid'));
+		    }
+		    
+		    // end open requested order
+		    
 		
 		});
 		    
