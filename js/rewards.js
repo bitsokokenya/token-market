@@ -5,6 +5,22 @@ var xKobo = "";
 var baseX;
 var baseCd;
 
+function openOrder(oid){
+
+			    $("#newTransferTotal").val('');
+			    $("#newTransferAmount").val('');
+			    $("#newTransferPrice").val('');
+			    M.updateTextFields();
+			    // Callback for Modal open. Modal and trigger parameters available.
+                        tradeManager(oid, 'manage');
+                       orderTimer = setInterval(function () {
+                                orderWatch()
+                            }, 15000);
+
+                        $("#newTradePrice").val(allTokens[activeCoin].rate * baseX);
+			    setOrderCallbacks();
+}
+
 function upDtokenD(){
                 $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
                 $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
@@ -794,7 +810,17 @@ console.log('!INFO did not update exchange balances')
 
                 //end for loop orders
 		    
+		    // start open requested order
+		    if (getBitsOpt('oid')){
+		    
+		    openOrder(getBitsOpt('oid'));
+		    }
+		    
+		    // end open requested order
+		    
+		     
 		    resolve('orderBook updated');
+		   
             }
 
 
