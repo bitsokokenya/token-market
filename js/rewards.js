@@ -5,14 +5,14 @@ var xKobo = "";
 var baseX;
 var baseCd;
 
-function openOrder(oid){
+function openOrder(oid,act){
 $('#tradeOrder').modal('open');
 			    $("#newTransferTotal").val('');
 			    $("#newTransferAmount").val('');
 			    $("#newTransferPrice").val('');
 			    M.updateTextFields();
 			    // Callback for Modal open. Modal and trigger parameters available.
-                        tradeManager(oid, 'manage');
+                        tradeManager(oid, act);
                        orderTimer = setInterval(function () {
                                 orderWatch()
                             }, 15000);
@@ -888,26 +888,7 @@ var newDisc;
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-			    
-			    $("#newTransferTotal").val('');
-			    $("#newTransferAmount").val('');
-			    $("#newTransferPrice").val('');
-			    M.updateTextFields();
-			    // Callback for Modal open. Modal and trigger parameters available.
-                        tradeManager($(trigger).attr('oid'), $(trigger).attr('act'));
-                        if ($(trigger).attr('oid') == "new") {
-
-                        } else {
-
-                            orderTimer = setInterval(function () {
-                                orderWatch()
-                            }, 15000);
-
-                        }
-
-
-                        $("#newTradePrice").val(allTokens[activeCoin].rate * baseX);
-			    setOrderCallbacks();
+			    openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
                     },
                     complete: function () {
                         stopOrderWatch()
@@ -952,7 +933,7 @@ var newDisc;
 		    // start open requested order
 		    if (getBitsOpt('oid')){
 		    
-		    openOrder(getBitsOpt('oid'));
+		    openOrder(getBitsOpt('oid'),'manage');
 		    }
 		    
 		    // end open requested order
