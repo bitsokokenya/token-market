@@ -888,7 +888,11 @@ var newDisc;
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-			    openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
+			     if (!getBitsOpt('oid')){
+		    
+		    openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
+		    }
+			    
                     },
                     complete: function () {
                         stopOrderWatch()
