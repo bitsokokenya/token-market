@@ -397,8 +397,12 @@ function manageOrderDet(oid) {
 		    
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
-
-                  
+			
+			
+                   	if (allOrds[ix].trading == 'true'){
+			 $("#newTradePrice").attr("disabled", true);
+			}
+			
                    	if (allOrds[ix].state == 'pending'){
 				$(".tradeOrderFooterCancel").html("cancel");
 				$(".tradeOrderFooterCancel").attr("action","cancel");
