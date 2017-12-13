@@ -17,14 +17,14 @@
     <meta content="https://bitsoko.co.ke/app" name="og:url">
     <meta content="#{img}" name="og:image">
     <link href="#{img}" rel="shortcut icon" type="image/png">
-	<meta content="#{theme}" name="msapplication-navbutton-color">
+    <meta content="#{theme}" name="msapplication-navbutton-color">
     <title>#{name}</title>
 
 
     <link href="../app/web-manifest.json" rel="manifest">
     <!-- Stylesheet -->
     <link href="css/gallery-materialize.min.css" rel="stylesheet">
-    <link href="/bitsAssets/css/materialize/materialize.min.css" rel="stylesheet">
+    <link href="https://bitsoko.co.ke/bitsAssets/css/materialize/materialize.min.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 
     <!-- Material Icons -->
@@ -68,59 +68,65 @@
             font-family: 'Lato', sans-serif !important;
             overflow-x: hidden;
         }
-        .tap-target-wrapper{
-        position: fixed!important;
+        
+        .tap-target-wrapper {
+            position: fixed!important;
         }
-        .tap-target{
+        
+        .tap-target {
             background-color: rgb(15, 95, 118)!important;
         }
         
         .input-field {
-    margin: 5px 0!important;
-}
-        .col .row {
-    margin-left: 2.5px!important;
-    margin-right: 2.5px!important;
-}
-        .tabs .tab a.active {
-    color: rgb(0, 94, 118) !important;
-}
-        .tabs .indicator {
-    position: absolute;
-    top: 0 !important;
-    height: 5px;
-    background-color: rgb(0, 94, 118) !important;
-    will-change: left, right;
-}
-        .odbk-txt{
-            margin: 8px 0px 0px 35px;
-    text-align: left;
-    display: inline-block;
-    float: left;
+            margin: 5px 0!important;
         }
-	    .imgTab {
-    left: 5%;
-}
-	    
+        
+        .col .row {
+            margin-left: 2.5px!important;
+            margin-right: 2.5px!important;
+        }
+        
+        .tabs .tab a.active {
+            color: rgb(0, 94, 118) !important;
+        }
+        
+        .tabs .indicator {
+            position: absolute;
+            top: 0 !important;
+            height: 5px;
+            background-color: rgb(0, 94, 118) !important;
+            will-change: left, right;
+        }
+        
+        .odbk-txt {
+            margin: 8px 0px 0px 35px;
+            text-align: left;
+            display: inline-block;
+            float: left;
+        }
+        
+        .imgTab {
+            left: 5%;
+        }
+        
         @media screen and (max-width: 480px) {
-		    
-		.doTransActs {
-   margin-top: 25px!important;
-}
-            .btn, .btn-large, .btn-flat {
-    padding: 0 1rem!important;
+            .doTransActs {
+                margin-top: 25px!important;
             }
-       
-        .odbk-txt{     
-           float: left;
-    margin: 0px 0px 0px 20px;
-    width: 30px;
-    text-align: left;
+            .btn,
+            .btn-large,
+            .btn-flat {
+                padding: 0 1rem!important;
             }
-            
+            .odbk-txt {
+                float: left;
+                margin: 0px 0px 0px 20px;
+                width: 30px;
+                text-align: left;
+            }
             nav .brand-logo {
-    left: 15%!important;
-}
+                left: 15%!important;
+            }
             .buyPoints {
                 width: 80% !important;
             }
@@ -163,13 +169,13 @@
             padding: 5px;
             display: inline-block;
         }
+        
         @media screen and (min-width: 780px) {
-           
-        #logo {
-    width: 20%;
-    margin-left: 15%;
-    padding: 10px;
-}
+            #logo {
+                width: 20%;
+                margin-left: 15%;
+                padding: 10px;
+            }
         }
         
         @media screen and (min-width: 480px) {
@@ -475,16 +481,14 @@
                 margin-top: 30px;
             }
             .hero {
-               height: 295px !important;
+                height: 295px !important;
             }
-            .myOrdersSec {		
-                 margin-top: 50px !important;		
-             }
-            
+            .myOrdersSec {
+                margin-top: 50px !important;
+            }
             table {
                 right: 0px!important;
             }
-            
             .imgTab {
                 left: 5% !important;
             }
@@ -562,11 +566,11 @@
         <div class="customGPlusSignIn" id="customBtn" style="text-align:center;padding:2%;">
             <a class="waves-effect waves-light btn"><i class="material-icons left loginBtn--google" style="line-height: 35px;">email</i> google signin</a>
         </div>
-	    
-	    <ul class="collection tradableCoins" style="border: 0px;">
- 
-  </ul>
-      
+
+        <ul class="collection tradableCoins" style="border: 0px;">
+
+        </ul>
+
     </div>
 
     <div id="tokenSelect" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 999; position:fixed;background-size: cover; background-position-x: 75%;">
@@ -715,14 +719,80 @@
 -->
 
     <!-- Modal Structure -->
+
+    <div id="tradeOrder2" class="modal open" style="overflow: initial;max-height: 100%;">
+        <div class="modal-content" style="text-align:center; padding-top:0px; padding-bottom:0px;">
+            <img class="tradeOrderImg" src="" style="width: 50px;border-radius:50px;width: 90px; border-radius: 50px; background: white; margin-top: -29px; -webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);">
+            <h5 class="tradeOrderSubTitle"></h5>
+            <p class="tradeOrderBody"></p>
+
+            <form class="col s12 newTradeForm">
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
+                        <label for="newTradeTotal" class="active">Total</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
+                        <label for="newTradeAmount" class="active">Amount</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
+                        <label for="newTradePrice" class="active">Price</label>
+                    </div>
+                </div>
+            </form>
+
+            <form class="col s12 confTradeForm">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: F5Y7U889E3 " id="newTradeConfirmation" type="text" class="validate">
+                        <label for="newTradeConfirmation" class="active">Transaction Code</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <span style="font-weight:bold;">STATUS: </span>
+                        <span class="transStat">waiting for seller to confirm payment..</span>
+                    </div>
+                </div>
+            </form>
+
+
+            <form class="col s12 newTransferForm">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input placeholder="eg: 0x323rdr4rhf83gf7c8fg6gfh8g6fc2g83 " id="newTransferConfirmation" type="text" class="newTrade validate">
+                        <label for="newTransferConfirmation" class="active">Sending to</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="newTransferAmount" type="number" min="0" step="any" class="newTrade validate">
+                        <label for="newTransferAmount" class="active">Amount</label>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="modal-footer tradeOrderFooter">
+
+        </div>
+    </div>
+
+
+    <!-- Modal Structure -->
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;">
         <div class="modal-content" style="text-align:center; padding-top:0px; padding-bottom:0px;">
             <img class="tradeOrderImg" src="" style="width: 50px;border-radius:50px;width: 90px; border-radius: 50px; background: white; margin-top: -29px; -webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);">
             <h5 class="tradeOrderSubTitle"></h5>
             <p class="tradeOrderBody"></p>
-                    
+
             <form class="col s12 newTradeForm">
-                
+
                 <div class="row">
                     <div class="input-field col s12">
                         <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
@@ -779,9 +849,9 @@
     </div>
 
     <div class="row orderGraph" style="max-height: calc(100% - 400px);height: auto;">
-        <div class="col s12 m8" style="height: 100%;">
+        <div class="col s12 orderBookSize" style="height: 100%;">
             <section class="graph row" style="width: 100%; height: 100%;">
-                <span>ORDERBOOK</span>
+                <p style="text-align: center; font-size: 1.3em; margin: 0px;">ORDERBOOK</p>
                 <div class="popup orderBookTour" style="position: absolute;z-index:10;display:none;">
                     <span class="orderBookPopupText" id="myPopup" style="">
                         <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
@@ -792,74 +862,67 @@
                 <div class="row orderbook" style="max-height: 100%; overflow: scroll;">
                     <table class="striped" id="blocks" style="height: 100%;">
                         <tbody class="orderbookTbody">
- <div class="preloader-wrapper big active" style="    margin-left: calc(50% - 30px);
+                            <div class="preloader-wrapper big active" style="    margin-left: calc(50% - 30px);
     margin-top: 30%;">
-      <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
+                                <div class="spinner-layer spinner-blue">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
 
-      <div class="spinner-layer spinner-red">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
+                                <div class="spinner-layer spinner-red">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
 
-      <div class="spinner-layer spinner-yellow">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
+                                <div class="spinner-layer spinner-yellow">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
 
-      <div class="spinner-layer spinner-green">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-        </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-    </div>
+                                <div class="spinner-layer spinner-green">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </tbody>
                     </table>
                 </div>
             </section>
         </div>
+        <!--
         <div class="col s12 m4" style="height:100%;">
-            <section class="graph row myOrdersSec" style="width:100%; height:100%;">
-                <span>MY ORDERS</span>
-                <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
-                    <span class="myOrdersPopupText" id="myPopup" style="">
-                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
-                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> 
-                        </div>
-                    </span>
-                </div>
-                <div class="row" style="overflow: scroll; height: 100%;">
-                    <table class="striped" id="blocks">
-                        <tbody id="myOrders">
 
-
-                        </tbody>
-                    </table>
-                </div>
-            </section>
         </div>
+-->
     </div>
     <section class="chart row" style="width: 60%;
     margin: 0 2%;
@@ -905,24 +968,9 @@
     </section>
     -->
 
+
     <!-- Modal Structure -->
-    <div id="userAccount" class="modal" style="top: 20% !important; overflow: initial;">
-        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display:none;margin-left: auto;margin-right: auto;margin-top: -35px;">
-           
-        </div>
-        <h4 style="text-align: center; font-size: 2em; padding-top: 10px;">wallet address</h4>
-        <p></p>
-        <div class="modal-content" style="text-align: center; ">
-          <div id="qrcode" style="height:200px;width:200px;margin-left: calc(50% - 100px); margin-bottom: 20px;"></div>  
-            <span style="font-size: 12px;" class="userWalletAddress"></span>
-        
-        </div>
-        <div class="modal-footer" style="display:none;">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
-        </div>
-    </div>
-    <!-- Modal Structure -->
-    <div id="orderHistory" class="modal" style="width: 45%;top: 20% !important; overflow: initial;">
+    <div id="orderHistory" class="modal" style="top: 20% !important; overflow: initial;">
         <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 219.15 219.15" style="enable-background:new 0 0 219.15 219.15;width: 54px;" xml:space="preserve">
                 <g>
@@ -934,23 +982,56 @@
                 </g>
             </svg>
         </div>
-        <h4 style="text-align: center; font-size: 2em; padding-top: 10px;">HISTORY</h4>
-        <p></p>
-        <div class="modal-content">
-            <table>
-                <tbody>
-                    <tr style="background:#D9D7D7;line-height: 30px;">
-                        <th>Amount</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </tbody>
-            </table>
+        <section class="graph row myOrdersSec" style="width:100%; height:100%;">
+            <p style="text-align: center; font-size: 1.3em;">MY ORDERS</p>
+            <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
+                <span class="myOrdersPopupText" id="myPopup" style="">
+                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> 
+                        </div>
+                    </span>
+            </div>
+            <div class="row" style="overflow: scroll; height: 100%;">
+                <table class="striped" id="blocks">
+                    <tbody id="myOrders">
 
-        </div>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
         </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="userAccount" class="modal" style="top: 20% !important; overflow: initial;">
+        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display:none;margin-left: auto;margin-right: auto;margin-top: -35px;">
+
+        </div>
+        <h4 style="text-align: center; font-size: 2em; padding-top: 10px;">wallet address</h4>
+        <p></p>
+        <div class="modal-content" style="text-align: center; ">
+            <div id="qrcode" style="height:200px;width:200px;margin-left: calc(50% - 100px); margin-bottom: 20px;"></div>
+            <span style="font-size: 12px;" class="userWalletAddress"></span>
+            <span>
+                <div class="row" style="padding: 15px 20%; margin-bottom: 0px;">
+                    <div class="col s6">Turn on notifications</div>
+                        <div class="col s6">
+                            <div class="switch">
+                            <label>
+                                <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification"> <span style="margin-top:13px;" class="lever right"></span>
+            </label>
+        </div>
+    </div>
+    </div>
+    </span>
+
+    </div>
+    <div class="modal-footer" style="display:none;">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
+    </div>
     </div>
     <ul id='dropdown1' class='dropdown-content'>
         <li><a href="#!">one</a></li>
@@ -976,17 +1057,17 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://bitsoko.co.ke//bitsAssets/js/materialize/materialize.min.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/moment.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/web3/web3.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/hooked-web3-provider/build/hooked-web3-provider.js"></script>
 
     <script src="https://bitsoko.co.ke/bitsAssets/js/globalServices.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/google.js"></script>
-    
+
     <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/pushManager/google-fcm.js"></script>
     <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
-<!--
+    <script src="https://bitsoko.co.ke/bitsAssets/js/materialize/materialize.min.js"></script>
+    <!--
     <script>
         var chart = AmCharts.makeChart("chartdiv", {
             "type": "serial",
@@ -1096,6 +1177,7 @@
     </script>
     <script src="./js/rewards.js"></script>
     <script src="./js/bits-addMobiVeri.js"></script>
+    <script src="./js/google-fcm.js"></script>
 
     <script>
         function profileLoaded(p) {
@@ -1108,7 +1190,7 @@
         Promise.all([indexDbReady, gDriveReady]).then(values => {
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
-		    getTradableCoins();
+                getTradableCoins();
             } else {
 
                 $("#notSignedIn").hide();
@@ -1124,24 +1206,35 @@
         })
 
     </script>
-    
-  <!-- Discovery Structure -->
-  <div class="tap-target" data-target="menu">
-    <div class="tap-target-content" style="color: white;">
-      <h5>Start here</h5>
-      <p>your wallet is empty! top it up by clicking the buy button to get some tokens..</p>
-    </div>
-  </div>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109897776-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'UA-109897776-1');
-</script>
-<!-- Twitter universal website tag code
+    <!-- Discovery Structure -->
+    <div class="tap-target" data-target="menu">
+        <div class="tap-target-content" style="color: white;">
+            <h5>Start here</h5>
+            <p>your wallet is empty! top it up by clicking the buy button to get some tokens..</p>
+        </div>
+    </div>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109897776-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-109897776-1');
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+            $('.modal').modal();
+        });
+
+    </script>
+    <!-- Twitter universal website tag code
 
 <script>
 !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);

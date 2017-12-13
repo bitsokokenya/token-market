@@ -1,20 +1,22 @@
 .gallery .gallery-expand.active .gallery-curve-wrapper .gallery-cover {
     box-shadow: none;
 }
-td, th {
+
+td,
+th {
     padding: 1px 1px;
-        text-align: center;
+    text-align: center;
 }
+
 table.striped>tbody>tr:nth-child(odd) {
     background-color: transparent;
 }
 
-.tradeOrderTitle{
- display: none!important;
+.tradeOrderTitle {
+    display: none!important;
 }
 
 @media only screen and (max-width: 500px) {
-    
     .coinDataHolda {
         display: none
     }
@@ -76,5 +78,25 @@ table.striped>tbody>tr:nth-child(odd) {
     #comingSoon {
         margin: 0px;
         margin-top: -10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #orderHistory {
+        margin: 4px !important;
+        width: 98% !important;
+    }
+}
+
+@media screen and (min-width: 480px) {
+    .orderBookSize {
+        padding: 0px 12% !important;
+    }
+    .coinTab {
+        margin-top: 10px !important;
+    }
+    .tradableCoins {
+        border: 0px;
+        margin: 0px 30%;
     }
 }
