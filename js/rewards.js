@@ -339,6 +339,8 @@ function updateNewOrderDet(oid, action) {
     var orderPrice = parseFloat($("#newTradePrice").val());
     var orderAmount = parseFloat($("#newTradeAmount").val());
     var orderTotal = parseFloat($("#newTradeTotal").val());
+	
+	$("#newTradeTotal").attr("step", orderPrice);
 
     if (orderTotal == NaN || $("#newTradeTotal").val() == "") {
         var orderTotal = 0;
