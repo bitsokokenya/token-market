@@ -7,6 +7,7 @@ var baseCd;
 
 function openOrder(oid,act){
 $('#tradeOrder').modal('open');
+	$("#newTradeTotal").val('')
 			    $("#newTransferTotal").val('');
 			    $("#newTransferAmount").val('');
 			    $("#newTransferPrice").val('');
@@ -339,6 +340,9 @@ function updateNewOrderDet(oid, action) {
     var orderPrice = parseFloat($("#newTradePrice").val());
     var orderAmount = parseFloat($("#newTradeAmount").val());
     var orderTotal = parseFloat($("#newTradeTotal").val());
+	
+	$("#newTradeTotal").attr("step", (orderPrice/Math.pow(10, allTokens[activeCoin].decimals)).toFixed(allTokens[activeCoin].decimals));
+	
 
     if (orderTotal == NaN || $("#newTradeTotal").val() == "") {
         var orderTotal = 0;
