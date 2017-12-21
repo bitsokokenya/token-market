@@ -7,6 +7,7 @@ var baseCd;
 
 function openOrder(oid,act){
 $('#tradeOrder').modal('open');
+	$("#newTradeTotal").val('')
 			    $("#newTransferTotal").val('');
 			    $("#newTransferAmount").val('');
 			    $("#newTransferPrice").val('');
