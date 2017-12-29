@@ -374,7 +374,7 @@ function updateNewOrderDet(oid, action) {
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
-    $("#newTradeAmount").val(ress.toFixed(allTokens[activeCoin].decimals));
+    $("#newTradePrice").val(ress);
     $(".tradeOrderTitle").html('');
     $(".completeOrderBut").prop("oid", '');
     $(".transStat").html('placing new order..');
