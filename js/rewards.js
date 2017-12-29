@@ -901,8 +901,6 @@ var newDisc;
 		    openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
 		    }
 		
-			   
-                        tradeManager(oid, act);
                        setTimeout(function () {
                                 M.updateTextFields();
                             }, 600);	    
