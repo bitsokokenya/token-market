@@ -352,6 +352,7 @@ function updateNewOrderDet(oid, action) {
     }
 
     var res = orderTotal / orderPrice;
+    var ress = orderTotal / orderAmount;
 
 
     if (action == 'buy') {
@@ -373,7 +374,7 @@ function updateNewOrderDet(oid, action) {
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
-    $("#newTradeAmount").val(res.toFixed(allTokens[activeCoin].decimals));
+    $("#newTradeAmount").val(ress.toFixed(allTokens[activeCoin].decimals));
     $(".tradeOrderTitle").html('');
     $(".completeOrderBut").prop("oid", '');
     $(".transStat").html('placing new order..');
