@@ -366,7 +366,7 @@ function updateNewOrderDet(oid, action) {
 
     } else if (action == 'sell') {
 
-        $("#newTradeTotal").attr("placeholder", 'Max: ' + (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice).toFixed(2) + ' ' + baseCd.toUpperCase();
+        $("#newTradeTotal").attr("placeholder", 'Max: ' + ((((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice).toFixed(2) + ' ' + baseCd.toUpperCase());
         $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice);
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + orderTotal + ' ' + baseCd.toUpperCase());
