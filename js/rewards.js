@@ -11,13 +11,10 @@ $('#tradeOrder').modal('open');
 			    $("#newTransferTotal").val('');
 			    $("#newTransferAmount").val('');
 			    $("#newTransferPrice").val('');
-			    M.updateTextFields();
+			   
 			    // Callback for Modal open. Modal and trigger parameters available.
                         tradeManager(oid, act);
-                       orderTimer = setInterval(function () {
-                                orderWatch()
-                            }, 15000);
-
+                      
                         $("#newTradePrice").val(allTokens[activeCoin].rate * baseX);
 			    setOrderCallbacks();
 }
@@ -91,7 +88,7 @@ function doNewTransfer() {
     $(".tradeOrderBody").html('transfer ' + activeCoin + ' to a different address');
 $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         
-    $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)) + ' ' + baseCd);
+    $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)).toFixed(2) + ' ' + baseCd);
     $("#newTransferAmount").attr("max", ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)));
 
 
@@ -515,6 +512,9 @@ function tradeManager(oid, action) {
         return;
 
     }
+ orderTimer = setInterval(function () {
+                                orderWatch()
+                            }, 15000);
 
     $(".confTradeForm").css("display", 'block');
 
@@ -900,7 +900,12 @@ var newDisc;
 		    
 		    openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
 		    }
-			    
+		
+			   
+                        tradeManager(oid, act);
+                       setTimeout(function () {
+                                M.updateTextFields();
+                            }, 600);	    
                     },
                     complete: function () {
                         stopOrderWatch()
