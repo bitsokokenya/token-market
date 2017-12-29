@@ -356,7 +356,7 @@ function updateNewOrderDet(oid, action) {
 
 
     if (action == 'buy') {
-        $("#newTradeTotal").attr("placeholder", 'eg: 1150');
+        $("#newTradeTotal").attr("placeholder", 'eg: 1150 ' + baseCd.toUpperCase());
         $("#newTradeTotal").attr("max", '');
 
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + orderTotal + ' ' + baseCd.toUpperCase());
@@ -366,7 +366,7 @@ function updateNewOrderDet(oid, action) {
 
     } else if (action == 'sell') {
 
-        $("#newTradeTotal").attr("placeholder", 'Max: ' + (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice);
+        $("#newTradeTotal").attr("placeholder", 'Max: ' + (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice).toFixed(2) + ' ' + baseCd.toUpperCase();
         $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2)*orderPrice);
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + orderTotal + ' ' + baseCd.toUpperCase());
@@ -374,10 +374,24 @@ function updateNewOrderDet(oid, action) {
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
+	
+	if(oid == 'new'){
+	
+    $("#newTradeAmount").val(res.toFixed(allTokens[activeCoin].decimals));
+		
+    $(".transStat").html('placing new order..');
+		
+	}else{
+
     $("#newTradePrice").val(ress);
+	
+    $(".transStat").html('updating order..');	
+	}
+	
+	
+	
     $(".tradeOrderTitle").html('');
     $(".completeOrderBut").prop("oid", '');
-    $(".transStat").html('placing new order..');
     setOrderCallbacks();
 
 }
