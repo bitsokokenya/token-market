@@ -325,9 +325,17 @@ function updateNewOrderDet(oid, action) {
         var sss = 's';
     }
 
+	     if (action == 'manage') {
+	    
+	    $(".tradeOrderFooterComplete").html('update');
+		     
+		 }
+	    
     if (parseFloat(($("#newTradePrice").val()) * parseFloat($("#newTradeAmount").val())) > 0 && $('.newTradeForm')[0].checkValidity()) {
 
         $(".tradeOrderFooterComplete").attr("disabled", false);
+	    
+	    
     } else {
 
         $(".tradeOrderFooterComplete").attr("disabled", true);
