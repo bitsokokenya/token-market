@@ -510,6 +510,8 @@ function tradeManager(oid, action) {
 
     if (action == 'transfer') {
 
+ orderTimer = setInterval(function () {
+                            }, 15000);
 
         doNewTransfer();
         $(".newTransferForm").css("display", 'block');
@@ -519,6 +521,8 @@ function tradeManager(oid, action) {
     } else if (oid == 'new') {
         //this is a new order
 
+ orderTimer = setInterval(function () {
+                            }, 15000);
         updateNewOrderDet(oid, action);
         $(".newTradeForm").css("display", 'block');
 
@@ -527,6 +531,8 @@ function tradeManager(oid, action) {
     } else if (action == 'manage') {
         //this is a new order
 
+ orderTimer = setInterval(function () {
+                            }, 15000);
         manageOrderDet(oid);
 
         $(".confTradeForm").css("display", 'block');
