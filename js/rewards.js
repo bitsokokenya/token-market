@@ -178,6 +178,7 @@ function stopOrderWatch() {
 function setOrderCallbacks() {
 
     $(".tradeOrderFooterComplete").click(function () {
+        $(this).html('<div class="preloader-wrapper active" style="width:30px;height:30px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div> </div></div>');
         console.log($(this).attr("oid"), $(this).attr("action"));
         if ($(this).attr("action") == 'transfer') {
             //buy from orderbook
@@ -673,6 +674,7 @@ function orderBookManager(baseX, baseCd) {
                     $("#myOrders").html('');
                     $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
                         '<th></th>' +
+                        '<th></th>' +
                         '<th class="hidden-xs">AMOUNT</th>' +
                         '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
                         '<th>TOTAL</th>' +
@@ -750,8 +752,9 @@ function orderBookManager(baseX, baseCd) {
                         var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
 
                         if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
-
+                            console.log("++++++++++++++++" + oDs[ii])
                             $("#myOrders").append('<tr class="">' +
+                                '<td><img src="https://bitsoko.io/bitsAssets/images/currencies/' + oDs[ii].img + '.png"></td>' +
                                 '<td>BUY</td>' +
                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
@@ -762,6 +765,7 @@ function orderBookManager(baseX, baseCd) {
                         } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                             $("#myOrders").append('<tr class="">' +
+                                '<td><img src="https://bitsoko.io/bitsAssets/images/currencies/' + oDs[ii].img + '.png"></td>' +
                                 '<td>SELL</td>' +
                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
