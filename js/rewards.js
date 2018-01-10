@@ -748,9 +748,18 @@ function orderBookManager(baseX, baseCd) {
 
                             var icon = 'attach_money';
                         }
+try{
+    
+var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
 
-                        var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
-
+}catch(err){
+//TO-DO
+    //this should not be happening!!
+    console.log(err);
+    
+var deci = 5;
+}
+                        
                         if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                             console.log("++++++++++++++++" + oDs[ii])
                             $("#myOrders").append('<tr class="">' +
