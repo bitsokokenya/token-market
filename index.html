@@ -24,17 +24,17 @@
     <link href="../app/web-manifest.json" rel="manifest">
     <!-- Stylesheet -->
     <link href="css/gallery-materialize.min.css" rel="stylesheet">
-    <link href="https://bitsoko.co.ke/bitsAssets/css/materialize/materialize.min.css" rel="stylesheet">
+    <link href="/bitsAssets/css/materialize/materialize.min.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="./css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/lightwallet/lightwallet.min.js"></script>
-    <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/ethjs-provider-signer.js"></script>
+    <script async="" defer="" src="/bitsAssets/js/lightwallet/lightwallet.min.js"></script>
+    <script async="" defer="" src="/bitsAssets/js/ethjs-provider-signer.js"></script>
     <script async="" defer="" src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
-    <script async="" src="https://bitsoko.co.ke/bitsAssets/js/raphQR.js"></script>
-    <script async="" src="https://bitsoko.co.ke/bitsAssets/js/qrcodesvg.js"></script>
+    <script async="" src="/bitsAssets/js/raphQR.js"></script>
+    <script async="" src="/bitsAssets/js/qrcodesvg.js"></script>
 
     <script type="application/ld+json">
         {
@@ -110,6 +110,18 @@
         }
         
         @media screen and (max-width: 480px) {
+            #openOrders {
+                margin: 0% !important;
+                width: 98% !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            .myOrdersSec {
+                margin-bottom: 0px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
             .doTransActs {
                 margin-top: 25px!important;
             }
@@ -147,6 +159,7 @@
         #tradeOrder {
             overflow: visible;
         }
+        
         #chartdiv a {
             display: none !important;
         }
@@ -547,14 +560,74 @@
                 font-size: 18px;
             }
         }
+        /************ Popular Traders ******************/
+        
+        .popularTraders {
+            width: 70%;
+            display: none;
+        }
+        
+        .popularTraders table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+        }
+        
+        .popularTraders td,
+        .popularTraders th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        .popularTraders tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        
+        .popularTraders h4 {
+            color: white;
+            font-size: 1.6em;
+            padding-left: 10px;
+        }
+        /************ Popular Token ******************/
+        
+        .popularToken {
+            width: 70%;
+            display: none;
+        }
+        
+        .popularToken table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+        }
+        
+        .popularToken td,
+        .popularToken th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        .popularToken tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        
+        .popularToken h4 {
+            color: white;
+            font-size: 1.6em;
+            padding-left: 10px;
+        }
 
     </style>
     <!-- Lato Font -->
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
     <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/storeManager.js"></script>
+    <script src="/bitsAssets/js/storeManager.js"></script>
     <!--<script src="https://bitsoko.co.ke/bitsAssets/js/locationManager.js"></script> -->
-    <link href="https://bitsoko.co.ke/bitsAssets/html/connect.html" rel="import">
+    <link href="/bitsAssets/html/connect.html" rel="import">
 </head>
 
 <body class="doc">
@@ -567,7 +640,11 @@
         <h5 style="color:white;font-size: 1.5em;font-weight: bold;text-align: center;">a p2p ethereum exchange</h5>
         <p style="color:white;font-size: 1em;font-weight: bold;text-align: center;padding: 4% 5% 1% 5%;">sign in to start trading any ERC20 digital currency or create your own token and start trading with your friends</p>
         <div class="customGPlusSignIn" id="customBtn" style="text-align:center;padding:2%;">
-            <a class="waves-effect waves-light btn"><i class="material-icons left loginBtn--google" style="line-height: 35px;">email</i> google signin</a>
+            <a class="waves-effect waves-light btn">
+                <i class=" left loginBtn--google" style="line-height: 35px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width: 20px;margin-top: 9px;" xml:space="preserve" class=""><g><path style="fill: white;" d="M113.47,309.408L95.648,375.94l-65.139,1.378C11.042,341.211,0,299.9,0,256  c0-42.451,10.324-82.483,28.624-117.732h0.014l57.992,10.632l25.404,57.644c-5.317,15.501-8.215,32.141-8.215,49.456  C103.821,274.792,107.225,292.797,113.47,309.408z" data-original="#FBBB00" class="" data-old_color="#FBBB00"></path><path style="fill: white;" d="M507.527,208.176C510.467,223.662,512,239.655,512,256c0,18.328-1.927,36.206-5.598,53.451  c-12.462,58.683-45.025,109.925-90.134,146.187l-0.014-0.014l-73.044-3.727l-10.338-64.535  c29.932-17.554,53.324-45.025,65.646-77.911h-136.89V208.176h138.887L507.527,208.176L507.527,208.176z" data-original="#518EF8" class="active-path" data-old_color="#518EF8"></path><path style="fill: white;" d="M416.253,455.624l0.014,0.014C372.396,490.901,316.666,512,256,512  c-97.491,0-182.252-54.491-225.491-134.681l82.961-67.91c21.619,57.698,77.278,98.771,142.53,98.771  c28.047,0,54.323-7.582,76.87-20.818L416.253,455.624z" data-original="#28B446" class="" data-old_color="#070707"></path><path style="fill: white;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012  c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0  C318.115,0,375.068,22.126,419.404,58.936z" data-original="#F14336" class="" data-old_color="#F14336"></path></g> 
+                    </svg>
+                </i> google signin</a>
         </div>
 
         <ul class="collection tradableCoins" style="border: 0px;">
@@ -577,14 +654,105 @@
     </div>
 
     <div id="tokenSelect" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 999; position:fixed;background-size: cover; background-position-x: 75%;">
-        <div id="reload" style="padding: 7px;background: white;position: absolute;border-radius: 40px;right: 30px;top: 30px;cursor: -webkit-grab;">
+        <!--<div id="reload" style="padding: 7px;background: white;position: absolute;border-radius: 40px;right: 30px;top: 30px;cursor: -webkit-grab;">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 496.166 496.166" style="enable-background:new 0 0 496.166 496.166;height: 30px;float: left;" xml:space="preserve">
                 <path style="fill:#32BEA6;" d="M0.005,248.087C0.005,111.063,111.073,0,248.079,0c137.014,0,248.082,111.062,248.082,248.087  c0,137.002-111.068,248.079-248.082,248.079C111.073,496.166,0.005,385.089,0.005,248.087z"></path>
                 <path style="fill:#F7F7F7;" d="M400.813,169.581c-2.502-4.865-14.695-16.012-35.262-5.891  c-20.564,10.122-10.625,32.351-10.625,32.351c7.666,15.722,11.98,33.371,11.98,52.046c0,65.622-53.201,118.824-118.828,118.824  c-65.619,0-118.82-53.202-118.82-118.824c0-61.422,46.6-111.946,106.357-118.173v30.793c0,0-0.084,1.836,1.828,2.999  c1.906,1.163,3.818,0,3.818,0l98.576-58.083c0,0,2.211-1.162,2.211-3.436c0-1.873-2.211-3.205-2.211-3.205l-98.248-57.754  c0,0-2.24-1.605-4.23-0.826c-1.988,0.773-1.744,3.481-1.744,3.481v32.993c-88.998,6.392-159.23,80.563-159.23,171.21  c0,94.824,76.873,171.696,171.693,171.696c94.828,0,171.707-76.872,171.707-171.696  C419.786,219.788,412.933,193.106,400.813,169.581z"></path>
             </svg>
             <p style="margin: 0px; line-height: 30px; padding-left: 40px; color: #635f5f;">RELOAD</p>
-        </div>
+        </div>-->
         <h5 style="color:white;font-size: 2em;font-weight: bold;text-align: center;padding: 5%;margin-top: 5%;">PICK A TOKEN TO START TRADING</h5>
+        <div class="row popularTraders">
+            <h4>POPULAR TRADERS</h4>
+            <div class="col s12">
+                <table>
+                    <tr>
+                        <th>Seller</th>
+                        <th>Country</th>
+                        <th>Price <span>KES</span></th>
+                        <th>Buy</th>
+                    </tr>
+                    <tr>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders</td>
+                        <td>Germany</td>
+                        <td>Germany</td>
+                    </tr>
+                    <tr>
+                        <td>Centro comercial Moctezuma</td>
+                        <td>Francisco Chang</td>
+                        <td>Mexico</td>
+                        <td>Mexico</td>
+                    </tr>
+                    <tr>
+                        <td>Ernst Handel</td>
+                        <td>Ernst Handel</td>
+                        <td>Roland Mendel</td>
+                        <td>Austria</td>
+                    </tr>
+                    <tr>
+                        <td>Island Trading</td>
+                        <td>Island Trading</td>
+                        <td>Helen Bennett</td>
+                        <td>UK</td>
+                    </tr>
+                    <tr>
+                        <td>Laughing Bacchus Winecellars</td>
+                        <td>Laughing Bacchus Winecellars</td>
+                        <td>Yoshi Tannamuri</td>
+                        <td>Canada</td>
+                    </tr>
+                    <tr>
+                        <td>Magazzini Alimentari Riuniti</td>
+                        <td>Magazzini Alimentari Riuniti</td>
+                        <td>Giovanni Rovelli</td>
+                        <td>Italy</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row popularToken">
+            <h4>POPULAR TOKENS</h4>
+            <div class="col s12">
+                <table>
+                    <tr>
+                        <th>Coin</th>
+                        <th>Price <span>KES</span></th>
+                        <th>Graph</th>
+                    </tr>
+                    <tr>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders</td>
+                        <td>Germany</td>
+                    </tr>
+                    <tr>
+                        <td>Centro comercial Moctezuma</td>
+                        <td>Francisco Chang</td>
+                        <td>Mexico</td>
+                    </tr>
+                    <tr>
+                        <td>Ernst Handel</td>
+                        <td>Ernst Handel</td>
+                        <td>Roland Mendel</td>
+                    </tr>
+                    <tr>
+                        <td>Island Trading</td>
+                        <td>Island Trading</td>
+                        <td>Helen Bennett</td>
+                    </tr>
+                    <tr>
+                        <td>Laughing Bacchus Winecellars</td>
+                        <td>Laughing Bacchus Winecellars</td>
+                        <td>Yoshi Tannamuri</td>
+                    </tr>
+                    <tr>
+                        <td>Magazzini Alimentari Riuniti</td>
+                        <td>Magazzini Alimentari Riuniti</td>
+                        <td>Giovanni Rovelli</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <div class="row">
             <div class="col s12 m6">
                 <p style="color:white;font-size: 1em;font-weight: bold;text-align: center;padding: 5%;">Available tokens</p>
@@ -635,7 +803,7 @@
                     </li>
                     <li style="line-height: 10px; background: #005E77; padding: 5px; border-radius: 50%; margin: 12px;">
                         <a class="waves-effect waves-light modal-trigger" href="#openOrders" style="padding:0px;">
-                           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAQAAAAngNWGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfhDBUEDwLdZP0UAAABSUlEQVQoz43TsUtVYRjH8c977kkF IdTSFP8AoUDwH4iGIi5JQVvgICg0OQkOEjW5uAkSSBBN1iTCJQjaFIQQwqUwEWxoEGtpkYse79uS nsM5N/I3Pbx8+T3P+3ufN0SGPDHqivZq2ffOtxBvWFF3IvqXunw2laqre2lV1hZNBHcsmEyNaFmz rduwpNL2h2O/zLqZSkUhiM88FUpgtOy5RJSmF4db+iqOZ7bOyxxseK+FmlrB8bQKjpmz4LdF/YUZ V70pgx16dUj16C2AXVXHT8ZleFSIPjqugsMeWtc05VrB8YPNMnjLvF1HZgwUwFoV3HDPd5n7rhbi Oai2TnRKJLrzC4j5vDl422sTfmq4XgCXzJXBHfO+aHph8OIpT3zMHTNBjBz+jfaVsqJEltqVeKzp THsFd/X5GmK/FQ/+s7jbpsOlvsJbe38AMB9d89zsgkMAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTct MTItMjFUMDQ6MTU6MDItMDc6MDBPKOnxAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTEyLTIxVDA0 OjE1OjAyLTA3OjAwPnVRTQAAAABJRU5ErkJggg=="/>
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAQAAAAngNWGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfhDBUEDwLdZP0UAAABSUlEQVQoz43TsUtVYRjH8c977kkF IdTSFP8AoUDwH4iGIi5JQVvgICg0OQkOEjW5uAkSSBBN1iTCJQjaFIQQwqUwEWxoEGtpkYse79uS nsM5N/I3Pbx8+T3P+3ufN0SGPDHqivZq2ffOtxBvWFF3IvqXunw2laqre2lV1hZNBHcsmEyNaFmz rduwpNL2h2O/zLqZSkUhiM88FUpgtOy5RJSmF4db+iqOZ7bOyxxseK+FmlrB8bQKjpmz4LdF/YUZ V70pgx16dUj16C2AXVXHT8ZleFSIPjqugsMeWtc05VrB8YPNMnjLvF1HZgwUwFoV3HDPd5n7rhbi Oai2TnRKJLrzC4j5vDl422sTfmq4XgCXzJXBHfO+aHph8OIpT3zMHTNBjBz+jfaVsqJEltqVeKzp THsFd/X5GmK/FQ/+s7jbpsOlvsJbe38AMB9d89zsgkMAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTct MTItMjFUMDQ6MTU6MDItMDc6MDBPKOnxAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTEyLTIxVDA0 OjE1OjAyLTA3OjAwPnVRTQAAAABJRU5ErkJggg=="/>
 </svg>
                         </a>
                     </li>
@@ -915,10 +1083,10 @@
     <!-- Modal Structure -->
     <div id="openOrders" class="modal" style="top: 20% !important; overflow: initial;">
         <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -35px;">
-           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">  <image id="image0" width="55" height="55" x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAQAAAAC0hrNAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfhDBUEEAjw6xqUAAADvklEQVRYw9WYT2wUVRzHPzM7tNTF BLRFGujSFCP1YDRwIDGGYKIH4VBMPHg3NiEGjTFFbeiBCwlyVBICJCSGk6ihGFPCn4QgIiagEbAi 3WKr1tJardImZf/166Fvp7vNPHdmO0v0O4d5833z3nd+773vvJmfg4GKhQQPEBfyzMwVHMrOAkjy NM+SojU2uWkGuc5pbs8LAkLoGfVqSrXALXVphcrkXtJITaTmUNAxLZcv9pSGaigmSXntkQcOyOMg r5hAM9wqTm8McFhDsylP8AJXPGAtzxvqZ3ZzinuxyUEbu3gZF2hkK1cBdSgvScpqh4j9aNZVM6B9 qneBZlwA/uAsODEfjHLBRNrEgx7QZkwxS2HeHYoyZAGTVoKcOa+i0Qu+XeDRxtrydqEghklrdv49 opI+LHJ4vMurrKxKboy9HKEQ3G0w1vMaj1Q5kim6OctgUJVrabKUpVWKATTYWtvk+vmUbJViMxwl HVzlWZu8RR+pKsTETc6TiSYHkxyvMjqwrjAv2u2LhT063+jOgusaRAeCBOvwGFTGb9xAivqKWncY l0XQHl0dXexgCR/Tzd8AtLKPzRXlxC8c5BCztvr3zBt7RG0l7BMalyTl9KJhekJvpmmVrGntN+yv anetT1m0qkfSZ8Iiss2hnxPkKHCO84bp5TvyFaXEn7zPT8GV9rmb5g0+oY6LjBrmazrYWPErVKT5 xt90QsvBJL0LmGGGw41mZCM4obuIgv+QzV3WUUe6xOYraSdRUWucfimqzT06eZs6TrCLKQAe5RCb /mUtFzHBHo4G7+ZYbf6kxiRJ97TVMN2hbT5U1lMomyeNvetpMkz4H7Gk7V673DU+Iw98yyXDnGIg 1HqZ4UMGbDNkwzQ7+Zwm+vymX7KNzX6sNmS5waXouzlMcKzsWgzYnnoh/n82j2L0amwOq0kypKxT ZJK0hLD5JL9F380TdLKT5Rynh7sApNjPlhA2H6WHk9ahsNj8cfO3ntN2w+wObfMf1FLSUyibN/KQ iXKZYcLbvIkVwRV2ueucBOAaFw1zgfFQYjk+4sfgKvvc/cXrfEEDfQwZ5gwdbKi4J9zlCueqsfkY H5RdF7jM5bDjGVGuNjavvKwXCZW9HVzgtiFcEotLAATC8Vf2HSZcYNR8YD/Mc8SeV6GVLUbud6Y8 4AYjpIAlvMN0zFmj9fTQbspfkZ3LiR2g01Bx58RaWGXKY2ybS1Khx/R9bRN+yqhLRb8Kba9pPjOj w0r6y7Dm2do3tUxmdI0g9yUX7b8q7k+m/R/BIG5G1q/54AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAx Ny0xMi0yMVQwNDoxNjowOC0wNzowMABvDbwAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMTItMjFU MDQ6MTY6MDgtMDc6MDBxMrUAAAAAAElFTkSuQmCC"/>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">  <image id="image0" width="55" height="55" x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAQAAAAC0hrNAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfhDBUEEAjw6xqUAAADvklEQVRYw9WYT2wUVRzHPzM7tNTF BLRFGujSFCP1YDRwIDGGYKIH4VBMPHg3NiEGjTFFbeiBCwlyVBICJCSGk6ihGFPCn4QgIiagEbAi 3WKr1tJardImZf/166Fvp7vNPHdmO0v0O4d5833z3nd+773vvJmfg4GKhQQPEBfyzMwVHMrOAkjy NM+SojU2uWkGuc5pbs8LAkLoGfVqSrXALXVphcrkXtJITaTmUNAxLZcv9pSGaigmSXntkQcOyOMg r5hAM9wqTm8McFhDsylP8AJXPGAtzxvqZ3ZzinuxyUEbu3gZF2hkK1cBdSgvScpqh4j9aNZVM6B9 qneBZlwA/uAsODEfjHLBRNrEgx7QZkwxS2HeHYoyZAGTVoKcOa+i0Qu+XeDRxtrydqEghklrdv49 opI+LHJ4vMurrKxKboy9HKEQ3G0w1vMaj1Q5kim6OctgUJVrabKUpVWKATTYWtvk+vmUbJViMxwl HVzlWZu8RR+pKsTETc6TiSYHkxyvMjqwrjAv2u2LhT063+jOgusaRAeCBOvwGFTGb9xAivqKWncY l0XQHl0dXexgCR/Tzd8AtLKPzRXlxC8c5BCztvr3zBt7RG0l7BMalyTl9KJhekJvpmmVrGntN+yv anetT1m0qkfSZ8Iiss2hnxPkKHCO84bp5TvyFaXEn7zPT8GV9rmb5g0+oY6LjBrmazrYWPErVKT5 xt90QsvBJL0LmGGGw41mZCM4obuIgv+QzV3WUUe6xOYraSdRUWucfimqzT06eZs6TrCLKQAe5RCb /mUtFzHBHo4G7+ZYbf6kxiRJ97TVMN2hbT5U1lMomyeNvetpMkz4H7Gk7V673DU+Iw98yyXDnGIg 1HqZ4UMGbDNkwzQ7+Zwm+vymX7KNzX6sNmS5waXouzlMcKzsWgzYnnoh/n82j2L0amwOq0kypKxT ZJK0hLD5JL9F380TdLKT5Rynh7sApNjPlhA2H6WHk9ahsNj8cfO3ntN2w+wObfMf1FLSUyibN/KQ iXKZYcLbvIkVwRV2ueucBOAaFw1zgfFQYjk+4sfgKvvc/cXrfEEDfQwZ5gwdbKi4J9zlCueqsfkY H5RdF7jM5bDjGVGuNjavvKwXCZW9HVzgtiFcEotLAATC8Vf2HSZcYNR8YD/Mc8SeV6GVLUbud6Y8 4AYjpIAlvMN0zFmj9fTQbspfkZ3LiR2g01Bx58RaWGXKY2ybS1Khx/R9bRN+yqhLRb8Kba9pPjOj w0r6y7Dm2do3tUxmdI0g9yUX7b8q7k+m/R/BIG5G1q/54AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAx Ny0xMi0yMVQwNDoxNjowOC0wNzowMABvDbwAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMTItMjFU MDQ6MTY6MDgtMDc6MDBxMrUAAAAAAElFTkSuQmCC"/>
 </svg>
         </div>
-        <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%;">
+        <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px;">
             <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">active orders</p>
             <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
                 <span class="myOrdersPopupText" id="myPopup" style="">
@@ -927,7 +1095,7 @@
                         </div>
                     </span>
             </div>
-            <div class="row" style="overflow: scroll; height: 100%;">
+            <div class="row" style="overflow: scroll; height: 100%; margin-bottom: 0px;">
                 <table class="striped" id="blocks">
                     <tbody id="myOrders">
 
@@ -991,15 +1159,28 @@
             <span>
                 <div class="row" style="padding: 15px 0%; margin-bottom: 0px;">
                     
-        <h4 style="text-align: center; font-size: 1.7em; padding-top: 10px;">settings</h4>
+                    <h4 style="text-align: center; font-size: 1.7em; padding-top: 10px;">settings</h4>
                     <div class="col s6 js-push-button-notification-title">Turn on notifications</div>
                         <div class="col s6">
                             <div class="switch">
-                            <label>
-                                <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification"> <span style="margin-top:13px;" class="lever right"></span>
+                                <label>
+                                <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification"> 
+                                 <span style="margin-top:13px;" class="lever right"></span>
             </label>
         </div>
     </div>
+    </div>
+    <div class="row">
+        <div class="col s6">Unlock Wallet</div>
+        <div class="col s6">
+            <button onclick="loadGdrive()" class="btn-flat toast-action" style="background: #00AC9A; color: white;position: relative;    padding: 0px 15px 10px 35px;"><span style="pointer-events:none;"><i>
+                <svg style="position: absolute; left: 8px; top: 8px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 486.866 486.866" style="enable-background:new 0 0 486.866 486.866;" xml:space="preserve">
+                    <g>
+                        <path d="M393.904,214.852h-8.891v-72.198c0-76.962-61.075-141.253-137.411-142.625c-2.084-0.038-6.254-0.038-8.338,0   C162.927,1.4,101.853,65.691,101.853,142.653v1.603c0,16.182,13.118,29.3,29.3,29.3c16.182,0,29.299-13.118,29.299-29.3v-1.603   c0-45.845,37.257-83.752,82.98-83.752s82.981,37.907,82.981,83.752v72.198H92.963c-13.702,0-24.878,14.139-24.878,31.602v208.701   c0,17.44,11.176,31.712,24.878,31.712h300.941c13.703,0,24.878-14.271,24.878-31.712V246.452   C418.783,228.989,407.607,214.852,393.904,214.852z M271.627,350.591v63.062c0,7.222-6.046,13.332-13.273,13.332h-29.841   c-7.228,0-13.273-6.11-13.273-13.332v-63.062c-7.009-6.9-11.09-16.44-11.09-26.993c0-19.999,15.459-37.185,35.115-37.977   c2.083-0.085,6.255-0.085,8.337,0c19.656,0.792,35.115,17.978,35.115,37.977C282.717,334.149,278.637,343.69,271.627,350.591z" fill="#FFFFFF"/>
+                    </g>    
+                </svg>
+                </i>Unlock</span></button>
+        </div>
     </div>
     </span>
 
@@ -1032,16 +1213,16 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/moment.js"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/web3/web3.js"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/hooked-web3-provider/build/hooked-web3-provider.js"></script>
+    <script src="/bitsAssets/js/moment.js"></script>
+    <script src="/bitsAssets/js/web3/web3.js"></script>
+    <script src="/bitsAssets/js/hooked-web3-provider/build/hooked-web3-provider.js"></script>
 
-    <script src="https://bitsoko.co.ke/bitsAssets/js/globalServices.js"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/google.js"></script>
+    <script src="/bitsAssets/js/globalServices.js"></script>
+    <script src="/bitsAssets/js/google.js"></script>
 
-    <script async="" defer="" src="https://bitsoko.co.ke/bitsAssets/js/pushManager/google-fcm.js"></script>
+    <script async="" defer="" src="/bitsAssets/js/pushManager/google-fcm.js"></script>
     <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
-    <script src="https://bitsoko.co.ke/bitsAssets/js/materialize/materialize.min.js"></script>
+    <script src="/bitsAssets/js/materialize/materialize.min.js"></script>
     <!--
     <script>
         var chart = AmCharts.makeChart("chartdiv", {
