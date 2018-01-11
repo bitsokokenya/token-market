@@ -770,7 +770,7 @@ var deci = 5;
                         if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                             console.log("++++++++++++++++" + oDs[ii])
                             $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin + '.png"></td>' +
+                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin + '.png" style="height:32px"></td>' +
                                 '<td>BUY</td>' +
                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
@@ -781,7 +781,7 @@ var deci = 5;
                         } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
                             $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin + '.png"></td>' +
+                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin + '.png" style="height:32px"></td>' +
                                 '<td>SELL</td>' +
                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
