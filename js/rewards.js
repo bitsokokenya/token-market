@@ -831,9 +831,9 @@ var deci = 5;
                                     console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
                                 }
 
-                                var bAc = '<a id="oid-act-'+ oDs[ii].coin+'" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
+                                var bAc = '<a id="oid-act-'+ oDs[ii].id+'" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                             } else {
-                                var bAc = '<a id="oid-act-'+ oDs[ii].coin+'" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
+                                var bAc = '<a id="oid-act-'+ oDs[ii].id+'" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
                             }
 
 
@@ -868,14 +868,14 @@ var deci = 5;
 
                                 try {
                                     if (coinba < 1) {
-                                        var bAc = '<a id="oid-act-'+ oDs[ii].coin+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+                                        var bAc = '<a id="oid-act-'+ oDs[ii].id+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                     } else {
-                                        var bAc = '<a id="oid-act-'+ oDs[ii].coin+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
+                                        var bAc = '<a id="oid-act-'+ oDs[ii].id+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
 
                                     }
                                 } catch (err) {
-                                    var bAc = '<a id="oid-act-'+ oDs[ii].coin+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+                                    var bAc = '<a id="oid-act-'+ oDs[ii].id+'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                 }
 
