@@ -1125,12 +1125,12 @@ function getAvailableCoins() {
             //'<tr><th></th><th></th></tr>' +
             //'<tr><th>Website</th><th><a href="" target="_blank" style="text-transform:lowercase;color: #ffffff;" class="coindata-' + tokenTab[i] + '-wpage"></a></th></tr>' +
             // '</tbody></table>'+
-            '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>Price:  </span><span class="coindata-' + tokenTab[i] + '-price">updating..</span></h5>' +
+            '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span> 1 ' + tokenTab[i] + ' =  </span><span class="coindata-' + tokenTab[i] + '-price">updating..</span></h5>' +
             '<table class="striped buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
-            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;">balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">wallet</th><th class="wallet-' + tokenTab[i] + '-Balance" style="text-align: center;">' +
+            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;">My balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">My wallet</th><th class="wallet-' + tokenTab[i] + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr>' +
-            '<tr><th style="text-align: left;text-transform: capitalize;">exchange</th><th class="exchange-' + tokenTab[i] + '-Balance" style="text-align: center;">' +
+            '<tr><th style="text-align: left;text-transform: capitalize;">exchange wallet</th><th class="exchange-' + tokenTab[i] + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
