@@ -652,6 +652,69 @@ function tradeManager(oid, action) {
 
 }
 
+function myOpenOrders(oDs,deci){
+    
+                    $("#myOrders").html('');
+                    $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
+                        '<th></th>' +
+                        '<th></th>' +
+                        '<th class="hidden-xs">AMOUNT</th>' +
+                        '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
+                        '<th>TOTAL</th>' +
+                        '<th></th>' +
+                        '</tr>');
+
+  
+                    for (var ii in oDs) {            
+try{
+    
+var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
+
+}catch(err){
+//TO-DO
+    //this should not be happening!!
+    console.log(err);
+    
+var deci = 5;
+} 
+                        
+                        if (oDs[ii].state == 'pending') {
+
+                            var icon = 'edit';
+                        } else {
+
+                            var icon = 'attach_money';
+                        }
+                        
+                        if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+                            console.log("++++++++++++++++" + oDs[ii])
+                            $("#myOrders").append('<tr class="">' +
+                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
+                                '<td>BUY</td>' +
+                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
+                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
+                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
+
+                                '</tr>');
+                        } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+
+                            $("#myOrders").append('<tr class="">' +
+                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
+                                '<td>SELL</td>' +
+                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
+                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
+                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
+                                '</tr>');
+
+                        }
+
+}
+    
+    
+}
+
 function orderBookManager(baseX, baseCd) {
 
     return new Promise(function (resolve, reject) {
@@ -678,17 +741,8 @@ function orderBookManager(baseX, baseCd) {
 
 
                     var oDs = e.data;
-                    $("#myOrders").html('');
-                    $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
-                        '<th></th>' +
-                        '<th></th>' +
-                        '<th class="hidden-xs">AMOUNT</th>' +
-                        '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
-                        '<th>TOTAL</th>' +
-                        '<th></th>' +
-                        '</tr>');
 
-
+             myOpenOrders(oDs);
                     $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs"> PRICE ' + baseCd.toUpperCase() + '</th><th>TOTAL</th><th></th></tr>');
                     var sells = [];
                     var buys = [];
@@ -748,50 +802,7 @@ function orderBookManager(baseX, baseCd) {
                     myEscrowCount = 0;
                     for (var ii in oDs) {
 
-                        if (oDs[ii].state == 'pending') {
-
-                            var icon = 'edit';
-                        } else {
-
-                            var icon = 'attach_money';
-                        }
-try{
-    
-var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
-
-}catch(err){
-//TO-DO
-    //this should not be happening!!
-    console.log(err);
-    
-var deci = 5;
-}
                         
-                        if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
-                            console.log("++++++++++++++++" + oDs[ii])
-                            $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
-                                '<td>BUY</td>' +
-                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
-                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
-                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
-                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
-
-                                '</tr>');
-                        } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
-
-                            $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
-                                '<td>SELL</td>' +
-                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
-                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
-                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
-                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
-                                '</tr>');
-
-                        }
-
-
                         if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
 
                             //this is a buy order
