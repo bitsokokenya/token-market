@@ -74,6 +74,9 @@
     border-radius: 50%;
     background-color: #29cfff26 !important;
 }
+table.bordered>thead>tr, table.bordered>tbody>tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.53) !important;
+}
 /* ------------------------------- end css by sam ------------------------------------------------------------------------------ */
         body {
             font-family: 'Lato', sans-serif !important;
@@ -981,10 +984,7 @@
                         </div>
                     </span>
                 </div>
-                <div class="row orderbook" style="max-height: 100%; overflow: auto;">
-                    <table class="striped" id="blocks" style="height: 100%;">
-                        <tbody class="orderbookTbody">
-                            <div class="preloader-wrapper big active" style="    margin-left: calc(50% - 30px);
+                <div class="preloader-wrapper big active" style="    margin-left: calc(50% - 30px);
     margin-top: 30%;">
                                 <div class="spinner-layer spinner-blue">
                                     <div class="circle-clipper left">
@@ -1034,6 +1034,10 @@
                                     </div>
                                 </div>
                             </div>
+                <div class="row orderbook" style="max-height: 100%; overflow: auto;">
+                    <table class="striped " id="blocks" style="height: 100%;">
+                        <tbody class="orderbookTbody">
+                            
 
                         </tbody>
                     </table>
