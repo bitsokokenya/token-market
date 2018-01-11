@@ -801,7 +801,18 @@ function orderBookManager(baseX, baseCd) {
                     myOrdCount = 0;
                     myEscrowCount = 0;
                     for (var ii in oDs) {
+try{
+    
+var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
 
+}catch(err){
+//TO-DO
+    //this should not be happening!!
+    console.log(err);
+    
+var deci = 5;
+} 
+ 
                         
                         if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
 
@@ -820,9 +831,9 @@ function orderBookManager(baseX, baseCd) {
                                     console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
                                 }
 
-                                var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
+                                var bAc = '<a id="oid-act-'+ oDs[ii].coin'" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                             } else {
-                                var bAc = '<a class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
+                                var bAc = '<a id="oid-act-'+ oDs[ii].coin'" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
                             }
 
 
@@ -857,14 +868,14 @@ function orderBookManager(baseX, baseCd) {
 
                                 try {
                                     if (coinba < 1) {
-                                        var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+                                        var bAc = '<a id="oid-act-'+ oDs[ii].coin'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                     } else {
-                                        var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
+                                        var bAc = '<a id="oid-act-'+ oDs[ii].coin'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell">SELL</a>';
 
                                     }
                                 } catch (err) {
-                                    var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
+                                    var bAc = '<a id="oid-act-'+ oDs[ii].coin'"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                 }
 
@@ -881,8 +892,18 @@ function orderBookManager(baseX, baseCd) {
                                     '</td></tr>');
 
                             }
+                            
+                            
 
                         }
+                        
+                        if(oDs[ii].trading=='true'){
+                        $("#oid-act-"+oDs[ii].id).html('trading');
+                        $("#oid-act-"+oDs[ii].id).attr("disabled", true);
+                            
+                        }
+                        
+                        
                         try {
                             $('.exchange-' + oDs[ii].coin + '-Balance').html(((allTokens[oDs[ii].coin].exchange / Math.pow(10, allTokens[oDs[ii].coin].decimals)) * (allTokens[oDs[ii].coin].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
 
