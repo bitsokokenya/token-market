@@ -814,7 +814,7 @@ var deci = 5;
 } 
  
                         
-                        if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
+                        if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending' && oDs[ii].trading == 'false') {
 
                             //this is a buy order
                             oDs[ii].type = 'buy';
