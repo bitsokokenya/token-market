@@ -681,16 +681,7 @@ function myOpenOrders(oDs,deci){
 //                         '<th></th>' +
 //                         '</tr>');
 
-    $("#myOrders").html('');
-    $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
-        '<th></th>' +
-        '<th></th>' +
-        '<th class="hidden-xs">AMOUNT</th>' +
-        '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
-        '<th>TOTAL</th>' +
-        '<th></th>' +
-        '</tr>');
-
+  
 
     for (var ii in oDs) {
         try {
