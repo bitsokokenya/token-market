@@ -688,25 +688,55 @@ var deci = 5;
                         
                         if (parseInt(oDs[ii].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                             console.log("++++++++++++++++" + oDs[ii])
-                            $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
-                                '<td>BUY</td>' +
-                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
-                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
-                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
-                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
+//--------------------------------- collection BUY code ---------------------------------------------------------
+    $("#myOrders").append('<ul class="collection">'+
+   ' <li class="collection-item avatar">'+
+    '  <img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" class="circle" style="height:75px;width: 75px;">'+
+    ' <div style=" margin-left: 8%; font-size: 12px; line-height: 1.4;"> <span class="title">BUY</span>'+
+    '  <p  class="hidden-xs">Amount: ' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</p>'+
+    '  <p  class="hidden-xs">Price:' + parseFloat(oDs[ii].rate).toFixed(5) + '</p>'+
+    '  <p>Total: ' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ''+
+     ' </p></div>'+
+'<a class=" modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a>'+
+      //'<a href="#!" class="secondary-content"><i class="material-icons"></i></a>'+
+   ' </li>');
 
-                                '</tr>');
+
+//---------------------------------------- collection code end -------------------------------------------------
+
+//                             $("#myOrders").append('<tr class="">' +
+//                                 '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
+//                                 '<td>BUY</td>' +
+//                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
+//                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+//                                 '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
+//                                 '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
+
+//                                 '</tr>');
                         } else if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+//--------------------------------- collection SELL code ---------------------------------------------------------
+    $("#myOrders").append('<ul class="collection">'+
+   ' <li class="collection-item avatar">'+
+    '  <img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" class="circle" style="height:75px;width: 75px;">'+
+    ' <div style=" margin-left: 8%; font-size: 12px; line-height: 1.4;"> <span class="title">SELL</span>'+
+    '  <p  class="hidden-xs">Amount: ' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) +'</p>'+
+    '  <p  class="hidden-xs">Price:' + parseFloat(oDs[ii].rate).toFixed(5) +  '</p>'+
+    '  <p>Total: ' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + ''+
+     ' </p></div>'+
+'<a class=" modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a>'+
+      //'<a href="#!" class="secondary-content"><i class="material-icons"></i></a>'+
+   ' </li>');
 
-                            $("#myOrders").append('<tr class="">' +
-                                '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
-                                '<td>SELL</td>' +
-                                '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
-                                '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
-                                '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
-                                '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
-                                '</tr>');
+
+//---------------------------------------- collection code end -------------------------------------------------
+//                             $("#myOrders").append('<tr class="">' +
+//                                 '<td><img src="/bitsAssets/images/currencies/' + oDs[ii].coin.replace('-kovan', '') + '.png" style="height:32px"></td>' +
+//                                 '<td>SELL</td>' +
+//                                 '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
+//                                 '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
+//                                 '<td>' + (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2) + '</td>' +
+//                                 '<td><a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="padding:0 1rem" oid="' + oDs[ii].id + '" act="manage"><i class="material-icons right" style="margin: 0px;">' + icon + '</i></a></td>' +
+//                                 '</tr>');
 
                         }
 
