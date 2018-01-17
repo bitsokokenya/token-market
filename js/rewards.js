@@ -404,7 +404,19 @@ function updateNewOrderDet(oid, action) {
     var orderAmount = parseFloat($("#newTradeAmount").val());
     var orderTotal = parseFloat($("#newTradeTotal").val());
 
-    $("#newTradeTotal").attr("step", (orderPrice / Math.pow(10, allTokens[activeCoin].decimals)).toFixed(allTokens[activeCoin].decimals));
+
+    console.log("!!!!!!!!!!!!!!!!!!!", orderPrice);
+
+    if (orderPrice == NaN) {
+        var orderPrice = allTokens[activeCoin].rate * baseX;
+    }
+
+    var stepVal = (orderPrice / Math.pow(10, allTokens[activeCoin].decimals)).toFixed(allTokens[activeCoin].decimals);
+
+
+
+
+    $("#newTradeTotal").attr("step", stepVal);
 
 
     if (orderTotal == NaN || $("#newTradeTotal").val() == "") {
