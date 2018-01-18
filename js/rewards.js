@@ -681,19 +681,19 @@ function tradeManager(oid, action) {
 
 }
 
-function myOpenOrders(oDs,deci){
-    
-                    $("#myOrders").html('');
-//                     $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
-//                         '<th></th>' +
-//                         '<th></th>' +
-//                         '<th class="hidden-xs">AMOUNT</th>' +
-//                         '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
-//                         '<th>TOTAL</th>' +
-//                         '<th></th>' +
-//                         '</tr>');
+function myOpenOrders(oDs, deci) {
 
-  
+    $("#myOrders").html('');
+    //                     $("#myOrders").append('<tr style="background-color: #dad8d8;height: 40px;">' +
+    //                         '<th></th>' +
+    //                         '<th></th>' +
+    //                         '<th class="hidden-xs">AMOUNT</th>' +
+    //                         '<th class="hidden-xs">PRICE ' + baseCd.toUpperCase() + '</th>' +
+    //                         '<th>TOTAL</th>' +
+    //                         '<th></th>' +
+    //                         '</tr>');
+
+
 
     for (var ii in oDs) {
         try {
@@ -1556,16 +1556,3 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
-
-//New Trade Total Step Intervals
-$("#newTradeTotalPlus").click(function () {
-    if ($("#newTradeTotal").val() == "") {
-        //        $("#newTradeTotal").val($("#newTradeTotal").attr("step"))
-    } else {
-        $("#newTradeTotal").val(JSON.parse($("#newTradeTotal").val()) + JSON.parse($("#newTradeTotal").attr("step")))
-    }
-});
-$("#newTradeTotalMinus").click(function () {
-    $("#newTradeTotal").val(JSON.parse($("#newTradeTotal").val()) - JSON.parse($("#newTradeTotal").attr("step")))
-});
