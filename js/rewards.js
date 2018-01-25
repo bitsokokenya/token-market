@@ -20,6 +20,8 @@ function openOrder(oid, act) {
 }
 
 function upDtokenD() {
+    
+    
     $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
     $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
     $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
@@ -1418,7 +1420,7 @@ function getAvailableCoins() {
     if (getBitsWinOpt('cid') != undefined) {
 
 // TO-DO remove support for calling contracts by name
-        activeCoin = getBitsWinOpt('cid');
+        activeCoin = getBitsWinOpt('cid').toLowerCase();
         
     var uscoin = undefined;
 
