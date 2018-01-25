@@ -1254,7 +1254,7 @@ function discoverExchange(e) {
 function starting() {
 
     //user wants to trade so hide default landing page
-    if (getBitsWinOpt('uid')) $("#tokenSelect").hide();
+    if (getBitsWinOpt('uid') || getBitsWinOpt('cid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
 
         new M.Modal(document.querySelector('#userAccount'), {
