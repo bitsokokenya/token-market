@@ -1015,7 +1015,7 @@ function orderBookManager(baseX, baseCd) {
         }).then(function (e) {
             if (e.status == 'ok') {
                 $('.preloader-wrapper').css('display', 'none');
-                getObjectStore('data', 'readwrite').put(JSON.stringify(e.data), 'market-orders-'+getBitsWinOpt('cid')).onsuccess = function (event) {
+                getObjectStore('data', 'readwrite').put(JSON.stringify(e.data), 'market-orders').onsuccess = function (event) {
 
 
 
