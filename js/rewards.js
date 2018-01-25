@@ -1413,7 +1413,18 @@ function getAvailableCoins() {
 
     }
 
-    if (getBitsOpt('coin') != undefined) {
+    var uscoin = getBitsOpt('coin');
+    
+    if (getBitsWinOpt('cid') != undefined) {
+
+// TO-DO remove support for calling contracts by name
+        activeCoin = getBitsWinOpt('cid');
+        
+    var uscoin = undefined;
+
+    }
+
+    if (uscoin != undefined) {
 
         activeCoin = getBitsOpt('coin');
         var index = tokenTab.indexOf(getBitsOpt('coin'));
