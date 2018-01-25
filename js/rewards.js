@@ -1381,7 +1381,7 @@ function getAvailableCoins() {
         var tokenTab = makerTokens;
     } else if (getBitsWinOpt('cid')) {
         var tokenTab=[];
-       tokenTab.push(allContracts[getBitsWinOpt('cid').toLowerCase()].name);
+       tokenTab.push(allTokens[getBitsWinOpt('cid').toLowerCase()].name);
     } else {
         var tokenTab = allTokens['balanceTokens'];
     };
