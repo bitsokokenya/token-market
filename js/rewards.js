@@ -1239,9 +1239,13 @@ function discoverExchange(e) {
     } else if (e == 'dfb') {
 
         document.querySelector('.tap-target').setAttribute("data-target", "newFirstBuyBut");
+try{
+newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
-        newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
-
+}catch(err){
+console.log('INFO: not activated buy guide',err);
+}
+        
     }
 
     newDisc.open();
