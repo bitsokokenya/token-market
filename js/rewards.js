@@ -1028,7 +1028,7 @@ function orderBookManager(baseX, baseCd) {
                     makerTokens = [];
                     for (var igg in oDs) {
 
-                        makerTokens.push(oDs[igg].coin);
+                        makerTokens.push(oDs[igg].contract);
 
                         if (parseInt(oDs[igg].tranFrom) == 0) {
                             buys.push(oDs[igg]);
@@ -1082,7 +1082,7 @@ function orderBookManager(baseX, baseCd) {
                     for (var ii in oDs) {
 try{
     
-var deci = allTokens[oDs[ii].coin].decimals ? allTokens[oDs[ii].coin].decimals : 5;
+var deci = allTokens[oDs[ii].contract].decimals ? allTokens[oDs[ii].contract].decimals : 5;
 
 }catch(err){
 //TO-DO
@@ -1104,7 +1104,7 @@ var deci = 5;
 
                                     //allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
 
-                                    allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + (oDs[ii].amount * 2);
+                                    allTokens[oDs[ii].contract].exchange = allTokens[oDs[ii].contract].exchange + (oDs[ii].amount * 2);
 
                                 } catch (er) {
                                     console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
@@ -1116,7 +1116,7 @@ var deci = 5;
                             }
 
 
-                                $("#orderbookSep").before('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
+                                $("#orderbookSep").before('<tr class="element-' + oDs[ii].contract + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
                                     '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
                                     '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                     '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
@@ -1137,7 +1137,7 @@ var deci = 5;
                                 var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                             } else {
                                 try {
-                                    var coinba = allTokens[oDs[ii].coin].balance;
+                                    var coinba = allTokens[oDs[ii].contract].balance;
                                 } catch (er) {
 
                                     var coinba = 0;
@@ -1160,7 +1160,7 @@ var deci = 5;
                             }
 
                             
-                                $("#orderbookSep").after('<tr class="element-' + oDs[ii].coin + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
+                                $("#orderbookSep").after('<tr class="element-' + oDs[ii].contract + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
                                     '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
                                     '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                     '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
@@ -1181,7 +1181,7 @@ var deci = 5;
                         
                         
                         try {
-                            $('.exchange-' + oDs[ii].coin + '-Balance').html(((allTokens[oDs[ii].coin].exchange / Math.pow(10, allTokens[oDs[ii].coin].decimals)) * (allTokens[oDs[ii].coin].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
+                            $('.exchange-' + oDs[ii].contract + '-Balance').html(((allTokens[oDs[ii].contract].exchange / Math.pow(10, allTokens[oDs[ii].contract].decimals)) * (allTokens[oDs[ii].contract].rate * baseX)).toFixed(2) + ' ' + baseCd.toUpperCase());
 
                         } catch (err) {
                             console.log('!INFO did not update exchange balances')
