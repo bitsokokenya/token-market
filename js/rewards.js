@@ -550,7 +550,7 @@ function manageOrderDet(oid) {
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
-                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranTo.name.split(" ") + ' at phone number ' + allOrds[ix].tranTo.phone +
                         ' then enter the transaction code below.');
@@ -558,7 +558,7 @@ function manageOrderDet(oid) {
 
                     $(".transStat").html('waiting for seller to confirm payment..');
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
-                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranFrom.phone + ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
@@ -656,7 +656,7 @@ function tradeManager(oid, action) {
 
                 if (action == 'buy') {
 
-                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
                         ' then enter the transaction code below.');
@@ -664,7 +664,7 @@ function tradeManager(oid, action) {
 
                     $(".transStat").html('waiting for seller to confirm payment..');
                 } else if (action == 'sell') {
-                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (activeCoin + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone +
                         ' then enter the transaction code below.');
