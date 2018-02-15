@@ -1236,19 +1236,21 @@ function discoverExchange(e) {
         document.querySelector('.tap-target').setAttribute("data-target", "add-" + activeCoin + "-buy-button");
 
         newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+        
+    newDisc.open();
     } else if (e == 'dfb') {
 
         document.querySelector('.tap-target').setAttribute("data-target", "newFirstBuyBut");
 try{
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
+    newDisc.open();
 }catch(err){
 console.log('INFO: not activated buy guide',err);
 }
         
     }
 
-    newDisc.open();
 }
 
 
