@@ -1123,7 +1123,7 @@ var deci = 5;
 
 
  console.log('THIS  THIS  THIS 3',oDs[ii]);
-                                $("#orderbookSep").before('<tr class="element-' + oDs[ii].contract + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
+                                $("#orderbookSep").before('<tr class="element-' + oDs[ii].contract.toLowerCase() + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
                                     '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
                                     '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                     '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
@@ -1167,7 +1167,7 @@ var deci = 5;
                             }
 
                             
-                                $("#orderbookSep").after('<tr class="element-' + oDs[ii].contract + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
+                                $("#orderbookSep").after('<tr class="element-' + oDs[ii].contract.toLowerCase() + '-coin element-all-coin" style="background-color:#dcffdc;height: 40px;">' +
                                     '<td ><img src="' + oDs[ii].tranTo.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranTo.name + '</span></td>' +
                                     '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
                                     '<td class="hidden-xs">' + parseFloat(oDs[ii].rate).toFixed(5) + '</td>' +
