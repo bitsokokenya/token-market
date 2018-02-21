@@ -1231,6 +1231,11 @@ var deci = 5;
 }
 
 function discoverExchange(e) {
+
+
+		if (sessionStorage.getItem('walletKey')){
+		
+    
     if (e == 'dnb') {
 
         document.querySelector('.tap-target').setAttribute("data-target", "add-" + activeCoin + "-buy-button");
@@ -1250,6 +1255,16 @@ console.log('INFO: not activated buy guide',err);
 }
         
     }
+		}else{
+		    //ask the user to unlock the wallet first
+
+
+        document.querySelector('.tap-target').setAttribute("data-target", "toast-container");        
+newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+        
+    newDisc.open();     
+
+		}
 
 }
 
