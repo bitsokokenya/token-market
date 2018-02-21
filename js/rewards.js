@@ -807,7 +807,7 @@ function orderBookManager(baseX, baseCd) {
                     var buys = [];
                     makerTokens = [];
                     for (var igg in oDs) {
-			if(oDs[igg].coin!='eth'){
+			if(oDs[igg].coin!='eth' && oDs[igg].contract.length>1){
 			makerTokens.push(oDs[igg].contract.toLowerCase());
 
 			}
@@ -1405,10 +1405,10 @@ function getAvailableCoins() {
         var tokenTab = makerTokens;
     } else if (getBitsWinOpt('cid')) {
         var tokenTab=[];
-       tokenTab.push(allTokens[getBitsWinOpt('cid').toLowerCase()].name);
-    } else {
-        var tokenTab = allTokens['balanceTokens'];
-    };
+       tokenTab.push(getBitsWinOpt('cid'));
+    }// else {
+     //   var tokenTab = allTokens['balanceTokens'];
+   // };
 
 
     if (getBitsWinOpt('uid') == CryptoJS.MD5(CryptoJS.MD5(localStorage.getItem('bits-user-name')).toString()).toString()) {
@@ -1455,8 +1455,8 @@ function getAvailableCoins() {
 
     if (uscoin != undefined) {
 
-        activeCoin = getBitsOpt('coin');
-        var index = tokenTab.indexOf(getBitsOpt('coin'));
+        activeCoin =allTokens[getBitsOpt('coin')].contract ;
+        var index = tokenTab.indexOf(activeCoin);
         if (index > -1) {
             tokenTab.splice(index, 1);
 
@@ -1469,9 +1469,9 @@ function getAvailableCoins() {
 
     for (i = 0; i < tokenTab.length; i++) {
 
-        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;padding: 0 12px 0px 35px;"><img class="imgTab" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan', '') + '.png" style="width: 30px; position: absolute;top: 10px;">' + tokenTab[i] + '</a></li>')
-        $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + tokenTab[i] + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + tokenTab[i] + '</p></a></li>')
-        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + tokenTab[i].replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + tokenTab[i] + '</p></div></div></div><div class="col s12 m4 hide-on-med-and-down">' +
+        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;padding: 0 12px 0px 35px;"><img class="imgTab" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png" style="width: 30px; position: absolute;top: 10px;">' + allTokens[tokenTab[i].toLowerCase()].name + '</a></li>')
+        $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + allTokens[tokenTab[i].toLowerCase()].name + '</p></a></li>')
+        $(".coinContent").append('<div id="' + allTokens[tokenTab[i].toLowerCase()].name + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div><div class="col s12 m4 hide-on-med-and-down">' +
 
             //'<table class="striped coinInfo coinDataHolda" id="blocks" style="display:none;line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
             //'<tbody style="height: 350px;"><tr><th style="">Capitalization</th><th class="coindata-' + tokenTab[i] + '-mcap">0.00</th>' +
@@ -1480,7 +1480,7 @@ function getAvailableCoins() {
             //'<tr><th></th><th></th></tr>' +
             //'<tr><th>Website</th><th><a href="" target="_blank" style="text-transform:lowercase;color: #ffffff;" class="coindata-' + tokenTab[i] + '-wpage"></a></th></tr>' +
             // '</tbody></table>'+
-            '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + tokenTab[i] + ' =  </span><span class="coindata-' + tokenTab[i] + '-price">updating..</span></h5>' +
+            '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + allTokens[tokenTab[i].toLowerCase()].name + ' =  </span><span class="coindata-' + tokenTab[i] + '-price">updating..</span></h5>' +
             '<table class="striped bordered buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
             '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;text-transform:uppercase;">Balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">Account</th><th class="wallet-' + tokenTab[i] + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
