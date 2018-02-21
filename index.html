@@ -64,6 +64,13 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
      -->
     <style>
+        div[data-target="toast-container"] > .tap-target-content {
+            top: -150px !important;
+    right: 0px !important;
+    bottom: -50px !important;
+    left: 200px !important;
+    padding: 0px !important;
+        }
         /*---------------------------- css by sam for token market -----------------------------------------------------------------*/
         
         .tap-target-wave::before,
@@ -914,6 +921,20 @@
 </section>
 
 -->
+    
+    
+
+    <!-- Sign In Modal Structure -->
+<div id="signInModal" class="modal">
+    <div class="modal-content">
+      <h4>Enter Passcode</h4>
+      <p class="signInText"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
+    </div>
+  </div> 
+    
 
     <!-- Modal Structure -->
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;">
@@ -1398,7 +1419,7 @@
     <div class="tap-target" data-target="menu">
         <div class="tap-target-content" style="color: white;">
             <h5>Start here</h5>
-            <p>Your wallet does not have this token.<br> Top it up by clicking the buy button to get some tokens. We have taken the liberty to choose the best deal for you</p>
+            <p class="tap-target-text"></p>
         </div>
     </div>
     <!-- Global site tag (gtag.js) - Google Analytics -->
