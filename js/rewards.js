@@ -886,7 +886,7 @@ function orderBookManager(baseX, baseCd) {
 
                                     //allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + ((oDs[ii].amount * Math.pow(10, allTokens[oDs[ii].coin].decimals)) * 2);
 
-                                    allTokens[oDs[ii].coin].exchange = allTokens[oDs[ii].coin].exchange + (oDs[ii].amount * 2);
+                                    allTokens[oDs[ii].contract].exchange = allTokens[oDs[ii].contract].exchange + (oDs[ii].amount * 2);
 
                                 } catch (er) {
                                     console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
