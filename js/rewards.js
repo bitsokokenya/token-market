@@ -1082,7 +1082,7 @@ function orderBookManager(baseX, baseCd) {
                     myOrdCount = 0;
                     myEscrowCount = 0;
 			
- console.log('THIS  THIS  THIS ',oDs[ii]);
+ console.log('THIS  THIS  THIS ',oDs);
                     for (var ii in oDs) {
 try{
     
