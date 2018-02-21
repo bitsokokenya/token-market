@@ -56,7 +56,7 @@ function doFirstBuy() {
     } catch (er) {
         M.toast({
             displayLength: 1000000000,
-            html: '<span class="toastlogin">your wallet is locked</span><button onclick="loadGdrive()" class="btn-flat toast-action" ><span style="pointer-events:none;">Unlock</span></button>'
+            html: '<span class="toastlogin">your wallet is locked</span><button onclick="loadGdrive()" class="btn-flat toast-action" ><span style="pointer-events:none;" class="toastloginbutton">Unlock</span></button>'
         });
 
         console.log('INFO! not started firstbuy, is wallet locked? ', er)
@@ -91,7 +91,7 @@ function sortOrderBookColor() {
 function doNewTransfer() {
 
     $(".tradeOrderSubTitle").html('New Transfer');
-    $(".tradeOrderBody").html('transfer ' + activeCoin + ' to a different address');
+    $(".tradeOrderBody").html('transfer ' + allTokens[activeCoin.toLowerCase()].name + ' tokens to a different address');
     $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
 
     $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)).toFixed(2) + ' ' + baseCd);
