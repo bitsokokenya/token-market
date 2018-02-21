@@ -1081,6 +1081,8 @@ function orderBookManager(baseX, baseCd) {
 
                     myOrdCount = 0;
                     myEscrowCount = 0;
+			
+ console.log('THIS  THIS  THIS ',oDs[ii]);
                     for (var ii in oDs) {
 try{
     
@@ -1093,13 +1095,15 @@ var deci = allTokens[oDs[ii].contract].decimals ? allTokens[oDs[ii].contract].de
     
 var deci = 5;
 } 
- 
+			    
+ console.log('THIS  THIS  THIS 0',oDs[ii]);
                         
                         if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending' && oDs[ii].trading == 'false') {
 
                             //this is a buy order
                             oDs[ii].type = 'buy';
 
+ console.log('THIS  THIS  THIS 2',oDs[ii]);
                             if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                                 myOrdCount++;
                                 try {
@@ -1118,6 +1122,7 @@ var deci = 5;
                             }
 
 
+ console.log('THIS  THIS  THIS 3',oDs[ii]);
                                 $("#orderbookSep").before('<tr class="element-' + oDs[ii].contract + '-coin element-all-coin" style="background-color:#ffdcdc;height: 40px;" >' +
                                     '<td ><img src="' + oDs[ii].tranFrom.icon + '" style="width: 35px;float: left;border-radius: 50px;position: relative;left: 10px;"><span class="odbk-txt hide-on-med-and-down">' + oDs[ii].tranFrom.name + '</span></td>' +
                                     '<td class="hidden-xs">' + Math.round10(parseFloat(oDs[ii].amount), (deci / -1)) + '</td>' +
