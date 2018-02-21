@@ -807,9 +807,11 @@ function orderBookManager(baseX, baseCd) {
                     var buys = [];
                     makerTokens = [];
                     for (var igg in oDs) {
+			if(oDs[igg].coin!='eth'){
+			makerTokens.push(oDs[igg].contract.toLowerCase());
 
-                        makerTokens.push(oDs[igg].coin);
-
+			}
+                        
                         if (parseInt(oDs[igg].tranFrom) == 0) {
                             buys.push(oDs[igg]);
                         } else {
