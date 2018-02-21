@@ -56,7 +56,7 @@ function doFirstBuy() {
     } catch (er) {
         M.toast({
             displayLength: 1000000000,
-            html: '<span class="toastlogin">your wallet is locked</span><button onclick="loadGdrive()" class="btn-flat toast-action" ><span style="pointer-events:none;" class="toastloginbutton">Unlock</span></button>'
+            html: '<span class="toastlogin">your wallet is locked</span><button id="toast-wallet-unlocker" onclick="loadGdrive()" class="btn-flat toast-action" ><span style="pointer-events:none;" class="toastloginbutton">Unlock</span></button>'
         });
 
         console.log('INFO! not started firstbuy, is wallet locked? ', er)
@@ -1259,7 +1259,7 @@ console.log('INFO: not activated buy guide',err);
 		    //ask the user to unlock the wallet first
 
 
-        document.querySelector('.tap-target').setAttribute("data-target", "toast-container");        
+        document.querySelector('.tap-target').setAttribute("data-target", "toast-wallet-unlocker");        
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
         
     newDisc.open();     
