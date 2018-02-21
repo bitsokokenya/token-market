@@ -1232,8 +1232,8 @@ var deci = 5;
 
 function discoverExchange(e) {
 
-
-		if (sessionStorage.getItem('walletKey')){
+		
+	if (sessionStorage.getItem('walletKey')){
 		
     
     if (e == 'dnb') {
@@ -1246,6 +1246,8 @@ function discoverExchange(e) {
     } else if (e == 'dfb') {
 
         document.querySelector('.tap-target').setAttribute("data-target", "newFirstBuyBut");
+	    $('.tap-target-text').html('Your wallet does not have this token.<br> Top it up by clicking the buy button to get some tokens. this is the best deal');
+
 try{
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
@@ -1259,7 +1261,9 @@ console.log('INFO: not activated buy guide',err);
 		    //ask the user to unlock the wallet first
 
 
-        document.querySelector('.tap-target').setAttribute("data-target", "toast-wallet-unlocker");        
+        document.querySelector('.tap-target').setAttribute("data-target", "toast-container");     
+			$('.tap-target-text').html('click unlock and enter your password');
+
 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
         
     newDisc.open();     
