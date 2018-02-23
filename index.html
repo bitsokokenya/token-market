@@ -64,6 +64,13 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
      -->
     <style>
+        div[data-target="toast-container"] > .tap-target-content {
+            top: -150px !important;
+    right: 0px !important;
+    bottom: -50px !important;
+    left: 200px !important;
+    padding: 0px !important;
+        }
         /*---------------------------- css by sam for token market -----------------------------------------------------------------*/
         
         .tap-target-wave::before,
@@ -802,9 +809,6 @@
                         <path d="M28,0C12.561,0,0,12.561,0,28s12.561,28,28,28s28-12.561,28-28S43.439,0,28,0z M40,41H16c-1.104,0-2-0.896-2-2s0.896-2,2-2  h24c1.104,0,2,0.896,2,2S41.104,41,40,41z M40,30H16c-1.104,0-2-0.896-2-2s0.896-2,2-2h24c1.104,0,2,0.896,2,2S41.104,30,40,30z   M40,19H16c-1.104,0-2-0.896-2-2s0.896-2,2-2h24c1.104,0,2,0.896,2,2S41.104,19,40,19z" fill="#005E76"></path>
                     </svg>
                 </span>
-                <a href="#" class="brand-logo" style="height: inherit;">
-                    <img id="logo" src="./images/bitsoko3.png" style="width: 20%; padding: 10px;">
-                </a>
                 <ul id="nav-mobile" class="right">
                     <li style="display:none;">
                         <svg id="startTour" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 496.158 496.158" style="enable-background:new 0 0 496.158 496.158;width: 30px;margin: 12px 0px;" xml:space="preserve" href='#' data-activates='dropdown1'>
@@ -917,6 +921,20 @@
 </section>
 
 -->
+    
+    
+
+    <!-- Sign In Modal Structure -->
+<div id="signInModal" class="modal">
+    <div class="modal-content">
+      <h4>Enter Passcode</h4>
+      <p class="signInText"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
+    </div>
+  </div> 
+    
 
     <!-- Modal Structure -->
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;">
@@ -1406,7 +1424,7 @@
     <div class="tap-target" data-target="menu">
         <div class="tap-target-content" style="color: white;">
             <h5>Start here</h5>
-            <p>Your wallet does not have this token.<br> Top it up by clicking the buy button to get some tokens. We have taken the liberty to choose the best deal for you</p>
+            <p class="tap-target-text"></p>
         </div>
     </div>
     <!-- Global site tag (gtag.js) - Google Analytics -->
