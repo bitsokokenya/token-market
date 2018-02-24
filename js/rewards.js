@@ -556,7 +556,7 @@ function manageOrderDet(oid) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('waiting for seller to confirm payment..');
+                    $(".transStat").html('waiting for you to enter transaction code..');
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -662,7 +662,7 @@ function tradeManager(oid, action) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
-                    $(".transStat").html('waiting for seller to confirm payment..');
+                    $(".transStat").html('waiting for you to enter transaction code');
                 } else if (action == 'sell') {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
