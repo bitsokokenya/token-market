@@ -26,7 +26,9 @@ function upDtokenD() {
     $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
     $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
     $('.coindata-' + activeCoin + '-price').html(numberify(allTokens[activeCoin].rate * baseX) + ' ' + baseCd.toUpperCase());
-    $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
+    console.log((allTokens[activeCoin].balance,Math.pow(10, allTokens[activeCoin].decimals),allTokens[activeCoin].rate, baseX,baseCd.toUpperCase());
+    
+	$('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
