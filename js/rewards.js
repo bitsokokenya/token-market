@@ -1092,6 +1092,7 @@ var deci = allTokens[oDs[ii].contract].decimals ? allTokens[oDs[ii].contract].de
 //TO-DO
     //this should not be happening!!
     console.log(err);
+	allTokens[oDs[ii].contract].decimals = 5;
     
 var deci = 5;
 } 
