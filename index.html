@@ -64,12 +64,12 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
      -->
     <style>
-        div[data-target="toast-container"] > .tap-target-content {
+        div[data-target="toast-container"]>.tap-target-content {
             top: -150px !important;
-    right: 0px !important;
-    bottom: -50px !important;
-    left: 200px !important;
-    padding: 0px !important;
+            right: 0px !important;
+            bottom: -50px !important;
+            left: 200px !important;
+            padding: 0px !important;
         }
         /*---------------------------- css by sam for token market -----------------------------------------------------------------*/
         
@@ -921,20 +921,20 @@
 </section>
 
 -->
-    
-    
+
+
 
     <!-- Sign In Modal Structure -->
-<div id="signInModal" class="modal">
-    <div class="modal-content">
-      <h4>Enter Passcode</h4>
-      <p class="signInText"></p>
+    <div id="signInModal" class="modal">
+        <div class="modal-content">
+            <h4>Enter Passcode</h4>
+            <p class="signInText"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
+        </div>
     </div>
-    <div class="modal-footer">
-      <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
-    </div>
-  </div> 
-    
+
 
     <!-- Modal Structure -->
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;">
@@ -949,14 +949,14 @@
                     <div class="input-field col s12">
                         <div class="row">
                             <div class="col s2">
-                                <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;" />
+                                <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
                             </div>
                             <div class="col s8">
                                 <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
                                 <label for="newTradeTotal" class="active">Total</label>
                             </div>
                             <div class="col s2">
-                                <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;" />
+                                <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
                             </div>
                         </div>
                     </div>
@@ -1140,7 +1140,7 @@
         </div>
         <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">my open orders</p>
         <div style="overflow: hidden; height: 68%;">
-            <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px; overflow: scroll;">
+            <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px; overflow: scroll;overflow-x: hidden;">
                 <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
                     <span class="myOrdersPopupText" id="myPopup" style="">
                         <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
