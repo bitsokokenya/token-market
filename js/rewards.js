@@ -26,7 +26,9 @@ function upDtokenD() {
     $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
     $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
     $('.coindata-' + activeCoin + '-price').html(numberify(allTokens[activeCoin].rate * baseX) + ' ' + baseCd.toUpperCase());
-    $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
+    console.log(allTokens[activeCoin].balance,Math.pow(10, allTokens[activeCoin].decimals),allTokens[activeCoin].rate, baseX,baseCd.toUpperCase());
+    
+	$('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
@@ -447,7 +449,7 @@ function updateNewOrderDet(oid, action) {
         $("#newTradeTotal").attr("max", '');
 
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
-        $(".tradeOrderBody").html('you will recieve ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (activeCoin + sss).toUpperCase());
+        $(".tradeOrderBody").html('you will recieve ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         //$(".tradeOrderFooter").append('<a href="#!" oid="new" action="buy" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
 
@@ -457,7 +459,7 @@ function updateNewOrderDet(oid, action) {
         $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2) * orderPrice);
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
-        $(".tradeOrderBody").html('you will send ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (activeCoin + sss).toUpperCase());
+        $(".tradeOrderBody").html('you will send ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
@@ -556,7 +558,7 @@ function manageOrderDet(oid) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('waiting for seller to confirm payment..');
+                    $(".transStat").html('waiting for you to enter transaction code..');
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -662,7 +664,7 @@ function tradeManager(oid, action) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
-                    $(".transStat").html('waiting for seller to confirm payment..');
+                    $(".transStat").html('waiting for you to enter transaction code');
                 } else if (action == 'sell') {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -1092,6 +1094,7 @@ var deci = allTokens[oDs[ii].contract].decimals ? allTokens[oDs[ii].contract].de
 //TO-DO
     //this should not be happening!!
     console.log(err);
+	allTokens[oDs[ii].contract.toLowerCase()].decimals = 5;
     
 var deci = 5;
 } 
