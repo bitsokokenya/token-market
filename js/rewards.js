@@ -238,7 +238,7 @@ function setOrderCallbacks() {
                 }).then(function (e) {
                     if (e.status == 'ok') {
                         $('#tradeOrder').modal('close');
-                        refreshOrderBook();
+                        orderBookManager(baseX, baseCd);
                         M.toast({
                             displayLength: 5000,
                             html: '<span >ok! waiting for seller..</span>'
@@ -250,11 +250,18 @@ function setOrderCallbacks() {
 
             } else {
 
-
-                M.toast({
-                    displayLength: 5000,
-                    html: '<span >adding order, please wait..</span>'
-                });
+                 try{
+                   
+  var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
+  var toastInstance = M.Toast.getInstance(toastElement);
+  toastInstance.dismiss(); 
+                    M.toast({
+                        displayLength: 5000, classes: 'tran-waiting-toast',
+                        html: '<span >adding order, please wait..</span>'
+                    });
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                   }
 
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
 
@@ -275,11 +282,20 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-                            M.toast({
-                                displayLength: 50000,
-                                html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
-                            });
-                            //orderBookManager(baseX, baseCd);
+                            try{
+                   
+  var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
+  var toastInstance = M.Toast.getInstance(toastElement);
+  toastInstance.dismiss(); 
+                    M.toast({
+                        displayLength: 5000, classes: 'tran-suc-toast',
+                        html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
+                    });
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                   }
+
+                            orderBookManager(baseX, baseCd);
                         }
                     });
 
@@ -287,10 +303,18 @@ function setOrderCallbacks() {
 
                 }).catch(function (e) {
                     console.log(e);
+                   try{
+                   
+  var toastElement = document.querySelector('#toast-container > .tran-error-toast');
+  var toastInstance = M.Toast.getInstance(toastElement);
+  toastInstance.dismiss(); 
                     M.toast({
-                        displayLength: 5000,
+                        displayLength: 5000, classes: 'tran-error-toast',
                         html: '<span >error adding order. does your wallet have enough gas?</span>'
                     });
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                   }
 
                 })
 
