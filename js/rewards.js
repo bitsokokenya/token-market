@@ -255,12 +255,13 @@ function setOrderCallbacks() {
   var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
   var toastInstance = M.Toast.getInstance(toastElement);
   toastInstance.dismiss(); 
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                       
                     M.toast({
                         displayLength: 5000, classes: 'tran-waiting-toast',
                         html: '<span >adding order, please wait..</span>'
                     });
-                   }catch(err){
-                   console.log('!INFO: ',err);
                    }
 
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
@@ -287,12 +288,13 @@ function setOrderCallbacks() {
   var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
   var toastInstance = M.Toast.getInstance(toastElement);
   toastInstance.dismiss(); 
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                       
                     M.toast({
                         displayLength: 5000, classes: 'tran-suc-toast',
                         html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
                     });
-                   }catch(err){
-                   console.log('!INFO: ',err);
                    }
 
                             orderBookManager(baseX, baseCd);
@@ -308,12 +310,13 @@ function setOrderCallbacks() {
   var toastElement = document.querySelector('#toast-container > .tran-error-toast');
   var toastInstance = M.Toast.getInstance(toastElement);
   toastInstance.dismiss(); 
+                   }catch(err){
+                   console.log('!INFO: ',err);
+                       
                     M.toast({
                         displayLength: 5000, classes: 'tran-error-toast',
                         html: '<span >error adding order. does your wallet have enough gas?</span>'
                     });
-                   }catch(err){
-                   console.log('!INFO: ',err);
                    }
 
                 })
