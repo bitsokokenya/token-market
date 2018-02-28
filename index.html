@@ -64,12 +64,12 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
      -->
     <style>
-        div[data-target="toast-container"] > .tap-target-content {
+        div[data-target="toast-container"]>.tap-target-content {
             top: -150px !important;
-    right: 0px !important;
-    bottom: -50px !important;
-    left: 200px !important;
-    padding: 0px !important;
+            right: 0px !important;
+            bottom: -50px !important;
+            left: 200px !important;
+            padding: 0px !important;
         }
         /*---------------------------- css by sam for token market -----------------------------------------------------------------*/
         
@@ -135,16 +135,19 @@
             left: 5%;
         }
         
+        #openOrders {
+            overflow: visible;
+        }
+        
         @media screen and (max-width: 480px) {
             #openOrders {
                 margin: 0% !important;
                 width: 98% !important;
                 margin-left: auto !important;
                 margin-right: auto !important;
+                /*                display: inline-table !important;*/
             }
-            .myOrdersSec {
-                margin-bottom: 0px;
-            }
+            .myOrdersSec {}
         }
         
         @media screen and (max-width: 480px) {
@@ -528,9 +531,6 @@
             }
             .hero {
                 height: 235px !important;
-            }
-            .myOrdersSec {
-                margin-top: 50px !important;
             }
             table {
                 right: 0px!important;
@@ -921,20 +921,20 @@
 </section>
 
 -->
-    
-    
+
+
 
     <!-- Sign In Modal Structure -->
-<div id="signInModal" class="modal">
-    <div class="modal-content">
-      <h4>Enter Passcode</h4>
-      <p class="signInText"></p>
+    <div id="signInModal" class="modal">
+        <div class="modal-content">
+            <h4>Enter Passcode</h4>
+            <p class="signInText"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
+        </div>
     </div>
-    <div class="modal-footer">
-      <a href="#!" class="signInTextClose modal-action modal-close waves-effect waves-green btn-flat">ok</a>
-    </div>
-  </div> 
-    
+
 
     <!-- Modal Structure -->
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;">
@@ -949,14 +949,14 @@
                     <div class="input-field col s12">
                         <div class="row">
                             <div class="col s2">
-                                <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;" />
+                                <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
                             </div>
                             <div class="col s8">
                                 <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
                                 <label for="newTradeTotal" class="active">Total</label>
                             </div>
                             <div class="col s2">
-                                <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;" />
+                                <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
                             </div>
                         </div>
                     </div>
@@ -1133,29 +1133,31 @@
 
 
     <!-- Modal Structure -->
-    <div id="openOrders" class="modal modal-fixed-footer" style="top: 20% !important;">
-        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: 5px;">
+    <div id="openOrders" class="modal modal-fixed-footer" style="top: 20% !important; overflow: visible !important;">
+        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: -30px;-webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75)">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" width="55px" height="55px" viewBox="0 0 55 55" enable-background="new 0 0 55 55" xml:space="preserve">  <image id="image0" width="55" height="55" x="0" y="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA3CAQAAAAC0hrNAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ cwAACxMAAAsTAQCanBgAAAAHdElNRQfhDBUEEAjw6xqUAAADvklEQVRYw9WYT2wUVRzHPzM7tNTF BLRFGujSFCP1YDRwIDGGYKIH4VBMPHg3NiEGjTFFbeiBCwlyVBICJCSGk6ihGFPCn4QgIiagEbAi 3WKr1tJardImZf/166Fvp7vNPHdmO0v0O4d5833z3nd+773vvJmfg4GKhQQPEBfyzMwVHMrOAkjy NM+SojU2uWkGuc5pbs8LAkLoGfVqSrXALXVphcrkXtJITaTmUNAxLZcv9pSGaigmSXntkQcOyOMg r5hAM9wqTm8McFhDsylP8AJXPGAtzxvqZ3ZzinuxyUEbu3gZF2hkK1cBdSgvScpqh4j9aNZVM6B9 qneBZlwA/uAsODEfjHLBRNrEgx7QZkwxS2HeHYoyZAGTVoKcOa+i0Qu+XeDRxtrydqEghklrdv49 opI+LHJ4vMurrKxKboy9HKEQ3G0w1vMaj1Q5kim6OctgUJVrabKUpVWKATTYWtvk+vmUbJViMxwl HVzlWZu8RR+pKsTETc6TiSYHkxyvMjqwrjAv2u2LhT063+jOgusaRAeCBOvwGFTGb9xAivqKWncY l0XQHl0dXexgCR/Tzd8AtLKPzRXlxC8c5BCztvr3zBt7RG0l7BMalyTl9KJhekJvpmmVrGntN+yv anetT1m0qkfSZ8Iiss2hnxPkKHCO84bp5TvyFaXEn7zPT8GV9rmb5g0+oY6LjBrmazrYWPErVKT5 xt90QsvBJL0LmGGGw41mZCM4obuIgv+QzV3WUUe6xOYraSdRUWucfimqzT06eZs6TrCLKQAe5RCb /mUtFzHBHo4G7+ZYbf6kxiRJ97TVMN2hbT5U1lMomyeNvetpMkz4H7Gk7V673DU+Iw98yyXDnGIg 1HqZ4UMGbDNkwzQ7+Zwm+vymX7KNzX6sNmS5waXouzlMcKzsWgzYnnoh/n82j2L0amwOq0kypKxT ZJK0hLD5JL9F380TdLKT5Rynh7sApNjPlhA2H6WHk9ahsNj8cfO3ntN2w+wObfMf1FLSUyibN/KQ iXKZYcLbvIkVwRV2ueucBOAaFw1zgfFQYjk+4sfgKvvc/cXrfEEDfQwZ5gwdbKi4J9zlCueqsfkY H5RdF7jM5bDjGVGuNjavvKwXCZW9HVzgtiFcEotLAATC8Vf2HSZcYNR8YD/Mc8SeV6GVLUbud6Y8 4AYjpIAlvMN0zFmj9fTQbspfkZ3LiR2g01Bx58RaWGXKY2ybS1Khx/R9bRN+yqhLRb8Kba9pPjOj w0r6y7Dm2do3tUxmdI0g9yUX7b8q7k+m/R/BIG5G1q/54AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAx Ny0xMi0yMVQwNDoxNjowOC0wNzowMABvDbwAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMTItMjFU MDQ6MTY6MDgtMDc6MDBxMrUAAAAAAElFTkSuQmCC"/>
 </svg>
         </div>
-        <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px;">
-            <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">my open orders</p>
-            <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
-                <span class="myOrdersPopupText" id="myPopup" style="">
+        <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">my open orders</p>
+        <div style="overflow: hidden; height: 68%;">
+            <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px; overflow: scroll;overflow-x: hidden;">
+                <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
+                    <span class="myOrdersPopupText" id="myPopup" style="">
                         <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
                             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> 
                         </div>
                     </span>
-            </div>
-            <div class="row" style=" height: 100%; margin-bottom: 0px;">
-                <div class="striped" id="blocks">
-                    <div id="myOrders">
+                </div>
+                <div class="row" style=" height: 100%; margin-bottom: 0px;">
+                    <div class="striped" id="blocks">
+                        <div id="myOrders">
 
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">close</a>
         </div>
@@ -1163,8 +1165,11 @@
 
 
     <!-- Modal Structure -->
-    <div id="orderHistory" class="modal modal-fixed-footer" style="top: 20% !important; ">
-        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: 5px;">
+    <div id="orderHistory" class="modal modal-fixed-footer" style="top: 20% !important; overflow: visible;">
+        <div style="background: #005E77;width: 70px;border-radius: 50%;height: 70px;padding: 8px;display: block;margin-left: auto;margin-right: auto;margin-top: 5px;margin-top: -30px;
+    -webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);
+    box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75)">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 219.15 219.15" style="enable-background:new 0 0 219.15 219.15;width: 54px;" xml:space="preserve">
                 <g>
                     <path d="M109.575,0C49.156,0,0.001,49.155,0.001,109.574c0,60.42,49.154,109.576,109.573,109.576   c60.42,0,109.574-49.156,109.574-109.576C219.149,49.155,169.995,0,109.575,0z M109.575,204.15   c-52.148,0-94.573-42.427-94.573-94.576C15.001,57.426,57.427,15,109.575,15c52.148,0,94.574,42.426,94.574,94.574   C204.149,161.724,161.723,204.15,109.575,204.15z" style="
@@ -1175,7 +1180,7 @@
                 </g>
             </svg>
         </div>
-        <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%;">
+        <section class="graph row myOrdersSec" style="width: 100%; height: 70%; padding: 0px 2.5%; margin-bottom: 0px; margin-top: 0px !important;">
             <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">trade history</p>
             <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
                 <span class="myOrdersPopupText" id="myPopup" style="">
