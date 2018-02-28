@@ -205,7 +205,7 @@ function setOrderCallbacks() {
             //buy from orderbook
             console.log('transferring from wallet');
 
-            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val()))).then(function (r) {
+            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val())),allTokens[activeCoin].rate).then(function (r) {
                 console.log(r);
                 $('#tradeOrder').modal('close');
                 M.toast({
@@ -265,8 +265,9 @@ function setOrderCallbacks() {
                    }
 
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
+                var atPr=$("#newTradePrice").val()/baseX;
 
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2)).then(function (r) {
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2),atPr).then(function (r) {
 
 
 
