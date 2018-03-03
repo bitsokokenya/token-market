@@ -1100,7 +1100,7 @@ function orderBookManager(baseX, baseCd) {
                         for (var ii in oDs) {
                             try {
 
-                                var deci = allTokens[oDs[ii].contract].decimals ? allTokens[oDs[ii].contract].decimals : 5;
+                                var deci = allTokens[oDs[ii].contract.toLowerCase()].decimals ? allTokens[oDs[ii].contract.toLowerCase()].decimals : 5;
 
                             } catch (err) {
                                 //TO-DO
