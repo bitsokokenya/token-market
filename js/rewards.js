@@ -15,20 +15,20 @@ function openOrder(oid, act) {
     // Callback for Modal open. Modal and trigger parameters available.
     tradeManager(oid, act);
 
-    $("#newTradePrice").val(allTokens[activeCoin].rate * baseX);
+    $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
     setOrderCallbacks();
 }
 
 function upDtokenD() {
 
 
-    $('.coindata-' + activeCoin + '-wpage').attr('href', allTokens[activeCoin].webpage.toLowerCase());
-    $('.coindata-' + activeCoin + '-wpage').html(allTokens[activeCoin].webpage.toLowerCase());
-    $('.coindata-' + activeCoin + '-mcap').html(numberify(((allTokens[activeCoin].rate * baseX) * allTokens[activeCoin].supply)) + ' ' + baseCd.toUpperCase());
-    $('.coindata-' + activeCoin + '-price').html(numberify(allTokens[activeCoin].rate * baseX) + ' ' + baseCd.toUpperCase());
-    console.log(allTokens[activeCoin].balance, Math.pow(10, allTokens[activeCoin].decimals), allTokens[activeCoin].rate, baseX, baseCd.toUpperCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-wpage').attr('href', allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
+    console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
 
-    $('.wallet-' + activeCoin + '-Balance').html('').append((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals) * allTokens[activeCoin].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
+    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
@@ -40,11 +40,11 @@ function doFirstBuy() {
 
         $("#newFirstBuy").attr('id', 'notNewFirstBuy');
         $("#newFirstBuyBut").attr('id', 'notNewFirstBuyBut');
-        $($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).attr('id', 'newFirstBuy');
+        $($("#orderbookSep").prevAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).attr('id', 'newFirstBuy');
 
         $("#newFirstBuy td:last-child").attr('id', 'newFirstBuyBut')
 
-        if (allTokens[activeCoin].balance == 0) {
+        if (allTokens[activeCoin.toLowerCase()].balance == 0) {
             window.setTimeout(function () {
 
                 discoverExchange('dfb');
@@ -74,17 +74,17 @@ function sortOrderBookColor() {
     for (i = 0; i < x.length; i++) {
         x[i].style.display = 'none';
     }
-    var x = document.querySelectorAll('.element-' + activeCoin + '-coin');
+    var x = document.querySelectorAll('.element-' + activeCoin.toLowerCase() + '-coin');
     var i;
     for (i = 0; i < x.length; i++) {
         x[i].style.display = 'table-row';
     }
 
 
-    $($("#orderbookSep").prevAll("tr.element-" + activeCoin + "-coin")[0]).css({
+    $($("#orderbookSep").prevAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
         "background-color": "rgb(255, 188, 188)"
     });
-    $($("#orderbookSep").nextAll("tr.element-" + activeCoin + "-coin")[0]).css({
+    $($("#orderbookSep").nextAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
         "background-color": "rgb(153, 255, 153)"
     });
 
@@ -94,10 +94,10 @@ function doNewTransfer() {
 
     $(".tradeOrderSubTitle").html('New Transfer');
     $(".tradeOrderBody").html('transfer ' + allTokens[activeCoin.toLowerCase()].name + ' tokens to a different address');
-    $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
+    $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + allTokens[activeCoin.toLowerCase()].name + '.png');
 
-    $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)).toFixed(2) + ' ' + baseCd);
-    $("#newTransferAmount").attr("max", ((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * (allTokens[activeCoin].rate * baseX)));
+    $("#newTransferAmount").attr("placeholder", 'Max: ' + ((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)) * (allTokens[activeCoin.toLowerCase()].rate * baseX)).toFixed(2) + ' ' + baseCd);
+    $("#newTransferAmount").attr("max", ((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)) * (allTokens[activeCoin.toLowerCase()].rate * baseX)));
 
 
 
@@ -1268,7 +1268,8 @@ function discoverExchange(e) {
         } else if (e == 'dfb') {
 
             document.querySelector('.tap-target').setAttribute("data-target", "newFirstBuyBut");
-            $('.tap-target-text').html('Your wallet does not have this token.<br> Top it up by clicking the buy button to get some tokens. this is the best deal');
+            $('.tap-target-title').html('best offer!');
+            $('.tap-target-text').html('Your wallet does not have this token.<br> click the buy button and follow instructions');
 
             try {
                 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
@@ -1284,7 +1285,8 @@ function discoverExchange(e) {
 
 
         document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
-        $('.tap-target-text').html('click unlock and enter your password');
+        $('.tap-target-title').html('start here');
+        $('.tap-target-text').html('click to unlock');
 
         newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
