@@ -1268,7 +1268,8 @@ function discoverExchange(e) {
         } else if (e == 'dfb') {
 
             document.querySelector('.tap-target').setAttribute("data-target", "newFirstBuyBut");
-            $('.tap-target-text').html('Your wallet does not have this token.<br> Top it up by clicking the buy button to get some tokens. this is the best deal');
+            $('.tap-target-title').html('best offer!');
+            $('.tap-target-text').html('Your wallet does not have this token.<br> click the buy button and follow instructions');
 
             try {
                 newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
@@ -1284,7 +1285,8 @@ function discoverExchange(e) {
 
 
         document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
-        $('.tap-target-text').html('click unlock and enter your password');
+        $('.tap-target-title').html('start here');
+        $('.tap-target-text').html('click to unlock');
 
         newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
