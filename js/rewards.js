@@ -1543,8 +1543,6 @@ function getAvailableCoins() {
 
 
 
-    $('.wallet-' + activeCoin + '-Balance').html('locked');
-
     $(".activeCoin").text(activeCoin)
     $(document).on("click", ".coinTab li a", function () {
         activeCoin = $(".active").attr('href').replace(/#/, '');
