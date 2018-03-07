@@ -28,7 +28,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
 
-    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX).toFixed(2) + ' ' + baseCd.toUpperCase());
+    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX),2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
@@ -1229,13 +1229,17 @@ function orderBookManager(baseX, baseCd) {
 
                         $('.orderbook').animate({
                             scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
-                        }, 1000);
+                        }, 1000,function(){
+                        
+                            //wait for animation to complete then resolve the callback
+                        resolve('orderBook updated');
+                            
+                        });
 
 
                         //end for loop orders
 
 
-                        resolve('orderBook updated');
 
                     }
 
@@ -1390,7 +1394,10 @@ function starting() {
                     } catch (er) {
                         console.log('INFO! not started messaging ', er)
                     }
-                    upDtokenD();
+                    
+                    //set interval to update token balance;
+                    setInterval(function(){ upDtokenD(); }, 10000);
+                    
                     // start first transaction
                     doFirstBuy();
 
@@ -1427,7 +1434,7 @@ function getAvailableCoins() {
         var tokenTab = makerTokens;
     } else if (getBitsWinOpt('cid')) {
         var tokenTab = [];
-        tokenTab.push(getBitsWinOpt('cid'));
+        tokenTab.push(getBitsWinOpt('cid').toLowerCase());
     } // else {
     //   var tokenTab = allTokens['balanceTokens'];
     // };
@@ -1505,10 +1512,10 @@ function getAvailableCoins() {
             '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + allTokens[tokenTab[i].toLowerCase()].name + ' =  </span><span class="coindata-' + tokenTab[i].toLowerCase() + '-price">updating..</span></h5>' +
             '<table class="striped bordered buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
             '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;text-transform:uppercase;">Balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">Account</th><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
-            '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
+            '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr>' +
             '<tr><th style="text-align: left;text-transform: capitalize;">Exchange</th><th class="exchange-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
-            '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
+            '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
             '</tr></tbody></table><div class="row"><table class="striped trnsf" id="blocks" style="line-height: 20px;width: 50%;float:right;font-size: 14px;background-color: transparent!important;display: block;margin-left: auto;margin-right: auto;display: block;"><tbody style="display: block;">' +
@@ -1535,8 +1542,6 @@ function getAvailableCoins() {
     }
 
 
-
-    $('.wallet-' + activeCoin + '-Balance').html('locked');
 
     $(".activeCoin").text(activeCoin)
     $(document).on("click", ".coinTab li a", function () {
