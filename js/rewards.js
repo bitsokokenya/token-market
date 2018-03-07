@@ -1229,13 +1229,17 @@ function orderBookManager(baseX, baseCd) {
 
                         $('.orderbook').animate({
                             scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
-                        }, 1000);
+                        }, 1000,function(){
+                        
+                            //wait for animation to complete then resolve the callback
+                        resolve('orderBook updated');
+                            
+                        });
 
 
                         //end for loop orders
 
 
-                        resolve('orderBook updated');
 
                     }
 
@@ -1390,7 +1394,10 @@ function starting() {
                     } catch (er) {
                         console.log('INFO! not started messaging ', er)
                     }
-                    upDtokenD();
+                    
+                    //set interval to update token balance;
+                    setInterval(function(){ upDtokenD(); }, 10000);
+                    
                     // start first transaction
                     doFirstBuy();
 
