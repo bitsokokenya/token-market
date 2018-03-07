@@ -568,9 +568,9 @@ function manageOrderDet(oid) {
 
 
                 if (allOrds[ix].coin.endsWith("s")) {
-                    var sss = '';
+                    var sss = ' TOKENS';
                 } else {
-                    var sss = 's';
+                    var sss = ' TOKENS';
                 }
 
 
@@ -586,7 +586,7 @@ function manageOrderDet(oid) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('waiting for you to enter transaction code..');
+                    $(".transStat").html('waiting for you to complete transaction');
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -679,9 +679,9 @@ function tradeManager(oid, action) {
 
 
                 if (allOrds[ix].coin.endsWith("s")) {
-                    var sss = '';
+                    var sss = ' TOKENS';
                 } else {
-                    var sss = 's';
+                    var sss = ' TOKENS';
                 }
 
                 if (action == 'buy') {
@@ -692,7 +692,7 @@ function tradeManager(oid, action) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
-                    $(".transStat").html('waiting for you to enter transaction code');
+                    $(".transStat").html('waiting for you to complete transaction');
                 } else if (action == 'sell') {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
