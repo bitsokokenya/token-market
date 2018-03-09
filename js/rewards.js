@@ -28,7 +28,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
 
-    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX),2) + ' ' + baseCd.toUpperCase());
+    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
@@ -205,7 +205,7 @@ function setOrderCallbacks() {
             //buy from orderbook
             console.log('transferring from wallet');
 
-            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val())),allTokens[activeCoin].rate).then(function (r) {
+            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val())), allTokens[activeCoin].rate).then(function (r) {
                 console.log(r);
                 $('#tradeOrder').modal('close');
                 M.toast({
@@ -250,24 +250,25 @@ function setOrderCallbacks() {
 
             } else {
 
-                 try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
+                try {
+
+                    var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
+                    var toastInstance = M.Toast.getInstance(toastElement);
+                    toastInstance.dismiss();
+                } catch (err) {
+                    console.log('!INFO: ', err);
+
                     M.toast({
-                        displayLength: 5000, classes: 'tran-waiting-toast',
+                        displayLength: 5000,
+                        classes: 'tran-waiting-toast',
                         html: '<span >adding order, please wait..</span>'
                     });
-                   }
+                }
 
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
-                var atPr=$("#newTradePrice").val()/baseX;
+                var atPr = $("#newTradePrice").val() / baseX;
 
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2),atPr).then(function (r) {
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2), atPr).then(function (r) {
 
 
 
@@ -284,19 +285,20 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-                            try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
-                    M.toast({
-                        displayLength: 5000, classes: 'tran-suc-toast',
-                        html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
-                    });
-                   }
+                            try {
+
+                                var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
+                                var toastInstance = M.Toast.getInstance(toastElement);
+                                toastInstance.dismiss();
+                            } catch (err) {
+                                console.log('!INFO: ', err);
+
+                                M.toast({
+                                    displayLength: 5000,
+                                    classes: 'tran-suc-toast',
+                                    html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
+                                });
+                            }
 
                             orderBookManager(baseX, baseCd);
                         }
@@ -306,19 +308,20 @@ function setOrderCallbacks() {
 
                 }).catch(function (e) {
                     console.log(e);
-                   try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-error-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
-                    M.toast({
-                        displayLength: 5000, classes: 'tran-error-toast',
-                        html: '<span >error adding order. does your wallet have enough gas?</span>'
-                    });
-                   }
+                    try {
+
+                        var toastElement = document.querySelector('#toast-container > .tran-error-toast');
+                        var toastInstance = M.Toast.getInstance(toastElement);
+                        toastInstance.dismiss();
+                    } catch (err) {
+                        console.log('!INFO: ', err);
+
+                        M.toast({
+                            displayLength: 5000,
+                            classes: 'tran-error-toast',
+                            html: '<span >error adding order. does your wallet have enough gas?</span>'
+                        });
+                    }
 
                 })
 
@@ -1229,11 +1232,11 @@ function orderBookManager(baseX, baseCd) {
 
                         $('.orderbook').animate({
                             scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
-                        }, 1000,function(){
-                        
+                        }, 1000, function () {
+
                             //wait for animation to complete then resolve the callback
-                        resolve('orderBook updated');
-                            
+                            resolve('orderBook updated');
+
                         });
 
 
@@ -1394,10 +1397,12 @@ function starting() {
                     } catch (er) {
                         console.log('INFO! not started messaging ', er)
                     }
-                    
+
                     //set interval to update token balance;
-                    setInterval(function(){ upDtokenD(); }, 10000);
-                    
+                    setInterval(function () {
+                        upDtokenD();
+                    }, 10000);
+
                     // start first transaction
                     doFirstBuy();
 
@@ -1855,4 +1860,122 @@ function openNav() {
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
+}
+
+
+
+
+/**
+ * Builds PaymentRequest for credit cards, but does not show any UI yet.
+ *
+ * @return {PaymentRequest} The PaymentRequest oject.
+ */
+function initPaymentRequest() {
+    let networks = ['amex', 'diners', 'discover', 'jcb', 'mastercard', 'unionpay',
+      'visa', 'mir'];
+    let types = ['debit', 'credit', 'prepaid'];
+    let supportedInstruments = [{
+        supportedMethods: networks,
+  }, {
+        supportedMethods: ['basic-card'],
+        data: {
+            supportedNetworks: networks,
+            supportedTypes: types
+        },
+  }];
+
+    let details = {
+        total: {
+            label: 'Total',
+            amount: {
+                currency: 'KES',
+                value: '100.00'
+            }
+        },
+        displayItems: [
+            {
+                label: 'Amount',
+                amount: {
+                    currency: 'KES',
+                    value: '100.00'
+                },
+      },
+            {
+                label: 'Discount',
+                amount: {
+                    currency: 'KES',
+                    value: '0.00'
+                },
+      },
+    ],
+    };
+
+    return new PaymentRequest(supportedInstruments, details);
+}
+
+/**
+ * Invokes PaymentRequest for credit cards.
+ *
+ * @param {PaymentRequest} request The PaymentRequest object.
+ */
+function onBuyClicked(request) {
+    request.show().then(function (instrumentResponse) {
+            sendPaymentToServer(instrumentResponse);
+        })
+        .catch(function (err) {
+            ChromeSamples.setStatus(err);
+        });
+}
+
+/**
+ * Simulates processing the payment data on the server.
+ *
+ * @param {PaymentResponse} instrumentResponse The payment information to
+ * process.
+ */
+function sendPaymentToServer(instrumentResponse) {
+    // There's no server-side component of these samples. No transactions are
+    // processed and no money exchanged hands. Instantaneous transactions are not
+    // realistic. Add a 2 second delay to make it seem more real.
+    window.setTimeout(function () {
+        instrumentResponse.complete('success')
+            .then(function () {
+                document.getElementById('result').innerHTML =
+                    instrumentToJsonString(instrumentResponse);
+            })
+            .catch(function (err) {
+                ChromeSamples.setStatus(err);
+            });
+    }, 2000);
+}
+
+/**
+ * Converts the payment instrument into a JSON string.
+ *
+ * @private
+ * @param {PaymentResponse} instrument The instrument to convert.
+ * @return {string} The JSON string representation of the instrument.
+ */
+function instrumentToJsonString(instrument) {
+    let details = instrument.details;
+    details.cardNumber = 'XXXX-XXXX-XXXX-' + details.cardNumber.substr(12);
+    details.cardSecurityCode = '***';
+
+    return JSON.stringify({
+        methodName: instrument.methodName,
+        details: details,
+    }, undefined, 2);
+}
+
+const payButton = document.getElementById('buyTokenButton');
+payButton.setAttribute('style', 'display: none;');
+if (window.PaymentRequest) {
+    let request = initPaymentRequest();
+    payButton.setAttribute('style', 'display: inline;');
+    payButton.addEventListener('click', function () {
+        onBuyClicked(request);
+        request = initPaymentRequest();
+    });
+} else {
+    ChromeSamples.setStatus('This browser does not support web payments');
 }
