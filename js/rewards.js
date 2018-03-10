@@ -1897,8 +1897,10 @@ if (window.PaymentRequest) {
     payButton.addEventListener('click', function () {
         var oid=document.querySelector('#buyTokenButton').getAttribute("oid");
         var amount=document.querySelector('#buyTokenButton').getAttribute("amount");
-        onBuyClicked(request);
         request = initPaymentRequest(oid,amount);
+        
+        onBuyClicked(request);
+        
     });
 } else {
     console.log('This browser does not support web payments');
