@@ -533,7 +533,8 @@ function manageOrderDet(oid) {
                 
                             //account for currency conversions
                             allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
-
+                    
+                
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
@@ -582,11 +583,16 @@ function manageOrderDet(oid) {
 
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
-                var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                var tAmount=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
                 $("#newTradeTotal").val(tAmount);
+                var cardTot=tAmount+(tAmount*0.05);
                 
+                
+                $(".totalCardPay").html(cardTot.toFixed(2));
                 document.querySelector('#buyTokenButton').setAttribute('oid',oid);
-                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount);
+                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
+                
+                
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
@@ -697,11 +703,16 @@ function tradeManager(oid, action) {
                     var sss = ' TOKENS';
                 }
                 
-                var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                var sendAmt=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
+                
+                var cardTot=sendAmt+(sendAmt*0.05);
+                
+                $(".totalCardPay").html(cardTot.toFixed(2));
                 
                 document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
-                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt);
+                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
 
+                
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
@@ -1861,7 +1872,10 @@ function onBuyClicked(request) {
             sendPaymentToServer(instrumentResponse);
         })
         .catch(function (err) {
-            ChromeSamples.setStatus(err);
+           console.log(err);
+        
+    $('#tradeOrder').modal('close');
+        
         });
 }
 
@@ -1882,7 +1896,7 @@ function sendPaymentToServer(instrumentResponse) {
                     instrumentToJsonString(instrumentResponse);
             })
             .catch(function (err) {
-                ChromeSamples.setStatus(err);
+                console.log(err);
             });
     }, 2000);
 }
