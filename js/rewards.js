@@ -583,7 +583,7 @@ function manageOrderDet(oid) {
 
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
-                var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                var tAmount=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
                 $("#newTradeTotal").val(tAmount);
                 var cardTot=tAmount+(tAmount*0.05);
                 
@@ -703,7 +703,7 @@ function tradeManager(oid, action) {
                     var sss = ' TOKENS';
                 }
                 
-                var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                var sendAmt=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
                 
                 var cardTot=sendAmt+(sendAmt*0.05);
                 
