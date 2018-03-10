@@ -530,6 +530,9 @@ function manageOrderDet(oid) {
             if (parseInt(allOrds[ix].id) == parseInt(oid)) {
 
                 console.log(allOrds[ix], parseInt(oid), parseInt(localStorage.getItem('bits-user-name')));
+                
+                            //account for currency conversions
+                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
 
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
@@ -681,6 +684,9 @@ function tradeManager(oid, action) {
 
                     $(".tradeOrderFooterCancel").attr("disabled", true);
                 }
+                
+                //account for currency conversions
+                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
 
                 //END enable or diasble cancel button
 
@@ -690,11 +696,16 @@ function tradeManager(oid, action) {
                 } else {
                     var sss = ' TOKENS';
                 }
+                
+                var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                
+                document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
+                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt);
 
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                    $(".tradeOrderBody").html('Send ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
@@ -702,7 +713,7 @@ function tradeManager(oid, action) {
                     $(".transStat").html('waiting for you to complete transaction');
                 } else if (action == 'sell') {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                    $(".tradeOrderBody").html('Recieve ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone +
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
@@ -832,6 +843,11 @@ function orderBookManager(baseX, baseCd) {
                                 makerTokens.push(oDs[igg].contract.toLowerCase());
 
                             }
+                            
+                            
+                            //account for currency conversions
+                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
+
 
                             if (parseInt(oDs[igg].tranFrom) == 0) {
                                 buys.push(oDs[igg]);
