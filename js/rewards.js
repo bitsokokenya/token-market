@@ -588,7 +588,7 @@ function manageOrderDet(oid) {
                 var cardTot=tAmount+(tAmount*0.05);
                 
                 
-                $(".totalCardPay").html(cardTot);
+                $(".totalCardPay").html(cardTot.toFixed(2));
                 document.querySelector('#buyTokenButton').setAttribute('oid',oid);
                 document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
                 
@@ -707,7 +707,7 @@ function tradeManager(oid, action) {
                 
                 var cardTot=sendAmt+(sendAmt*0.05);
                 
-                $(".totalCardPay").html(cardTot);
+                $(".totalCardPay").html(cardTot.toFixed(2));
                 
                 document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
                 document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
