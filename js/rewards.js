@@ -1861,7 +1861,10 @@ function onBuyClicked(request) {
             sendPaymentToServer(instrumentResponse);
         })
         .catch(function (err) {
-            ChromeSamples.setStatus(err);
+           console.log(err);
+        
+    $('#tradeOrder').modal('close');
+        
         });
 }
 
@@ -1882,7 +1885,7 @@ function sendPaymentToServer(instrumentResponse) {
                     instrumentToJsonString(instrumentResponse);
             })
             .catch(function (err) {
-                ChromeSamples.setStatus(err);
+                console.log(err);
             });
     }, 2000);
 }
