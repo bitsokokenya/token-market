@@ -28,7 +28,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
 
-    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX),2) + ' ' + baseCd.toUpperCase());
+    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2) + ' ' + baseCd.toUpperCase());
     sortOrderBookColor();
 
 }
@@ -205,7 +205,7 @@ function setOrderCallbacks() {
             //buy from orderbook
             console.log('transferring from wallet');
 
-            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val())),allTokens[activeCoin].rate).then(function (r) {
+            transferTokenValue($("#newTransferConfirmation").val(), activeCoin, (parseFloat($("#newTransferAmount").val())), allTokens[activeCoin].rate).then(function (r) {
                 console.log(r);
                 $('#tradeOrder').modal('close');
                 M.toast({
@@ -250,24 +250,25 @@ function setOrderCallbacks() {
 
             } else {
 
-                 try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
+                try {
+
+                    var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
+                    var toastInstance = M.Toast.getInstance(toastElement);
+                    toastInstance.dismiss();
+                } catch (err) {
+                    console.log('!INFO: ', err);
+
                     M.toast({
-                        displayLength: 5000, classes: 'tran-waiting-toast',
+                        displayLength: 5000,
+                        classes: 'tran-waiting-toast',
                         html: '<span >adding order, please wait..</span>'
                     });
-                   }
+                }
 
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
-                var atPr=$("#newTradePrice").val()/baseX;
+                var atPr = $("#newTradePrice").val() / baseX;
 
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2),atPr).then(function (r) {
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2), atPr).then(function (r) {
 
 
 
@@ -284,19 +285,20 @@ function setOrderCallbacks() {
                     }).then(function (e) {
                         if (e.status == 'ok') {
                             $('#tradeOrder').modal('close');
-                            try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
-                    M.toast({
-                        displayLength: 5000, classes: 'tran-suc-toast',
-                        html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
-                    });
-                   }
+                            try {
+
+                                var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
+                                var toastInstance = M.Toast.getInstance(toastElement);
+                                toastInstance.dismiss();
+                            } catch (err) {
+                                console.log('!INFO: ', err);
+
+                                M.toast({
+                                    displayLength: 5000,
+                                    classes: 'tran-suc-toast',
+                                    html: '<span >ok! waiting for buyer..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
+                                });
+                            }
 
                             orderBookManager(baseX, baseCd);
                         }
@@ -306,19 +308,20 @@ function setOrderCallbacks() {
 
                 }).catch(function (e) {
                     console.log(e);
-                   try{
-                   
-  var toastElement = document.querySelector('#toast-container > .tran-error-toast');
-  var toastInstance = M.Toast.getInstance(toastElement);
-  toastInstance.dismiss(); 
-                   }catch(err){
-                   console.log('!INFO: ',err);
-                       
-                    M.toast({
-                        displayLength: 5000, classes: 'tran-error-toast',
-                        html: '<span >error adding order. does your wallet have enough gas?</span>'
-                    });
-                   }
+                    try {
+
+                        var toastElement = document.querySelector('#toast-container > .tran-error-toast');
+                        var toastInstance = M.Toast.getInstance(toastElement);
+                        toastInstance.dismiss();
+                    } catch (err) {
+                        console.log('!INFO: ', err);
+
+                        M.toast({
+                            displayLength: 5000,
+                            classes: 'tran-error-toast',
+                            html: '<span >error adding order. does your wallet have enough gas?</span>'
+                        });
+                    }
 
                 })
 
@@ -527,6 +530,9 @@ function manageOrderDet(oid) {
             if (parseInt(allOrds[ix].id) == parseInt(oid)) {
 
                 console.log(allOrds[ix], parseInt(oid), parseInt(localStorage.getItem('bits-user-name')));
+                
+                            //account for currency conversions
+                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
 
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
@@ -568,15 +574,19 @@ function manageOrderDet(oid) {
 
 
                 if (allOrds[ix].coin.endsWith("s")) {
-                    var sss = '';
+                    var sss = ' TOKENS';
                 } else {
-                    var sss = 's';
+                    var sss = ' TOKENS';
                 }
 
 
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
-                $("#newTradeTotal").val((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
+                var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                $("#newTradeTotal").val(tAmount);
+                
+                document.querySelector('#buyTokenButton').setAttribute('oid',oid);
+                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount);
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
@@ -586,7 +596,7 @@ function manageOrderDet(oid) {
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('waiting for you to enter transaction code..');
+                    $(".transStat").html('waiting for you to complete transaction');
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -674,28 +684,36 @@ function tradeManager(oid, action) {
 
                     $(".tradeOrderFooterCancel").attr("disabled", true);
                 }
+                
+                //account for currency conversions
+                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
 
                 //END enable or diasble cancel button
 
 
                 if (allOrds[ix].coin.endsWith("s")) {
-                    var sss = '';
+                    var sss = ' TOKENS';
                 } else {
-                    var sss = 's';
+                    var sss = ' TOKENS';
                 }
+                
+                var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                
+                document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
+                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt);
 
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                    $(".tradeOrderBody").html('Send ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
-                    $(".transStat").html('waiting for you to enter transaction code');
+                    $(".transStat").html('waiting for you to complete transaction');
                 } else if (action == 'sell') {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                    $(".tradeOrderBody").html('Recieve ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone +
                         ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
@@ -825,6 +843,11 @@ function orderBookManager(baseX, baseCd) {
                                 makerTokens.push(oDs[igg].contract.toLowerCase());
 
                             }
+                            
+                            
+                            //account for currency conversions
+                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
+
 
                             if (parseInt(oDs[igg].tranFrom) == 0) {
                                 buys.push(oDs[igg]);
@@ -1043,6 +1066,9 @@ function orderBookManager(baseX, baseCd) {
                         var buys = [];
                         makerTokens = [];
                         for (var igg in oDs) {
+                            
+                            //account for currency conversions
+                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
 
                             makerTokens.push(oDs[igg].contract);
 
@@ -1229,11 +1255,11 @@ function orderBookManager(baseX, baseCd) {
 
                         $('.orderbook').animate({
                             scrollTop: $("#orderbookSep").offset().top - ($("#orderbookSep").offset().top / 2)
-                        }, 1000,function(){
-                        
+                        }, 1000, function () {
+
                             //wait for animation to complete then resolve the callback
-                        resolve('orderBook updated');
-                            
+                            resolve('orderBook updated');
+
                         });
 
 
@@ -1394,10 +1420,12 @@ function starting() {
                     } catch (er) {
                         console.log('INFO! not started messaging ', er)
                     }
-                    
+
                     //set interval to update token balance;
-                    setInterval(function(){ upDtokenD(); }, 10000);
-                    
+                    setInterval(function () {
+                        upDtokenD();
+                    }, 10000);
+
                     // start first transaction
                     doFirstBuy();
 
@@ -1637,84 +1665,6 @@ $('.loyaltyCls').click(function () {
     $('#loyaltyModal').modal('close');
 });
 
-
-//Buy Points
-function initPaymentRequest() {
-    let networks = ['mastercard', 'visa'];
-    let types = ['debit', 'credit', 'prepaid'];
-    let supportedInstruments = [{
-        supportedMethods: networks,
-  }, {
-        supportedMethods: ['basic-card'],
-        data: {
-            supportedNetworks: networks,
-            supportedTypes: types
-        },
-  }];
-
-    let details = {
-        total: {
-            label: 'Loyalty Points',
-            amount: {
-                currency: 'KES',
-                value: document.getElementById('buyPoints').value * finalRate
-            }
-        },
-        displayItems: [
-            {
-                label: '1 point = ',
-                amount: {
-                    currency: 'KES',
-                    value: finalRate.toFixed(2)
-                },
-      },
-    ],
-    };
-
-    return new PaymentRequest(supportedInstruments, details);
-}
-
-
-/**
- * Simulates processing the payment data on the server.
- *
- * @param {PaymentResponse} instrumentResponse The payment information to
- * process.
- */
-function sendPaymentToServer(instrumentResponse) {
-    // There's no server-side component of these samples. No transactions are
-    // processed and no money exchanged hands. Instantaneous transactions are not
-    // realistic. Add a 2 second delay to make it seem more real.
-    window.setTimeout(function () {
-        instrumentResponse.complete('success')
-            .then(function () {
-                document.getElementById('result').innerHTML =
-                    instrumentToJsonString(instrumentResponse);
-            })
-            .catch(function (err) {
-                ChromeSamples.setStatus(err);
-            });
-    }, 2000);
-}
-
-/**
- * Converts the payment instrument into a JSON string.
- *
- * @private
- * @param {PaymentResponse} instrument The instrument to convert.
- * @return {string} The JSON string representation of the instrument.
- */
-function instrumentToJsonString(instrument) {
-    let details = instrument.details;
-    details.cardNumber = 'XXXX-XXXX-XXXX-' + details.cardNumber.substr(12);
-    details.cardSecurityCode = '***';
-
-    return JSON.stringify({
-        methodName: instrument.methodName,
-        details: details,
-    }, undefined, 2);
-}
-
 //const payButton = document.getElementById('buy100');
 
 //payButton.setAttribute('style', 'display: none;');
@@ -1855,4 +1805,119 @@ function openNav() {
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
+}
+
+
+
+
+/**
+ * Builds PaymentRequest for credit cards, but does not show any UI yet.
+ *
+ * @return {PaymentRequest} The PaymentRequest oject.
+ */
+function initPaymentRequest(oid,amount) {
+    let networks = ['amex', 'diners', 'discover', 'jcb', 'mastercard', 'unionpay',
+      'visa', 'mir'];
+    let types = ['debit', 'credit', 'prepaid'];
+    let supportedInstruments = [{
+        supportedMethods: networks,
+  }, {
+        supportedMethods: ['basic-card'],
+        data: {
+            supportedNetworks: networks,
+            supportedTypes: types
+        },
+  }];
+
+    let details = {
+        total: {
+            label: 'Total',
+            amount: {
+                currency: baseCd.toUpperCase(),
+                value: amount
+            }
+        },
+        displayItems: [
+            {
+                label: 'TID-'+oid,
+                amount: {
+                    currency: baseCd.toUpperCase(),
+                    value: amount
+                },
+      },
+    ],
+    };
+
+    return new PaymentRequest(supportedInstruments, details);
+}
+
+/**
+ * Invokes PaymentRequest for credit cards.
+ *
+ * @param {PaymentRequest} request The PaymentRequest object.
+ */
+function onBuyClicked(request) {
+    request.show().then(function (instrumentResponse) {
+            sendPaymentToServer(instrumentResponse);
+        })
+        .catch(function (err) {
+            ChromeSamples.setStatus(err);
+        });
+}
+
+/**
+ * Simulates processing the payment data on the server.
+ *
+ * @param {PaymentResponse} instrumentResponse The payment information to
+ * process.
+ */
+function sendPaymentToServer(instrumentResponse) {
+    // There's no server-side component of these samples. No transactions are
+    // processed and no money exchanged hands. Instantaneous transactions are not
+    // realistic. Add a 2 second delay to make it seem more real.
+    window.setTimeout(function () {
+        instrumentResponse.complete('success')
+            .then(function () {
+                document.getElementById('result').innerHTML =
+                    instrumentToJsonString(instrumentResponse);
+            })
+            .catch(function (err) {
+                ChromeSamples.setStatus(err);
+            });
+    }, 2000);
+}
+
+/**
+ * Converts the payment instrument into a JSON string.
+ *
+ * @private
+ * @param {PaymentResponse} instrument The instrument to convert.
+ * @return {string} The JSON string representation of the instrument.
+ */
+function instrumentToJsonString(instrument) {
+    let details = instrument.details;
+    details.cardNumber = 'XXXX-XXXX-XXXX-' + details.cardNumber.substr(12);
+    details.cardSecurityCode = '***';
+
+    return JSON.stringify({
+        methodName: instrument.methodName,
+        details: details,
+    }, undefined, 2);
+}
+
+const payButton = document.getElementById('buyTokenButton');
+payButton.setAttribute('style', 'display: none;');
+if (window.PaymentRequest) {
+    let request;
+    payButton.setAttribute('style', 'display: inline;');
+    payButton.addEventListener('click', function () {
+        var oid=document.querySelector('#buyTokenButton').getAttribute("oid");
+        var amount=document.querySelector('#buyTokenButton').getAttribute("amount");
+        request = initPaymentRequest(oid,amount);
+        
+        onBuyClicked(request);
+        
+    });
+} else {
+    console.log('This browser does not support web payments');
 }
