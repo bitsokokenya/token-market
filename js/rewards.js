@@ -1839,7 +1839,7 @@ function initPaymentRequest(oid,amount) {
         },
         displayItems: [
             {
-                label: oid,
+                label: 'TID-'+oid,
                 amount: {
                     currency: baseCd.toUpperCase(),
                     value: amount
