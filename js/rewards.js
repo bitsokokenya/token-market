@@ -585,10 +585,12 @@ function manageOrderDet(oid) {
                 $("#newTradeAmount").val(allOrds[ix].amount);
                 var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
                 $("#newTradeTotal").val(tAmount);
+                var cardTot=tAmount+(tAmount*0.05);
                 
-                $(".totalCardPay").html(tAmount+(tAmount*0.05));
+                
+                $(".totalCardPay").html(cardTot);
                 document.querySelector('#buyTokenButton').setAttribute('oid',oid);
-                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount+(tAmount*0.05));
+                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
                 
                 
 
@@ -703,10 +705,12 @@ function tradeManager(oid, action) {
                 
                 var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
                 
-                $(".totalCardPay").html(sendAmt+(sendAmt*0.05));
+                var cardTot=sendAmt+(sendAmt*0.05);
+                
+                $(".totalCardPay").html(cardTot);
                 
                 document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
-                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt+(sendAmt*0.05));
+                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
 
                 
                 if (action == 'buy') {
