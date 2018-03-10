@@ -579,7 +579,11 @@ function manageOrderDet(oid) {
 
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
-                $("#newTradeTotal").val((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
+                var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
+                $("#newTradeTotal").val(tAmount);
+                
+                document.querySelector('#buyTokenButton').setAttribute('oid',oid);
+                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount);
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
@@ -1046,6 +1050,9 @@ function orderBookManager(baseX, baseCd) {
                         var buys = [];
                         makerTokens = [];
                         for (var igg in oDs) {
+                            
+                            //account for currency conversions
+                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
 
                             makerTokens.push(oDs[igg].contract);
 
@@ -1642,84 +1649,6 @@ $('.loyaltyCls').click(function () {
     $('#loyaltyModal').modal('close');
 });
 
-
-//Buy Points
-function initPaymentRequest() {
-    let networks = ['mastercard', 'visa'];
-    let types = ['debit', 'credit', 'prepaid'];
-    let supportedInstruments = [{
-        supportedMethods: networks,
-  }, {
-        supportedMethods: ['basic-card'],
-        data: {
-            supportedNetworks: networks,
-            supportedTypes: types
-        },
-  }];
-
-    let details = {
-        total: {
-            label: 'Loyalty Points',
-            amount: {
-                currency: 'KES',
-                value: document.getElementById('buyPoints').value * finalRate
-            }
-        },
-        displayItems: [
-            {
-                label: '1 point = ',
-                amount: {
-                    currency: 'KES',
-                    value: finalRate.toFixed(2)
-                },
-      },
-    ],
-    };
-
-    return new PaymentRequest(supportedInstruments, details);
-}
-
-
-/**
- * Simulates processing the payment data on the server.
- *
- * @param {PaymentResponse} instrumentResponse The payment information to
- * process.
- */
-function sendPaymentToServer(instrumentResponse) {
-    // There's no server-side component of these samples. No transactions are
-    // processed and no money exchanged hands. Instantaneous transactions are not
-    // realistic. Add a 2 second delay to make it seem more real.
-    window.setTimeout(function () {
-        instrumentResponse.complete('success')
-            .then(function () {
-                document.getElementById('result').innerHTML =
-                    instrumentToJsonString(instrumentResponse);
-            })
-            .catch(function (err) {
-                ChromeSamples.setStatus(err);
-            });
-    }, 2000);
-}
-
-/**
- * Converts the payment instrument into a JSON string.
- *
- * @private
- * @param {PaymentResponse} instrument The instrument to convert.
- * @return {string} The JSON string representation of the instrument.
- */
-function instrumentToJsonString(instrument) {
-    let details = instrument.details;
-    details.cardNumber = 'XXXX-XXXX-XXXX-' + details.cardNumber.substr(12);
-    details.cardSecurityCode = '***';
-
-    return JSON.stringify({
-        methodName: instrument.methodName,
-        details: details,
-    }, undefined, 2);
-}
-
 //const payButton = document.getElementById('buy100');
 
 //payButton.setAttribute('style', 'display: none;');
@@ -1870,7 +1799,7 @@ function closeNav() {
  *
  * @return {PaymentRequest} The PaymentRequest oject.
  */
-function initPaymentRequest() {
+function initPaymentRequest(oid,amount) {
     let networks = ['amex', 'diners', 'discover', 'jcb', 'mastercard', 'unionpay',
       'visa', 'mir'];
     let types = ['debit', 'credit', 'prepaid'];
@@ -1888,23 +1817,16 @@ function initPaymentRequest() {
         total: {
             label: 'Total',
             amount: {
-                currency: 'KES',
-                value: '100.00'
+                currency: baseCd.toUpperCase(),
+                value: amount
             }
         },
         displayItems: [
             {
-                label: 'Amount',
+                label: oid,
                 amount: {
-                    currency: 'KES',
-                    value: '100.00'
-                },
-      },
-            {
-                label: 'Discount',
-                amount: {
-                    currency: 'KES',
-                    value: '0.00'
+                    currency: baseCd.toUpperCase(),
+                    value: amount
                 },
       },
     ],
@@ -1973,9 +1895,11 @@ if (window.PaymentRequest) {
     let request = initPaymentRequest();
     payButton.setAttribute('style', 'display: inline;');
     payButton.addEventListener('click', function () {
+        var oid=document.querySelector('#buyTokenButton').getAttribute("oid");
+        var amount=document.querySelector('#buyTokenButton').getAttribute("amount");
         onBuyClicked(request);
-        request = initPaymentRequest();
+        request = initPaymentRequest(oid,amount);
     });
 } else {
-    ChromeSamples.setStatus('This browser does not support web payments');
+    console.log('This browser does not support web payments');
 }
