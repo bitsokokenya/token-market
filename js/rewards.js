@@ -533,7 +533,8 @@ function manageOrderDet(oid) {
                 
                             //account for currency conversions
                             allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
-
+                    
+                
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
@@ -585,8 +586,11 @@ function manageOrderDet(oid) {
                 var tAmount=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
                 $("#newTradeTotal").val(tAmount);
                 
+                $(".totalCardPay").html(tAmount+(tAmount*0.05));
                 document.querySelector('#buyTokenButton').setAttribute('oid',oid);
-                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount);
+                document.querySelector('#buyTokenButton').setAttribute('amount',tAmount+(tAmount*0.05));
+                
+                
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
@@ -699,9 +703,12 @@ function tradeManager(oid, action) {
                 
                 var sendAmt=(parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2);
                 
+                $(".totalCardPay").html(sendAmt+(sendAmt*0.05));
+                
                 document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
-                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt);
+                document.querySelector('#buyTokenButton').setAttribute('amount',sendAmt+(sendAmt*0.05));
 
+                
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
