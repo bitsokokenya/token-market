@@ -1892,7 +1892,7 @@ function instrumentToJsonString(instrument) {
 const payButton = document.getElementById('buyTokenButton');
 payButton.setAttribute('style', 'display: none;');
 if (window.PaymentRequest) {
-    let request = initPaymentRequest();
+    let request;
     payButton.setAttribute('style', 'display: inline;');
     payButton.addEventListener('click', function () {
         var oid=document.querySelector('#buyTokenButton').getAttribute("oid");
