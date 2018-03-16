@@ -125,6 +125,10 @@ table.striped>tbody>tr:nth-child(odd) {
     margin-bottom: 0px;
 }
 
+#tradeOrder .modal-content {
+    background: white;
+}
+
 @media only screen and (max-width: 602px) {
     .coinDataHolda {
         display: none;
