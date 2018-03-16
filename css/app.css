@@ -125,6 +125,14 @@ table.striped>tbody>tr:nth-child(odd) {
     margin-bottom: 0px;
 }
 
+#buyTokenButton {
+    padding: 10px;
+}
+
+#tradeOrder {
+    max-height: 100% !important;
+}
+
 #tradeOrder .modal-content {
     background: white;
 }
