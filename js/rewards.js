@@ -530,11 +530,11 @@ function manageOrderDet(oid) {
             if (parseInt(allOrds[ix].id) == parseInt(oid)) {
 
                 console.log(allOrds[ix], parseInt(oid), parseInt(localStorage.getItem('bits-user-name')));
-                
-                            //account for currency conversions
-                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
-                    
-                
+
+                //account for currency conversions
+                allOrds[ix].rate = JSON.stringify(parseFloat(allOrds[ix].rate) * baseConv);
+
+
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
@@ -583,16 +583,16 @@ function manageOrderDet(oid) {
 
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
-                var tAmount=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
+                var tAmount = parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
                 $("#newTradeTotal").val(tAmount);
-                var cardTot=tAmount+(tAmount*0.05);
-                
-                
+                var cardTot = tAmount + (tAmount * 0.05);
+
+
                 $(".totalCardPay").html(cardTot.toFixed(2));
-                document.querySelector('#buyTokenButton').setAttribute('oid',oid);
-                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
-                
-                
+                document.querySelector('#buyTokenButton').setAttribute('oid', oid);
+                document.querySelector('#buyTokenButton').setAttribute('amount', cardTot);
+
+
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
@@ -690,9 +690,9 @@ function tradeManager(oid, action) {
 
                     $(".tradeOrderFooterCancel").attr("disabled", true);
                 }
-                
+
                 //account for currency conversions
-                            allOrds[ix].rate=JSON.stringify(parseFloat(allOrds[ix].rate)*baseConv);
+                allOrds[ix].rate = JSON.stringify(parseFloat(allOrds[ix].rate) * baseConv);
 
                 //END enable or diasble cancel button
 
@@ -702,17 +702,17 @@ function tradeManager(oid, action) {
                 } else {
                     var sss = ' TOKENS';
                 }
-                
-                var sendAmt=parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
-                
-                var cardTot=sendAmt+(sendAmt*0.05);
-                
-                $(".totalCardPay").html(cardTot.toFixed(2));
-                
-                document.querySelector('#buyTokenButton').setAttribute('oid',allOrds[ix].id);
-                document.querySelector('#buyTokenButton').setAttribute('amount',cardTot);
 
-                
+                var sendAmt = parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
+
+                var cardTot = sendAmt + (sendAmt * 0.05);
+
+                $(".totalCardPay").html(cardTot.toFixed(2));
+
+                document.querySelector('#buyTokenButton').setAttribute('oid', allOrds[ix].id);
+                document.querySelector('#buyTokenButton').setAttribute('amount', cardTot);
+
+
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
@@ -854,10 +854,10 @@ function orderBookManager(baseX, baseCd) {
                                 makerTokens.push(oDs[igg].contract.toLowerCase());
 
                             }
-                            
-                            
+
+
                             //account for currency conversions
-                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
+                            oDs[igg].rate = JSON.stringify(parseFloat(oDs[igg].rate) * baseConv);
 
 
                             if (parseInt(oDs[igg].tranFrom) == 0) {
@@ -1077,9 +1077,9 @@ function orderBookManager(baseX, baseCd) {
                         var buys = [];
                         makerTokens = [];
                         for (var igg in oDs) {
-                            
+
                             //account for currency conversions
-                            oDs[igg].rate=JSON.stringify(parseFloat(oDs[igg].rate)*baseConv);
+                            oDs[igg].rate = JSON.stringify(parseFloat(oDs[igg].rate) * baseConv);
 
                             makerTokens.push(oDs[igg].contract);
 
@@ -1539,7 +1539,8 @@ function getAvailableCoins() {
 
         $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;padding: 0 12px 0px 35px;"><img class="imgTab" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png" style="width: 30px; position: absolute;top: 10px;">' + allTokens[tokenTab[i].toLowerCase()].name + '</a></li>')
         $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + allTokens[tokenTab[i].toLowerCase()].name + '</p></a></li>')
-        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row"> <div class="col s12 m4 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div><div class="col s12 m4 hide-on-med-and-down">' +
+        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row col s5"> <div class="col s12 m12 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div>' +
+            //'<div class="col s12 m4 hide-on-med-and-down">' +
 
             //'<table class="striped coinInfo coinDataHolda" id="blocks" style="display:none;line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
             //'<tbody style="height: 350px;"><tr><th style="">Capitalization</th><th class="coindata-' + tokenTab[i] + '-mcap">0.00</th>' +
@@ -1548,7 +1549,7 @@ function getAvailableCoins() {
             //'<tr><th></th><th></th></tr>' +
             //'<tr><th>Website</th><th><a href="" target="_blank" style="text-transform:lowercase;color: #ffffff;" class="coindata-' + tokenTab[i] + '-wpage"></a></th></tr>' +
             // '</tbody></table>'+
-            '</div><div class="col s12 m4 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + allTokens[tokenTab[i].toLowerCase()].name + ' =  </span><span class="coindata-' + tokenTab[i].toLowerCase() + '-price">updating..</span></h5>' +
+            '</div><div class="col s12 m6 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + allTokens[tokenTab[i].toLowerCase()].name + ' =  </span><span class="coindata-' + tokenTab[i].toLowerCase() + '-price">updating..</span></h5>' +
             '<table class="striped bordered buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
             '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;text-transform:uppercase;">Balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">Account</th><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
@@ -1826,7 +1827,7 @@ function closeNav() {
  *
  * @return {PaymentRequest} The PaymentRequest oject.
  */
-function initPaymentRequest(oid,amount) {
+function initPaymentRequest(oid, amount) {
     let networks = ['amex', 'diners', 'discover', 'jcb', 'mastercard', 'unionpay',
       'visa', 'mir'];
     let types = ['debit', 'credit', 'prepaid'];
@@ -1850,7 +1851,7 @@ function initPaymentRequest(oid,amount) {
         },
         displayItems: [
             {
-                label: 'TID-'+oid,
+                label: 'TID-' + oid,
                 amount: {
                     currency: baseCd.toUpperCase(),
                     value: amount
@@ -1872,10 +1873,10 @@ function onBuyClicked(request) {
             sendPaymentToServer(instrumentResponse);
         })
         .catch(function (err) {
-           console.log(err);
-        
-    $('#tradeOrder').modal('close');
-        
+            console.log(err);
+
+            $('#tradeOrder').modal('close');
+
         });
 }
 
@@ -1925,12 +1926,12 @@ if (window.PaymentRequest) {
     let request;
     payButton.setAttribute('style', 'display: inline;');
     payButton.addEventListener('click', function () {
-        var oid=document.querySelector('#buyTokenButton').getAttribute("oid");
-        var amount=document.querySelector('#buyTokenButton').getAttribute("amount");
-        request = initPaymentRequest(oid,amount);
-        
+        var oid = document.querySelector('#buyTokenButton').getAttribute("oid");
+        var amount = document.querySelector('#buyTokenButton').getAttribute("amount");
+        request = initPaymentRequest(oid, amount);
+
         onBuyClicked(request);
-        
+
     });
 } else {
     console.log('This browser does not support web payments');
