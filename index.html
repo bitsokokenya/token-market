@@ -103,6 +103,10 @@
             background-color: rgb(15, 95, 118)!important;
         }
         
+        #tradeOrder {
+            overflow: initial;
+        }
+        
         .input-field {
             margin: 5px 0!important;
         }
@@ -590,6 +594,10 @@
                 font-size: 18px;
             }
         }
+        
+        #userAccount {
+            max-height: 100%;
+        }
         /************ Popular Traders ******************/
         
         .popularTraders {
@@ -947,10 +955,18 @@
                     <span class="transStat">waiting for seller to confirm payment..</span>
                 </div>
             </div>
-            <ul class="collapsible">
+            <ul class="collapsible doTradeForm">
                 <li>
                     <div class="collapsible-header">Pay using Ethereum</div>
-                    <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                    <div class="collapsible-body">
+                        <span>
+                            <p>Your Ethereum balance is <span id="ethBal"></span></p>
+
+                        <button class="btn" style="margin-bottom: 10px;" onclick='$("#userAccount").modal("open")' id="topUpToken">top up</button>
+                        <br>
+                        <button class="btn" id="tokenPrice">BUY</button>
+                        </span>
+                    </div>
                 </li>
                 <li>
                     <div class="collapsible-header">Pay using mobile money</div>

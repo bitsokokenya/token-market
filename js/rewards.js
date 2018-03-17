@@ -629,6 +629,8 @@ function tradeManager(oid, action) {
     $(".confTradeForm").css("display", 'none');
     $(".newTransferForm").css("display", 'none');
 
+    $(".doTradeForm").css("display", 'none');
+
     $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
     $(".tradeOrderFooter").append('<a href="#!" action="' + action + '" oid="' + oid + '" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
 
@@ -663,6 +665,9 @@ function tradeManager(oid, action) {
         return;
 
     }
+
+    $(".doTradeForm").css("display", 'block');
+
     orderTimer = setInterval(function () {
         orderWatch()
     }, 15000);
@@ -716,6 +721,8 @@ function tradeManager(oid, action) {
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
+                    $("#tokenPrice").html('BUY ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1));
+                    $("#tokenPrice").attr("amount", sendAmt)
                     $(".tradeOrderBody").html('Send ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
                         ' then enter the transaction code below.');
@@ -1902,6 +1909,18 @@ function sendPaymentToServer(instrumentResponse) {
     }, 2000);
 }
 
+//Open User Account
+$(document).on("click", "#topUpToken", function () {
+    $("#tradeOrder").modal({
+        onCloseStart: starting(),
+        onCloseEnd: $("#userAccount").modal("open")
+    }).modal("close")
+
+    setTimeout(function () {
+        $("#userAccount").modal("open");
+    }, 2000);
+})
+
 /**
  * Converts the payment instrument into a JSON string.
  *
@@ -1921,10 +1940,13 @@ function instrumentToJsonString(instrument) {
 }
 
 const payButton = document.getElementById('buyTokenButton');
+
+
 payButton.setAttribute('style', 'display: none;');
 if (window.PaymentRequest) {
     let request;
     payButton.setAttribute('style', 'display: inline;');
+
     payButton.addEventListener('click', function () {
         var oid = document.querySelector('#buyTokenButton').getAttribute("oid");
         var amount = document.querySelector('#buyTokenButton').getAttribute("amount");
@@ -1936,3 +1958,43 @@ if (window.PaymentRequest) {
 } else {
     console.log('This browser does not support web payments');
 }
+
+
+//Buy Store Tokens
+$("#tokenPrice").click(function () {
+    var tokenValue = $("#tokenVal").val();
+    if (tokenValue == "") {
+        M.toast({
+            html: 'Ooops! Please input amount',
+            displayLength: 3000
+        })
+    } else {
+        transferTokenValue("0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481", "0xb72627650f1149ea5e54834b2f468e5d430e67bf", parseFloat(tokenValue), allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate).then(function (r) {
+            console.log("This is the TRID" + r);
+            doFetch({
+                action: "payOrderEth",
+                contract: "0xb72627650f1149ea5e54834b2f468e5d430e67bf",
+                amount: tokenValue / (baseX * allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate),
+                rate: baseX * allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate,
+                user: localStorage.getItem("soko-owner-id"),
+                baseCd: baseCd,
+                shop: localStorage.getItem("soko-active-store"),
+                tran: r
+            }).then(function (e) {
+                if (e.status == 'ok') {
+                    $(".prodCatToast").remove();
+                    M.toast({
+                        html: 'Tokens bought successfully',
+                        classes: 'prodCatToast',
+                        displayLength: 3000
+                    })
+                } else {
+                    M.toast({
+                        html: 'Error! Please try later',
+                        displayLength: 3000
+                    })
+                }
+            });
+        });
+    }
+});
