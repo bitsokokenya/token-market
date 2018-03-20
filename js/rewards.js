@@ -27,8 +27,14 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
-
-    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2) + ' ' + baseCd.toUpperCase());
+    var thBal=numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
+    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
+    if(parseFloat(thBal)>0){
+     $(".new-trade-sell-Button").attr("disabled", false);
+    }else{
+     $(".new-trade-sell-Button").attr("disabled", true);
+    }
+    
     sortOrderBookColor();
 
 }
@@ -629,6 +635,8 @@ function tradeManager(oid, action) {
     $(".confTradeForm").css("display", 'none');
     $(".newTransferForm").css("display", 'none');
 
+    $(".doTradeForm").css("display", 'none');
+
     $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
     $(".tradeOrderFooter").append('<a href="#!" action="' + action + '" oid="' + oid + '" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
 
@@ -663,6 +671,9 @@ function tradeManager(oid, action) {
         return;
 
     }
+
+    $(".doTradeForm").css("display", 'block');
+
     orderTimer = setInterval(function () {
         orderWatch()
     }, 15000);
@@ -716,6 +727,8 @@ function tradeManager(oid, action) {
                 if (action == 'buy') {
 
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
+                    $("#tokenPrice").html('BUY ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1));
+                    $("#tokenPrice").attr("amount", sendAmt)
                     $(".tradeOrderBody").html('Send ' + sendAmt + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
                         ' then enter the transaction code below.');
@@ -1537,9 +1550,9 @@ function getAvailableCoins() {
 
     for (i = 0; i < tokenTab.length; i++) {
 
-        $(".coinTab").append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;padding: 0 12px 0px 35px;"><img class="imgTab" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png" style="width: 30px; position: absolute;top: 10px;">' + allTokens[tokenTab[i].toLowerCase()].name + '</a></li>')
-        $(".availableCoins").append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + allTokens[tokenTab[i].toLowerCase()].name + '</p></a></li>')
-        $(".coinContent").append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row col s5"> <div class="col s12 m12 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div>' +
+        $(".coinTab").html('').append('<li class="tab col s2" style="width: calc(100% / ' + tokenTab.length + ')!important;"><a href="#' + tokenTab[i] + '" style="color:#bbbaba;position: relative;padding: 0 12px 0px 35px;"><img class="imgTab" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png" style="width: 30px; position: absolute;top: 10px;">' + allTokens[tokenTab[i].toLowerCase()].name + '</a></li>')
+        $(".availableCoins").html('').append('<li style="cursor: pointer;"><a coin="' + tokenTab[i] + '"><img style="width: 60px; border-radius: 50%;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name + '.png"><p style="margin: 0; color: white; text-transform: uppercase;">' + allTokens[tokenTab[i].toLowerCase()].name + '</p></a></li>')
+        $(".coinContent").html('').append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row col s5"> <div class="col s12 m12 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div>' +
             //'<div class="col s12 m4 hide-on-med-and-down">' +
 
             //'<table class="striped coinInfo coinDataHolda" id="blocks" style="display:none;line-height: 20px;width: 250px;font-size: 14px;background-color: transparent!important;position: relative;top:80px; display: block; margin-left: auto; margin-right: auto;">' +
@@ -1559,8 +1572,8 @@ function getAvailableCoins() {
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
             '</tr></tbody></table><div class="row"><table class="striped trnsf" id="blocks" style="line-height: 20px;width: 50%;float:right;font-size: 14px;background-color: transparent!important;display: block;margin-left: auto;margin-right: auto;display: block;"><tbody style="display: block;">' +
-            '<tr style=" display: block;"><th style=" display: block;"><a id="add-' + tokenTab[i] + '-buy-button" class="trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: calc(50% - 3px);margin-right:2.5px; position:relative; overflow:initial;" oid="new" act="buy" disabled><i class="material-icons left" style="margin: 0px;">file_download</i>BUY</a>' +
-            '<a class="trade-' + tokenTab[i] + '-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: calc(50% - 3px);margin-left:2.5px;  position:relative;" oid="new" act="sell"><i class="material-icons right" style="margin: 0px;">file_upload</i>SELL</a></th></tr>' +
+            '<tr style=" display: block;"><th style=" display: block;"><a id="add-' + tokenTab[i] + '-buy-button" class="new-trade-buy-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: calc(50% - 3px);margin-right:2.5px; position:relative; overflow:initial;" oid="new" act="buy" disabled><i class="material-icons left" style="margin: 0px;">file_download</i>BUY</a>' +
+            '<a class="trade-' + tokenTab[i] + '-Button new-trade-sell-Button trade-new-Button waves-effect waves-light btn modal-trigger" href="#tradeOrder" style="width: calc(50% - 3px);margin-left:2.5px;  position:relative;" oid="new" act="sell"><i class="material-icons right" style="margin: 0px;">file_upload</i>SELL</a></th></tr>' +
             '<tr style=" display: block;"><td  style=" display: block;padding: 5px 0px;"><div class="popup transferTour" style=" position: absolute; z-index: 10; bottom: -410%; display:none;"> <span class="transferPopupText" id="myPopup" style=""><p style=" font-weight: 500; text-transform: initial; padding: 10px;">Transfer to a different ethereum address. Fees will be included in transfer amount.</p><div class="modal-footer"> <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openOrderBookTour" style=" float: right;">next</a> </div></span></div><a class="transfer-' + tokenTab[i] + '-Button waves-effect waves-light btn modal-trigger red" href="#tradeOrder" style="width: 100%;" oid="new" act="transfer"><i class="material-icons right">redo</i>Transfer</a></td>' +
             '</tr></tbody></table></div></div></div></div>');
 
@@ -1902,6 +1915,18 @@ function sendPaymentToServer(instrumentResponse) {
     }, 2000);
 }
 
+//Open User Account
+$(document).on("click", "#topUpToken", function () {
+    $("#tradeOrder").modal({
+        onCloseStart: starting(),
+        onCloseEnd: $("#userAccount").modal("open")
+    }).modal("close")
+
+    setTimeout(function () {
+        $("#userAccount").modal("open");
+    }, 2000);
+})
+
 /**
  * Converts the payment instrument into a JSON string.
  *
@@ -1921,10 +1946,13 @@ function instrumentToJsonString(instrument) {
 }
 
 const payButton = document.getElementById('buyTokenButton');
+
+
 payButton.setAttribute('style', 'display: none;');
 if (window.PaymentRequest) {
     let request;
     payButton.setAttribute('style', 'display: inline;');
+
     payButton.addEventListener('click', function () {
         var oid = document.querySelector('#buyTokenButton').getAttribute("oid");
         var amount = document.querySelector('#buyTokenButton').getAttribute("amount");
@@ -1936,3 +1964,43 @@ if (window.PaymentRequest) {
 } else {
     console.log('This browser does not support web payments');
 }
+
+
+//Buy Store Tokens
+$("#tokenPrice").click(function () {
+    var tokenValue = $("#tokenVal").val();
+    if (tokenValue == "") {
+        M.toast({
+            html: 'Ooops! Please input amount',
+            displayLength: 3000
+        })
+    } else {
+        transferTokenValue("0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481", "0xb72627650f1149ea5e54834b2f468e5d430e67bf", parseFloat(tokenValue), allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate).then(function (r) {
+            console.log("This is the TRID" + r);
+            doFetch({
+                action: "payOrderEth",
+                contract: "0xb72627650f1149ea5e54834b2f468e5d430e67bf",
+                amount: tokenValue / (baseX * allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate),
+                rate: baseX * allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate,
+                user: localStorage.getItem("soko-owner-id"),
+                baseCd: baseCd,
+                shop: localStorage.getItem("soko-active-store"),
+                tran: r
+            }).then(function (e) {
+                if (e.status == 'ok') {
+                    $(".prodCatToast").remove();
+                    M.toast({
+                        html: 'Tokens bought successfully',
+                        classes: 'prodCatToast',
+                        displayLength: 3000
+                    })
+                } else {
+                    M.toast({
+                        html: 'Error! Please try later',
+                        displayLength: 3000
+                    })
+                }
+            });
+        });
+    }
+});
