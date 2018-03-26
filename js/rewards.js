@@ -407,13 +407,16 @@ function setOrderCallbacks() {
 
 }
 
-
-
-document.querySelector('.newTrade').addEventListener("input", function () {
+var x = document.querySelectorAll('.newTrade');
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].addEventListener("input", function () {
 
     updateNewOrderDet($('.tradeOrderFooterComplete').attr("oid"), $('.tradeOrderFooterComplete').attr("action"));
 
 });
+        }
+
 
 
 
