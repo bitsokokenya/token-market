@@ -858,7 +858,14 @@ function orderBookManager(baseX, baseCd) {
                         var oDs = e.data;
 
                         myOpenOrders(oDs);
-                        $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">AMOUNT</th><th class="hidden-xs"> PRICE ' + baseCd.toUpperCase() + '</th><th>TOTAL</th><th></th></tr>');
+                        if(getBitsWinOpt('cid')){
+                        var coinHo=allTokens[getBitsWinOpt('cid').toLowerCase()].name.toUpperCase();
+                        }else{
+                       var coinHo='AMOUNT';
+                         
+                        }
+                        
+                        $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">'+coinHo+'</th><th class="hidden-xs"> PRICE ' + baseCd.toUpperCase() + '</th><th>TOTAL</th><th></th></tr>');
                         var sells = [];
                         var buys = [];
                         makerTokens = [];
@@ -1564,10 +1571,10 @@ function getAvailableCoins() {
             // '</tbody></table>'+
             '</div><div class="col s12 m6 doTransActs" style="text-align: center; position: relative;padding: 0px;"><h5 style="font-weight: bold;margin-top: 85px;:right: calc(50% - 100px)right: calc(50% - 99px);font-size: 17px;"><span>1 ' + allTokens[tokenTab[i].toLowerCase()].name + ' =  </span><span class="coindata-' + tokenTab[i].toLowerCase() + '-price">updating..</span></h5>' +
             '<table class="striped bordered buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
-            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 10%;text-transform:uppercase;">Balances</th></tr><tr><th  style="text-align: left;text-transform: capitalize;">Account</th><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
+            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 0%;text-transform:uppercase;">Balance</th></tr><tr><th class="tokens-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr>' +
-            '<tr><th style="text-align: left;text-transform: capitalize;">Exchange</th><th class="exchange-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
+            '<tr><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
