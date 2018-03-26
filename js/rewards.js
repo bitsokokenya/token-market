@@ -1349,10 +1349,9 @@ function discoverExchange(e) {
         $('.tap-target-title').html('start here');
         $('.tap-target-text').html('click to unlock');
 
-        newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {onClose:loadGdrive()});
+        newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
         newDisc.open();
-        newDisc.onClose();
 
     }
 
