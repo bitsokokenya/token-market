@@ -27,14 +27,14 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
-    var thBal=numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
+    var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
     $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
-    if(parseFloat(thBal)>0){
-     $(".new-trade-sell-Button").attr("disabled", false);
-    }else{
-     $(".new-trade-sell-Button").attr("disabled", true);
+    if (parseFloat(thBal) > 0) {
+        $(".new-trade-sell-Button").attr("disabled", false);
+    } else {
+        $(".new-trade-sell-Button").attr("disabled", true);
     }
-    
+
     sortOrderBookColor();
 
 }
@@ -408,14 +408,14 @@ function setOrderCallbacks() {
 }
 
 var x = document.querySelectorAll('.newTrade');
-        var i;
-        for (i = 0; i < x.length; i++) {
-            x[i].addEventListener("input", function () {
+var i;
+for (i = 0; i < x.length; i++) {
+    x[i].addEventListener("input", function () {
 
-    updateNewOrderDet($('.tradeOrderFooterComplete').attr("oid"), $('.tradeOrderFooterComplete').attr("action"));
+        updateNewOrderDet($('.tradeOrderFooterComplete').attr("oid"), $('.tradeOrderFooterComplete').attr("action"));
 
-});
-        }
+    });
+}
 
 
 
@@ -861,14 +861,14 @@ function orderBookManager(baseX, baseCd) {
                         var oDs = e.data;
 
                         myOpenOrders(oDs);
-                        if(getBitsWinOpt('cid')){
-                        var coinHo=allTokens[getBitsWinOpt('cid').toLowerCase()].name.toUpperCase();
-                        }else{
-                       var coinHo='AMOUNT';
-                         
+                        if (getBitsWinOpt('cid')) {
+                            var coinHo = allTokens[getBitsWinOpt('cid').toLowerCase()].name.toUpperCase();
+                        } else {
+                            var coinHo = 'AMOUNT';
+
                         }
-                        
-                        $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">'+coinHo+'</th><th class="hidden-xs"> PRICE ' + baseCd.toUpperCase() + '</th><th>TOTAL</th><th></th></tr>');
+
+                        $(".orderbookTbody").html('').append('<tr id="orderbookSep" style="background-color: #dad8d8;height: 40px;"><th>USER</th><th class="hidden-xs">' + coinHo + '</th><th class="hidden-xs"> PRICE ' + baseCd.toUpperCase() + '</th><th>TOTAL</th><th></th></tr>');
                         var sells = [];
                         var buys = [];
                         makerTokens = [];
@@ -2014,3 +2014,47 @@ $("#tokenPrice").click(function () {
         });
     }
 });
+
+
+//Match Adress with user
+var inputVal = $("#newTransferConfirmation").val();
+doFetch({
+    action: 'getAllUsers',
+    data: inputVal
+}).then(function (e) {
+    var dat = {}
+    deliveryGuys = e.users;
+
+    for (var iii in e.users) {
+        var nm = e.users[iii].name;
+        var icn = e.users[iii].icon;
+        //var id = e.users[iii].id;
+        dat[nm] = icn;
+
+    }
+
+    $("#newTransferConfirmation").keyup(function () {
+        var textCounter = $(this).val().length;
+        var inputVal = $("#newTransferConfirmation").val();
+        if (textCounter >= 3) {} else {
+            $("#newTransferConfirmation").autocomplete({
+                data: dat
+            });
+        }
+    });
+
+
+});
+
+
+$(document).on('click', $('.newTransferForm .autocomplete-content li'), function (e) {
+    var selectedUser = $("#newTransferConfirmation").val();
+    for (var i in deliveryGuys) {
+        var name = deliveryGuys[i].name;
+        var id = deliveryGuys[i].id;
+        var walletAdress = deliveryGuys[i].wallets;
+        if (selectedUser == name) {
+            console.log(walletAdress)
+        }
+    }
+})
