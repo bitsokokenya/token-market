@@ -2054,7 +2054,7 @@ $(document).on('click', $('.newTransferForm .autocomplete-content li'), function
         var id = deliveryGuys[i].id;
         var walletAdress = deliveryGuys[i].wallets;
         if (selectedUser == name) {
-            console.log(walletAdress)
+            $("#newTransferConfirmation").val(JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
         }
     }
 })
