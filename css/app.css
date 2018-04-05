@@ -8,6 +8,12 @@ th {
     text-align: center;
 }
 
+
+input[type=number]::-webkit-inner-spin-button {
+  width: 30px;
+  height: 30px;
+}
+
 table.striped>tbody>tr:nth-child(odd) {
     background-color: transparent;
 }
