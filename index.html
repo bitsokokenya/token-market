@@ -955,6 +955,37 @@
                     <span class="transStat">waiting for seller to confirm payment..</span>
                 </div>
             </div>
+
+        <form class="col s12 newTradeForm">
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <div class="row">
+                        <div class="col s2">
+                            <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
+                        </div>
+                        <div class="col s8">
+                            <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
+                            <label for="newTradeTotal" class="active">Total</label>
+                        </div>
+                        <div class="col s2">
+                            <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
+                    <label for="newTradeAmount" class="active">Amount</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
+                    <label for="newTradePrice" class="active">Price</label>
+                </div>
+            </div>
+        </form>
+
             <ul class="collapsible doTradeForm">
                 <li style="display:none;">
                     <div class="collapsible-header">Pay using Ethereum</div>
@@ -996,37 +1027,6 @@
         </div>
         </li>
         </ul>
-
-        <form class="col s12 newTradeForm">
-
-            <div class="row">
-                <div class="input-field col s12">
-                    <div class="row">
-                        <div class="col s2">
-                            <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
-                        </div>
-                        <div class="col s8">
-                            <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
-                            <label for="newTradeTotal" class="active">Total</label>
-                        </div>
-                        <div class="col s2">
-                            <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
-                    <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
-                    <label for="newTradeAmount" class="active">Amount</label>
-                </div>
-                <div class="input-field col s6">
-                    <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
-                    <label for="newTradePrice" class="active">Price</label>
-                </div>
-            </div>
-        </form>
-
         <!--
         <form class="col s12 confTradeForm">
             <div class="row">
