@@ -1639,12 +1639,13 @@ function getAvailableCoins() {
     // $('.modal').modal();
     doFetch({
         action: 'userVerified',
-        uid: JSON.parse(localStorage.getItem("bits-user-name"))
+        uid: localStorage.getItem("bits-user-name")
     }).then(function (e) {
-        if (e.data != "true") {
-            Materialize.toast('Please verify you phone number to continue', 5000);
-            $('.modal').modal();
-            $("#mobiVeri").modal("open");
+        if (e.status == "ok") {
+        } else if (e.status == "bad") {
+            $(".MobileModal").modal("open")
+        } else {
+            $(".MobileModal").modal("open")
         }
     })
 }

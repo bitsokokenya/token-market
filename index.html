@@ -670,9 +670,9 @@
 
 <body class="doc">
     <bits-connect></bits-connect>
-    <!-- Mobile Verification Modal Start -->
-    <div id="mobiVeri" class="modal bottom-sheet MobileModal" style="width: 50%; display: block; margin-left: auto; margin-right: auto;">
-    </div>
+    <!--================================== modal enter phone number start =====================================================================-->
+    <div class="modal MobileModal" id="MobileModal"></div>
+    
     <div id="notSignedIn" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 1000; position:fixed;background-size: cover; background-position-x: 75%;overflow: auto;">
         <h5 style="color:white;font-size: 3em;font-weight: bold;text-align: center;padding: 8% 5% 1% 5%;">TOKEN MARKET</h5>
         <h5 style="color:white;font-size: 1.5em;font-weight: bold;text-align: center;">a p2p ethereum exchange</h5>
@@ -956,35 +956,35 @@
                 </div>
             </div>
 
-        <form class="col s12 newTradeForm">
+            <form class="col s12 newTradeForm">
 
-            <div class="row">
-                <div class="input-field col s12">
-                    <div class="row">
-                        <div class="col s2">
-                            <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
-                        </div>
-                        <div class="col s8">
-                            <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
-                            <label for="newTradeTotal" class="active">Total</label>
-                        </div>
-                        <div class="col s2">
-                            <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
+                <div class="row">
+                    <div class="input-field col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <input type='button' value='-' id='newTradeTotalMinus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white;width: 25px;display: none;" />
+                            </div>
+                            <div class="col s8">
+                                <input placeholder="eg: 15000 " id="newTradeTotal" type="number" class="newTrade validate">
+                                <label for="newTradeTotal" class="active">Total</label>
+                            </div>
+                            <div class="col s2">
+                                <input type='button' value='+' id='newTradeTotalPlus' field='quantity' style="margin-top: 10px; font-size: 1.5em; background: #00AC9A; border: none; -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); color: white; display: none;" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
-                    <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
-                    <label for="newTradeAmount" class="active">Amount</label>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 1000 " id="newTradeAmount" type="number" step="any" min="0" class="newTrade validate" disabled>
+                        <label for="newTradeAmount" class="active">Amount</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
+                        <label for="newTradePrice" class="active">Price</label>
+                    </div>
                 </div>
-                <div class="input-field col s6">
-                    <input placeholder="eg: 15 " id="newTradePrice" type="number" step="any" min="0" class="newTrade validate">
-                    <label for="newTradePrice" class="active">Price</label>
-                </div>
-            </div>
-        </form>
+            </form>
 
             <ul class="collapsible doTradeForm">
                 <li style="display:none;" class="doPayEth">
@@ -1444,7 +1444,6 @@
 
     </script>
     <script src="js/rewards.js"></script>
-    <script src="js/bits-addMobiVeri.js"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/pushManager/google-fcm.js"></script>
 
     <script>
@@ -1503,6 +1502,7 @@
         });
 
     </script>
+    <script src="js/bits-addMobiVeri.js"></script>
     <!-- Twitter universal website tag code
 
 <script>
