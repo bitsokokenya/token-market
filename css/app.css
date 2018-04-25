@@ -2,6 +2,19 @@
     box-shadow: none;
 }
 
+#walletList button{
+    padding: 4px 10px !important;
+}
+@media only screen and (min-width: 600px) {
+    #chooseWalletModal{
+        margin-top: 5% !important;
+    }
+    #walletList{
+        overflow-x: hidden !important;
+        padding-bottom: 30px !important;
+    }
+}
+
 td,
 th {
     padding: 1px 1px;
