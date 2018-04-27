@@ -1641,8 +1641,7 @@ function getAvailableCoins() {
         action: 'userVerified',
         uid: localStorage.getItem("bits-user-name")
     }).then(function (e) {
-        if (e.status == "ok") {
-        } else if (e.status == "bad") {
+        if (e.status == "ok") {} else if (e.status == "bad") {
             $(".MobileModal").modal("open")
         } else {
             $(".MobileModal").modal("open")
@@ -2047,7 +2046,6 @@ doFetch({
 
 });
 
-
 $(document).on('click', $('.newTransferForm .autocomplete-content li'), function (e) {
     var selectedUser = $("#newTransferConfirmation").val();
     for (var i in deliveryGuys) {
@@ -2055,7 +2053,7 @@ $(document).on('click', $('.newTransferForm .autocomplete-content li'), function
         var id = deliveryGuys[i].id;
         var walletAdress = deliveryGuys[i].wallets;
         if (selectedUser == name) {
-            $("#newTransferConfirmation").val(JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
+            $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
         }
     }
 })
