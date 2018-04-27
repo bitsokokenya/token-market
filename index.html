@@ -672,7 +672,7 @@
     <bits-connect></bits-connect>
     <!--================================== modal enter phone number start =====================================================================-->
     <div class="modal MobileModal" id="MobileModal"></div>
-    
+
     <div id="notSignedIn" style="position:absolute; height:100%; width:100%; background:linear-gradient(rgba(15, 95, 118, 0.82), rgba(15, 95, 118, 0.82)), url(./images/Slide.jpg);  z-index: 1000; position:fixed;background-size: cover; background-position-x: 75%;overflow: auto;">
         <h5 style="color:white;font-size: 3em;font-weight: bold;text-align: center;padding: 8% 5% 1% 5%;">TOKEN MARKET</h5>
         <h5 style="color:white;font-size: 1.5em;font-weight: bold;text-align: center;">a p2p ethereum exchange</h5>
@@ -1322,7 +1322,7 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
     </div>
 
-    
+
     <div id="chooseWalletModal" class="modal open" style="overflow: initial; margin-top: 30%; border-radius: 5px;">
         <div style="width:100px;display:block;margin-left:auto;margin-right:auto;margin-top:-50px;background: #339eb9;padding: 20px;border-radius: 50%;">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -1351,7 +1351,7 @@
         <h5 style="text-align: center; padding: 5%; margin:0px;margin-bottom: 30px;">Select a wallet</h5>
         <div id="walletList" style="max-height: 200px; overflow: scroll; text-align: center;"></div>
     </div>
-    
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -1482,6 +1482,20 @@
 
             $("#notSignedIn").hide();
             starting();
+            //Unlock Wallet
+            if (sessionStorage.getItem('walletKey')) {
+                console.log('unlocked')
+            } else {
+                var toastHTML = '<span>Unlock wallet to trade</span><button id="unlckWallet" class="btn-flat toast-action" onclick="loadGdrive()">unlock</button>';
+                M.toast({
+                    html: toastHTML,
+                    displayLength: 100000,
+                    classes: "unlckWallet"
+                });
+                $(document).on('click', $('#unlckWallet'), function(e) {
+                    $(".unlckWallet").remove()
+                });
+            }
         }
         startGoogle();
         Promise.all([indexDbReady, gDriveReady]).then(values => {
