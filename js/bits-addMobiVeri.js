@@ -1,37 +1,35 @@
-//----------------------------------------------bits addMobiVeri--------------------------------------------------------------------------------------
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//----------------------------------------------updating addMobiVeri ---------------------------------------------------------------------------------
+//-----------updating addMobiVeri --------------------
 function addMobiVeri() {
     //----------------------------------------------append contact modal--------------------------------------------------------------------------------------
-    $(".MobileModal").append('<div class="modal-content">' +
+    $(".MobileModal").append('<div class="modal-content" style="padding: 24px 10px;"><p style=" text-align: center;">Please enter your phone number.</p>' +
         ' <div class="row" style="margin-bottom:0px;">' +
         '<div class="input-field col s8">' +
         '  <i class="mdi-hardware-phone-android prefix"></i>' +
-        '  <input id="inp-phone" type="number" class="validate" >' +
-        '  <label for="inp-phone" class="">enter phone number</label>' +
+        '  <input id="inp-phone" type="number" class="validate" style="margin-left:0px;width:100%;">' +
+        '  <label for="inp-phone" class="" style="margin-left:0px;">Phone number</label>' +
         ' </div>' +
-        ' <div class="input-field col s4">' +
-        '  <div class="input-field col s12">' +
-        '    <button class="inp-phone btn cyan waves-effect waves-light" type="submit" name="action" disabled><i class="mdi-navigation-refresh"></i></button>' +
+        ' <div class="input-field col s4" style="margin-bottom:0px;">' +
+        '  <div class="input-field col s12" style="padding:0px;">' +
+        '    <button class="inp-phone btn cyan waves-effect waves-light" type="submit" name="action" disabled>ok</button>' +
         '  </div>' +
         ' </div>' +
         ' </div>' +
-        ' <div class="row" style="margin-bottom:0px;">' +
+        ' <div class="row">' +
         ' <div class="input-field col s8">' +
         '  <i class="mdi-action-lock-outline prefix"></i>' +
-        ' <input id="inp-code" type="number" class="validate" disabled>' +
-        '  <label for="inp-code" class="">confirmation code</label>' +
+        ' <input id="inp-code" type="number" class="validate" style="margin-left:0px;width:100%;">' +
+        '  <label for="inp-code" class="" style="margin-left:0px;width:100%;">confirmation code</label>' +
         ' </div>' +
         ' <div class="input-field col s4">' +
-        '  <div class="input-field col s12">' +
-        '    <button class="inp-code btn cyan waves-effect waves-light" type="submit" name="action" disabled><i class="mdi-navigation-refresh"></i></button>' +
+        '  <div class="input-field col s12" style="padding:0px;">' +
+        '    <button class="inp-code btn cyan waves-effect waves-light" type="submit" name="action" disabled>ok</button>' +
         '  </div>' +
         '  </div>' +
         ' </div>' +
 
         '</div>' +
-        ' <div class="modal-footer blue-grey lighten-5">' +
-        ' <a id="submitPhoneNo" href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Verify</a>' +
+        ' <div class="modal-footer blue-grey lighten-5" style="height: auto; padding: 0px;">' +
+        ' <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat bits" style="padding: 0px 10px; color: white; margin-right: 10%;">Close</a>' +
         '</div>');
 
     var forEach = function (array, callback, scope) {
@@ -48,6 +46,7 @@ function addMobiVeri() {
         value.addEventListener("change", changedConfCode);
     });
 }
+addMobiVeri()
 
 function changedPhnNum(t) {
     console.log($(t.target).val());
@@ -61,13 +60,18 @@ function changedPhnNum(t) {
         if (e.status == 'ok') {
             $('#inp-phone').prop('disabled', true);
             $('#inp-code').prop('disabled', false);
-            Materialize.toast('confirmation code sent', 5000);
+            M.toast({
+                html: 'confirmation code sent'
+            });
+
         } else {
+
             $('#inp-phone').prop('disabled', false);
             $('#inp-code').prop('disabled', true);
             console.log(e);
         }
     });
+
 }
 
 function changedConfCode(t) {
@@ -76,20 +80,21 @@ function changedConfCode(t) {
 
     doFetch({
         action: 'doMobiVeriCode',
-        address: localStorage.getItem('bits-user-wallet'),
+        user: localStorage.getItem('bits-user-name'),
         val: val
     }).then(function (e) {
         if (e.status == 'ok') {
 
             $('#inp-phone').prop('disabled', false);
             $('#inp-code').prop('disabled', true);
-            Materialize.toast('Phone Number added', 3000);
+            M.toast({
+                html: 'Phone Number added'
+            });
+            $("#MobileModal").modal("close")
 
         } else {
             console.log(e);
         }
     });
+
 }
-addMobiVeri();
-//changedPhnNum();
-//changedConfCode();
