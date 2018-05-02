@@ -4,6 +4,7 @@ var cKobo = "";
 var xKobo = "";
 var baseX;
 var baseCd;
+var deliveryGuys;
 
 function openOrder(oid, act) {
     $('#tradeOrder').modal('open');
@@ -121,20 +122,23 @@ function doNewTransfer() {
 
 
     //New Transfer Input Count
-    $("#newTransferConfirmation").keyup(function () {
-        var inputCount = $("#newTransferConfirmation").val().length
-        if ($("#newTransferConfirmation").val().length > 2) {
-            doFetch({
-                action: 'matchTrader'
-            }).then(function (e) {
-                if (e.status == 'ok') {
-                    console.log(e)
-                } else {
-
-                }
-            });
-        }
-    });
+    //    document.querySelector("#newTransferConfirmation").addEventListener("pointerup", function(e){
+    //        var inputCount = $("#newTransferConfirmation").val().length
+    //        if ($("#newTransferConfirmation").val().length > 2) {
+    //            doFetch({
+    //                action: 'matchTrader'
+    //            }).then(function (e) {
+    //                if (e.status == 'ok') {
+    //                    console.log(e)
+    //                } else {
+    //
+    //                }
+    //            });
+    //        }
+    //    });
+    //    $("#newTransferConfirmation").keyup(function () {
+    //        
+    //    });
 
 }
 
@@ -1484,8 +1488,48 @@ function starting() {
 
         ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
 
+    }).catch(function (err) {
+
+        console.log('!info ', err)
+        setTimeout(function () {
+            starting();
+        }, 450);
     })
     profileImg();
+
+    //Match Adress with user
+    var inputVal = $("#newTransferConfirmation").val();
+
+    document.querySelector("#newTransferConfirmation").addEventListener("input", function (e) {
+       var textCounter = $(this).val().length;
+        
+
+             var inputVal = $("#newTransferConfirmation").val();
+                if (textCounter >= 3) {
+                    
+                    doFetch({
+            action: 'getAllUsers',
+            data: inputVal
+        }).then(function (e) {
+            var dat = {}
+            deliveryGuys = e.users;
+
+            for (var iii in e.users) {
+                var nm = e.users[iii].name;
+                var icn = e.users[iii].icon;
+                //var id = e.users[iii].id;
+                dat[nm] = icn;
+
+            }
+                $("#newTransferConfirmation").autocomplete({
+                        data: dat
+                    });
+
+
+        });
+    }
+    });
+
 }
 
 function getAvailableCoins() {
@@ -2015,45 +2059,19 @@ $("#tokenPrice").click(function () {
     }
 });
 
-
-//Match Adress with user
-var inputVal = $("#newTransferConfirmation").val();
-doFetch({
-    action: 'getAllUsers',
-    data: inputVal
-}).then(function (e) {
-    var dat = {}
-    deliveryGuys = e.users;
-
-    for (var iii in e.users) {
-        var nm = e.users[iii].name;
-        var icn = e.users[iii].icon;
-        //var id = e.users[iii].id;
-        dat[nm] = icn;
-
-    }
-
-    $("#newTransferConfirmation").keyup(function () {
-        var textCounter = $(this).val().length;
-        var inputVal = $("#newTransferConfirmation").val();
-        if (textCounter >= 3) {} else {
-            $("#newTransferConfirmation").autocomplete({
-                data: dat
-            });
+document.querySelector("#newTransferConfirmation").addEventListener("change", function (e) {
+    document.querySelector(".newTransferForm > .autocomplete-content > li").addEventListener("click", function (e) {
+        var selectedUser = $("#newTransferConfirmation").val();
+        for (var i in deliveryGuys) {
+            var name = deliveryGuys[i].name;
+            var id = deliveryGuys[i].id;
+            var walletAdress = deliveryGuys[i].wallets;
+            if (selectedUser == name) {
+                $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
+            }
         }
     });
-
-
 });
-
-$(document).on('click', $('.newTransferForm .autocomplete-content li'), function (e) {
-    var selectedUser = $("#newTransferConfirmation").val();
-    for (var i in deliveryGuys) {
-        var name = deliveryGuys[i].name;
-        var id = deliveryGuys[i].id;
-        var walletAdress = deliveryGuys[i].wallets;
-        if (selectedUser == name) {
-            $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
-        }
-    }
-})
+//$(".newTransferForm").on('click', $(' .autocomplete-content li'), function (e) {
+//    
+//})
