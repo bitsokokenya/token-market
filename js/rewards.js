@@ -1351,21 +1351,21 @@ function discoverExchange(e) {
     } else {
         //ask the user to unlock the wallet first
 
-try{
-    
-        document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
-        $('.tap-target-title').html('start here');
-        $('.tap-target-text').html('click to unlock');
+        try {
 
-        newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+            document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
+            $('.tap-target-title').html('start here');
+            $('.tap-target-text').html('click to unlock');
 
-        newDisc.open();
+            newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
-    
-}catch(e){
-    
-    
-}
+            newDisc.open();
+
+
+        } catch (e) {
+
+
+        }
     }
 
 }
@@ -1502,110 +1502,21 @@ function starting() {
         }, 450);
     })
     profileImg();
-
-    //Match Adress with user
-    var inputVal = $("#newTransferConfirmation").val();
-//   autoInput=  $('input.autocomplete').autocomplete({
-//      onAutocomplete: function(){
-//            try{
-//               var alElms = document.querySelectorAll(".autocomplete-content > li")
-//               for(var i in alElms){
-//                   alElms[i].addEventListener("touchstart", function (e) {
-//            var selectedUser = $("#newTransferConfirmation").val();
-//            for (var i in deliveryGuys) {
-//                var name = deliveryGuys[i].name;
-//                var id = deliveryGuys[i].id;
-//                var walletAdress = deliveryGuys[i].wallets;
-//                if (selectedUser == name) {
-//                    $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
-//                }
-//            }
-//        }); 
-//                   
-//                   
-//               }
-//                 
-//                
-//            }catch(e){
-//              console.log (e)
-//            }       
-//                   }
-//    });
     
+    matchAddrUser();
     
-    
-//autoInput= M.Autocomplete.init(document.querySelectorAll('.autocomplete')[0], {
-//                    onAutocomplete: function(){
-//            try{
-//               var alElms = document.querySelectorAll(".autocomplete-content > li")
-//               for(var i in alElms){
-//                   alElms[i].addEventListener("touchstart", function (e) {
-//            var selectedUser = $("#newTransferConfirmation").val();
-//            for (var i in deliveryGuys) {
-//                var name = deliveryGuys[i].name;
-//                var id = deliveryGuys[i].id;
-//                var walletAdress = deliveryGuys[i].wallets;
-//                if (selectedUser == name) {
-//                    $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
-//                }
-//            }
-//        }); 
-//                   
-//                   
-//               }
-//                 
-//                
-//            }catch(e){
-//              console.log (e)
-//            }       
-//                   }});
-    setTimeout(function(){
-        var elems = document.querySelectorAll('.autocomplete')[0];
-    autoInput = M.Autocomplete.init(elems, {});
-    autoInput.updateData({
-  "Apple": null,
-  "Microsoft": null,
-  "Google": 'https://placehold.it/250x250'
-});
-    },10000)
-    
-    
-    document.querySelector("#newTransferConfirmation").addEventListener("input", function (e) {
-        //var textCounter = $(this).val().length;
-
-
-        var inputVal = $("#newTransferConfirmation").val();
-        if (inputVal.length == 2) {
-
- doFetch({
-                action: 'getAllUsers',
-                data: inputVal
-            }).then(function (e) {
-                var dat = {}
-                deliveryGuys = e.users;
-
-                for (var iii in e.users) {
-                    var nm = e.users[iii].name;
-                    var icn = e.users[iii].icon;
-                    //var id = e.users[iii].id;
-                    dat[nm] = icn;
-
-                }
-     
-     autoInput.updateData(dat);
-    autoInput.open();
-        
-
-            });
-            
-            
-        } 
-            
-        
-        
-    });
-
-
+    $(".newTransferForm").on('change', '#newTransferConfirmation', function (e) {
+        var selectedUser = $("#newTransferConfirmation").val();
+        console.log(selectedUser)
+        for (var i in deliveryGuys) {
+            var name = deliveryGuys[i].name;
+            var id = deliveryGuys[i].id;
+            var walletAdress = deliveryGuys[i].wallets;
+            if (selectedUser == name) {
+                $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
+            }
+        }
+    })
 }
 
 function getAvailableCoins() {
@@ -2151,3 +2062,36 @@ $("#tokenPrice").click(function () {
 //$(".newTransferForm").on('click', $(' .autocomplete-content li'), function (e) {
 //    
 //})
+
+
+//Match Adress with user
+function matchAddrUser() {
+    var inputVal = $("#newTransferConfirmation").val();
+    doFetch({
+        action: 'getAllUsers',
+        data: inputVal
+    }).then(function (e) {
+        var dat = {}
+        deliveryGuys = e.users;
+
+        for (var iii in e.users) {
+            var nm = e.users[iii].name;
+            var icn = e.users[iii].icon;
+            //var id = e.users[iii].id;
+            dat[nm] = icn;
+
+        }
+
+        $("#newTransferConfirmation").keyup(function () {
+            var textCounter = $(this).val().length;
+            var inputVal = $("#newTransferConfirmation").val();
+            if (textCounter >= 3) {} else {
+                $("#newTransferConfirmation").autocomplete({
+                    data: dat
+                });
+            }
+        });
+
+
+    });
+}
