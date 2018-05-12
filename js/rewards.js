@@ -1420,7 +1420,7 @@ function starting() {
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-                        if (getBitsOpt('oid')) {
+                        if (!getBitsOpt('oid') || !getBitsOpt('act')) {
 
                             openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
                         }
