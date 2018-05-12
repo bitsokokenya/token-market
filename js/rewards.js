@@ -1351,15 +1351,21 @@ function discoverExchange(e) {
     } else {
         //ask the user to unlock the wallet first
 
+        try {
 
-        document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
-        $('.tap-target-title').html('start here');
-        $('.tap-target-text').html('click to unlock');
+            document.querySelector('.tap-target').setAttribute("data-target", "toast-container");
+            $('.tap-target-title').html('start here');
+            $('.tap-target-text').html('click to unlock');
 
-        newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
+            newDisc = new M.FeatureDiscovery(document.querySelector('.tap-target'), {});
 
-        newDisc.open();
+            newDisc.open();
 
+
+        } catch (e) {
+
+
+        }
     }
 
 }
@@ -1414,11 +1420,10 @@ function starting() {
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-                        if (!getBitsOpt('oid')) {
+                        if (getBitsOpt('oid')) {
 
                             openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
                         }
-
                         setTimeout(function () {
                             M.updateTextFields();
                         }, 600);
@@ -1468,13 +1473,23 @@ function starting() {
                     doFirstBuy();
 
 
-                    // start open requested order
+                    
                     if (getBitsOpt('oid')) {
-
+                        // start open requested order
                         openOrder(getBitsOpt('oid'), 'manage');
-                    }
-
                     // end open requested order
+                        
+                    }else if(getBitsOpt('act')=='transfer'){
+
+                            openOrder('new', 'transfer');
+
+                            $("#newTransferConfirmation").val(getBitsOpt('dest'));
+
+                            $("#newTransferAmount").val(getBitsOpt('amount'));
+
+                        }
+
+
 
 
                 });
@@ -1496,40 +1511,21 @@ function starting() {
         }, 450);
     })
     profileImg();
-
-    //Match Adress with user
-    var inputVal = $("#newTransferConfirmation").val();
-
-    document.querySelector("#newTransferConfirmation").addEventListener("input", function (e) {
-       var textCounter = $(this).val().length;
-        
-
-             var inputVal = $("#newTransferConfirmation").val();
-                if (textCounter >= 3) {
-                    
-                    doFetch({
-            action: 'getAllUsers',
-            data: inputVal
-        }).then(function (e) {
-            var dat = {}
-            deliveryGuys = e.users;
-
-            for (var iii in e.users) {
-                var nm = e.users[iii].name;
-                var icn = e.users[iii].icon;
-                //var id = e.users[iii].id;
-                dat[nm] = icn;
-
+    
+    matchAddrUser();
+    
+    $(".newTransferForm").on('change', '#newTransferConfirmation', function (e) {
+        var selectedUser = $("#newTransferConfirmation").val();
+        console.log(selectedUser)
+        for (var i in deliveryGuys) {
+            var name = deliveryGuys[i].name;
+            var id = deliveryGuys[i].id;
+            var walletAdress = deliveryGuys[i].wallets;
+            if (selectedUser == name) {
+                $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
             }
-                $("#newTransferConfirmation").autocomplete({
-                        data: dat
-                    });
-
-
-        });
-    }
-    });
-
+        }
+    })
 }
 
 function getAvailableCoins() {
@@ -2059,19 +2055,52 @@ $("#tokenPrice").click(function () {
     }
 });
 
-document.querySelector("#newTransferConfirmation").addEventListener("change", function (e) {
-    document.querySelector(".newTransferForm > .autocomplete-content > li").addEventListener("click", function (e) {
-        var selectedUser = $("#newTransferConfirmation").val();
-        for (var i in deliveryGuys) {
-            var name = deliveryGuys[i].name;
-            var id = deliveryGuys[i].id;
-            var walletAdress = deliveryGuys[i].wallets;
-            if (selectedUser == name) {
-                $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
-            }
-        }
-    });
-});
+//document.querySelector("#newTransferConfirmation").addEventListener("input", function (e) {
+//    document.querySelector(".newTransferForm > .autocomplete-content > li").addEventListener("touchstart", function (e) {
+//        var selectedUser = $("#newTransferConfirmation").val();
+//        for (var i in deliveryGuys) {
+//            var name = deliveryGuys[i].name;
+//            var id = deliveryGuys[i].id;
+//            var walletAdress = deliveryGuys[i].wallets;
+//            if (selectedUser == name) {
+//                $("#newTransferConfirmation").val("0x" + JSON.parse(walletAdress.replace('"[', '[').replace(']"', ']')).publicAddress[0]);
+//            }
+//        }
+//    });
+//});
 //$(".newTransferForm").on('click', $(' .autocomplete-content li'), function (e) {
 //    
 //})
+
+
+//Match Adress with user
+function matchAddrUser() {
+    var inputVal = $("#newTransferConfirmation").val();
+    doFetch({
+        action: 'getAllUsers',
+        data: inputVal
+    }).then(function (e) {
+        var dat = {}
+        deliveryGuys = e.users;
+
+        for (var iii in e.users) {
+            var nm = e.users[iii].name;
+            var icn = e.users[iii].icon;
+            //var id = e.users[iii].id;
+            dat[nm] = icn;
+
+        }
+
+        $("#newTransferConfirmation").keyup(function () {
+            var textCounter = $(this).val().length;
+            var inputVal = $("#newTransferConfirmation").val();
+            if (textCounter >= 3) {} else {
+                $("#newTransferConfirmation").autocomplete({
+                    data: dat
+                });
+            }
+        });
+
+
+    });
+}
