@@ -1420,11 +1420,10 @@ function starting() {
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-                        if (!getBitsOpt('oid')) {
+                        if (getBitsOpt('oid')) {
 
                             openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
                         }
-
                         setTimeout(function () {
                             M.updateTextFields();
                         }, 600);
@@ -1474,13 +1473,23 @@ function starting() {
                     doFirstBuy();
 
 
-                    // start open requested order
+                    
                     if (getBitsOpt('oid')) {
-
+                        // start open requested order
                         openOrder(getBitsOpt('oid'), 'manage');
-                    }
-
                     // end open requested order
+                        
+                    }else if(getBitsOpt('act')=='transfer'){
+
+                            openOrder('new', 'transfer');
+
+                            $("#newTransferConfirmation").val(getBitsOpt('dest'));
+
+                            $("#newTransferAmount").val(getBitsOpt('amount'));
+
+                        }
+
+
 
 
                 });
