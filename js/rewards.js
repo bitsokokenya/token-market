@@ -1423,6 +1423,10 @@ function starting() {
                         if (!getBitsOpt('oid') || !getBitsOpt('act')) {
 
                             openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
+                        }else{
+                        
+                        location.hash='';
+                        
                         }
                         setTimeout(function () {
                             M.updateTextFields();
