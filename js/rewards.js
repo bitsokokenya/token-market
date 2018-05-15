@@ -1227,7 +1227,7 @@ function orderBookManager(baseX, baseCd) {
                                     var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                                 } else {
                                     try {
-                                        var coinba = allTokens[activeCoin.toLowerCase()].balance/Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)*allTokens[activeCoin.toLowerCase()].rate*baseX;
+                                        var coinba = allTokens[activeCoin.toLowerCase()].balance/Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)*allTokens[activeCoin.toLowerCase()].rate*baseX*baseConv;
                                     } catch (er) {
 
                                         var coinba = 0;
