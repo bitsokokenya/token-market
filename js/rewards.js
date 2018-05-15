@@ -489,9 +489,10 @@ function updateNewOrderDet(oid, action) {
     }
 
     if (action == 'buy') {
-        $("#newTradeTotal").attr("placeholder", 'eg: 1150 ' + baseCd.toUpperCase());
-        $("#newTradeTotal").attr("max", '');
+        $("#newTradeTotal").attr("placeholder", 'eg: '+ (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice)/2 +' '+ baseCd.toUpperCase());
+        $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice);
 
+       
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
         $(".tradeOrderBody").html('you will recieve ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
         $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
