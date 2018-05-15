@@ -1227,10 +1227,10 @@ function orderBookManager(baseX, baseCd) {
                                     var bAc = '<a class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>SELL</a>';
                                 } else {
                                     try {
-                                        var coinba = allTokens[oDs[ii].contract].balance;
+                                        var coinba = allTokens[activeCoin.toLowerCase()].balance/Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)*allTokens[activeCoin.toLowerCase()].rate*baseX;
                                     } catch (er) {
 
-                                        var coinba = allTokens[activeCoin.toLowerCase()].balance/Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)*allTokens[activeCoin.toLowerCase()].rate*baseX;
+                                        var coinba = 0;
                                         console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
                                     }
 
