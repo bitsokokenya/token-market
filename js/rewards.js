@@ -490,7 +490,7 @@ function updateNewOrderDet(oid, action) {
 
     if (action == 'buy') {
         $("#newTradeTotal").attr("placeholder", 'eg: '+ (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice)/2 +' '+ baseCd.toUpperCase());
-        $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice);
+        $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice));
 
        
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
