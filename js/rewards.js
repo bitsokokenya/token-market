@@ -1238,7 +1238,7 @@ function orderBookManager(baseX, baseCd) {
                                         //before enabling selling ensure user has sufficient funds fo cover transaction fees
                                         // TO-DO -  better workaround??
                                         // this is a rough estimatee of 10% of users balance
-                                        if ((coinba*0.9) < (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)) {
+                                        if ((coinba*0.9) > (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)) {
                                             var bAc = '<a id="oid-act-' + oDs[ii].id + '"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                         } else {
