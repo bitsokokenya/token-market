@@ -493,6 +493,7 @@ function updateNewOrderDet(oid, action) {
     if (action == 'buy') {
         $("#newTradeTotal").attr("placeholder", 'eg: '+ (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice)/2 +' '+ baseCd.toUpperCase());
         $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) * orderPrice));
+        $("#newTradeTotal").attr("min", 100*baseConv);
 
        
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
@@ -504,6 +505,7 @@ function updateNewOrderDet(oid, action) {
 
         $("#newTradeTotal").attr("placeholder", 'Max: ' + ((((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2) * orderPrice).toFixed(2) + ' ' + baseCd.toUpperCase());
         $("#newTradeTotal").attr("max", (((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2) * orderPrice);
+        $("#newTradeTotal").attr("min", 100*baseConv);
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
         $(".tradeOrderBody").html('you will send ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
