@@ -844,7 +844,7 @@ function orderBookManager(baseX, baseCd) {
 
     return new Promise(function (resolve, reject) {
 
-
+/*
 
         if (getBitsWinOpt('uid') != undefined) {
 
@@ -1082,7 +1082,11 @@ function orderBookManager(baseX, baseCd) {
 
             });
 
-        } else if (getBitsWinOpt('cid') != undefined) {
+        } else 
+            
+            */
+        
+        if (getBitsWinOpt('cid') != undefined) {
 
 
             doFetch({
@@ -1226,12 +1230,15 @@ function orderBookManager(baseX, baseCd) {
                                         var coinba = allTokens[oDs[ii].contract].balance;
                                     } catch (er) {
 
-                                        var coinba = 0;
+                                        var coinba = allTokens[activeCoin.toLowerCase()].balance/Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)*allTokens[activeCoin.toLowerCase()].rate*baseX;
                                         console.log('INFO! unable to update exchange balance. is wallet locked? ', er);
                                     }
 
                                     try {
-                                        if (coinba < 1) {
+                                        //before enabling selling ensure user has sufficient funds fo cover transaction fees
+                                        // TO-DO -  better workaround??
+                                        // this is a rough estimatee of 10% of users balance
+                                        if ((coinba*0.9) < (parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)) {
                                             var bAc = '<a id="oid-act-' + oDs[ii].id + '"  class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="sell" disabled>SELL</a>';
 
                                         } else {
