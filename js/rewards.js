@@ -902,13 +902,13 @@ function orderBookManager(baseX, baseCd) {
                             });
                         };
 
-                        /*
-                        var uniqEs6 = (arrArg) => {
-                          return arrArg.filter((elem, pos, arr) => {
-                            return arr.indexOf(elem) == pos;
-                          });
-                        }
-                        */
+                        
+                        //var uniqEs6 = (arrArg) => {
+                        //  return arrArg.filter((elem, pos, arr) => {
+                        //    return arr.indexOf(elem) == pos;
+                        //  });
+                        //}
+                        
 
                         makerTokens = uniqueArray(makerTokens);
 
