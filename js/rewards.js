@@ -242,10 +242,13 @@ function setOrderCallbacks() {
         } else if ($(this).attr("oid") == 'new') {
 
             if ($(this).attr("action") == 'buy') {
+                
+                // TO-DO 
+                // enable payment using mobile money and cards, currently only eth payments are processed
+                
 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
-                var atPr = $("#newTradePrice").val() / baseX;
-
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2), atPr).then(function (r) {
+                
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', 'eth', parseFloat(sendInFiat), 1).then(function (r) {
 
 
                 doFetch({
@@ -286,7 +289,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                         M.toast({
                             displayLength: 5000,
                             classes: 'tran-error-toast',
-                            html: '<span >error adding order. does your wallet have enough gas?</span>'
+                            html: '<span >error adding order. does your wallet have sufficient balance?</span>'
                         });
                     }
 
