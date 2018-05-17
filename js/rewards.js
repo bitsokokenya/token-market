@@ -32,7 +32,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
-    console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
+    //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
     var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
     $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
     if (parseFloat(thBal) > 0) {
@@ -254,7 +254,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 doFetch({
                     action: 'manageTradeOrder',
                     oid: 'new',
-                    do: $(this).attr("action"),
+                    do: 'buy',
                     user: localStorage.getItem('bits-user-name'),
                     amount: $("#newTradeAmount").val(),
                     coin: activeCoin,
@@ -321,7 +321,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                     doFetch({
                         action: 'manageTradeOrder',
                         oid: 'new',
-                        do: $(this).attr("action"),
+                        do: 'sell',
                         user: localStorage.getItem('bits-user-name'),
                         amount: $("#newTradeAmount").val(),
                         coin: activeCoin,
