@@ -146,12 +146,16 @@
         @media screen and (max-width: 480px) {
             #openOrders {
                 margin: 0% !important;
-                width: 98% !important;
+                width: 90% !important;
                 margin-left: auto !important;
                 margin-right: auto !important;
+                
                 /*                display: inline-table !important;*/
             }
             .myOrdersSec {}
+            .editOrderBtn{
+                margin-top: 0px !important;
+            }
         }
         
         @media screen and (max-width: 480px) {
@@ -1277,22 +1281,22 @@
                             <label>
                             <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification"> 
                              <span style="margin-top:3px;" class="lever right"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col s6">Unlock Wallet</div>
-                    <div class="col s6">
-                        <button onclick="loadGdrive()" class="btn-flat toast-action" style="background: #00AC9A; color: white;position: relative;    padding: 0px 15px 10px 35px !important; margin-top: -10px"><span style="pointer-events:none;"><i>
+            </label>
+        </div>
+    </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        <div class="col s6">Unlock Wallet</div>
+        <div class="col s6">
+            <button onclick="loadGdrive()" class="btn-flat toast-action" style="background: #00AC9A; color: white;position: relative;    padding: 0px 15px 10px 35px !important; margin-top: -10px"><span style="pointer-events:none;"><i>
                             <svg style="position: absolute; left: 8px; top: 8px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 486.866 486.866" style="enable-background:new 0 0 486.866 486.866;" xml:space="preserve">
                                 <g>
                                     <path d="M393.904,214.852h-8.891v-72.198c0-76.962-61.075-141.253-137.411-142.625c-2.084-0.038-6.254-0.038-8.338,0   C162.927,1.4,101.853,65.691,101.853,142.653v1.603c0,16.182,13.118,29.3,29.3,29.3c16.182,0,29.299-13.118,29.299-29.3v-1.603   c0-45.845,37.257-83.752,82.98-83.752s82.981,37.907,82.981,83.752v72.198H92.963c-13.702,0-24.878,14.139-24.878,31.602v208.701   c0,17.44,11.176,31.712,24.878,31.712h300.941c13.703,0,24.878-14.271,24.878-31.712V246.452   C418.783,228.989,407.607,214.852,393.904,214.852z M271.627,350.591v63.062c0,7.222-6.046,13.332-13.273,13.332h-29.841   c-7.228,0-13.273-6.11-13.273-13.332v-63.062c-7.009-6.9-11.09-16.44-11.09-26.993c0-19.999,15.459-37.185,35.115-37.977   c2.083-0.085,6.255-0.085,8.337,0c19.656,0.792,35.115,17.978,35.115,37.977C282.717,334.149,278.637,343.69,271.627,350.591z" fill="#FFFFFF"/>
                                 </g>    
                             </svg>
                             </i>Unlock</span></button>
-                    </div>
-                </div>
+        </div>
+    </div>
     </span>
 
     </div>
@@ -1348,7 +1352,7 @@
                     <rect x="119.467" y="51.2" width="17.067" height="68.267"></rect>
                     <path d="M187.733,392.533h-128c-4.71,0-8.533,3.823-8.533,8.533v51.2c0,4.71,3.823,8.533,8.533,8.533h128  c4.71,0,8.533-3.823,8.533-8.533v-51.2C196.267,396.356,192.444,392.533,187.733,392.533z M179.2,443.733H68.267V409.6H179.2  V443.733z"></path>
                     <rect x="452.267" y="256" width="17.067" height="204.8"></rect>    
-                </svg>    
+                </svg>
             </div>
             <h5 style="text-align: center; padding: 5%; margin:0px;">Select a wallet</h5>
             <div id="walletList" style="max-height: 255px; overflow: scroll; text-align: center;"></div>
@@ -1501,7 +1505,7 @@
             }
         }
         startGoogle();
-        Promise.all([indexDbReady, gDriveReady,serverConnectReady]).then(values => {
+        Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
                 getTradableCoins();
@@ -1513,11 +1517,11 @@
         });
 
 
-//        $(document).on('click', '.availableCoins a', function(event) {
-//            var selectedCoin = $(this).attr("coin");
-//            $("#tokenSelect").hide();
-//            $('ul.tabs').tabs('select_tab', selectedCoin);
-//        })
+        //        $(document).on('click', '.availableCoins a', function(event) {
+        //            var selectedCoin = $(this).attr("coin");
+        //            $("#tokenSelect").hide();
+        //            $('ul.tabs').tabs('select_tab', selectedCoin);
+        //        })
 
     </script>
 
@@ -1543,21 +1547,27 @@
     </script>
     <script>
         /*
+                        $(document).ready(function() {
+                            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+                            $('.modal').modal();
+                            $('.collapsible').collapsible();
+                        //Select Wallet Custome Modal
+                //        var modal = document.getElementById('chooseWalletModal');
+                //        var span = document.getElementsByClassName("close")[0];
+                //        window.onclick = function(event) {
+                //            if (event.target == modal) {
+                //                modal.style.display = "none";
+                //            }
+                //        }
+                //
+                //        });
+                */
+
+    </script>
+    <script>
         $(document).ready(function() {
-            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
-            $('.collapsible').collapsible();
-        //Select Wallet Custome Modal
-//        var modal = document.getElementById('chooseWalletModal');
-//        var span = document.getElementsByClassName("close")[0];
-//        window.onclick = function(event) {
-//            if (event.target == modal) {
-//                modal.style.display = "none";
-//            }
-//        }
-//
-//        });
-*/
+        });
     </script>
     <script src="js/bits-addMobiVeri.js"></script>
     <!-- Twitter universal website tag code
