@@ -34,6 +34,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
     //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
     var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
+    $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' +  allTokens[activeCoin.toLowerCase()].name);
     $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
     if (parseFloat(thBal) > 0) {
         $(".new-trade-buy-Button").attr("disabled", false);
