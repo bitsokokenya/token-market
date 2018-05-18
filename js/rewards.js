@@ -689,7 +689,7 @@ function tradeManager(oid, action) {
 
     if (action == 'transfer') {
 
-        orderTimer = setInterval(function () {}, 15000);
+        //orderTimer = setInterval(function () {}, 15000);
 
         doNewTransfer();
         $(".newTransferForm").css("display", 'block');
@@ -699,7 +699,7 @@ function tradeManager(oid, action) {
     } else if (oid == 'new') {
         //this is a new order
 
-        orderTimer = setInterval(function () {}, 15000);
+        //orderTimer = setInterval(function () {}, 15000);
         updateNewOrderDet(oid, action);
         $(".newTradeForm").css("display", 'block');
 
@@ -708,7 +708,18 @@ function tradeManager(oid, action) {
     } else if (action == 'manage') {
         //this is a new order
 
-        orderTimer = setInterval(function () {}, 15000);
+       // orderTimer = setInterval(function () {}, 15000);
+        manageOrderDet(oid);
+
+        $(".confTradeForm").css("display", 'block');
+        $(".newTradeForm").css("display", 'block');
+
+        return;
+
+    } else if (action == 'sell') {
+        //this is a new order
+
+        //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
 
         $(".confTradeForm").css("display", 'block');
@@ -720,9 +731,9 @@ function tradeManager(oid, action) {
 
     $(".doTradeForm").css("display", 'block');
 
-    orderTimer = setInterval(function () {
-        orderWatch()
-    }, 15000);
+    //orderTimer = setInterval(function () {
+    //    orderWatch()
+    //}, 15000);
 
     $(".confTradeForm").css("display", 'block');
 
