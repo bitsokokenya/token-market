@@ -1470,29 +1470,6 @@ function starting() {
                 $('.orderbook').animate({
                     scrollTop: 40
                 }, 1000);
-
-                $('#tradeOrder').modal({
-                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                    opacity: .5, // Opacity of modal background
-                    inDuration: 300, // Transition in duration
-                    outDuration: 200, // Ending top style attribute
-                    ready: function (modal, trigger) {
-                        if (!getBitsOpt('oid') || !getBitsOpt('act')) {
-
-                            openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
-                        }else{
-                        
-                        location.hash='';
-                        
-                        }
-                        setTimeout(function () {
-                            M.updateTextFields();
-                        }, 600);
-                    },
-                    complete: function () {
-                        stopOrderWatch()
-                    } // Callback for Modal close
-                });
                 /*
                             if (window.PaymentRequest) {
                                 payButton.setAttribute('style', 'display: inline;');
@@ -1516,6 +1493,29 @@ function starting() {
                     getAvailableCoins();
                     sortOrderBookColor();
 
+
+                $('#tradeOrder').modal({
+                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                    opacity: .5, // Opacity of modal background
+                    inDuration: 300, // Transition in duration
+                    outDuration: 200, // Ending top style attribute
+                    ready: function (modal, trigger) {
+                        if (!getBitsOpt('oid') || !getBitsOpt('act')) {
+
+                            openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
+                        }else{
+                        
+                        location.hash='';
+                        
+                        }
+                        setTimeout(function () {
+                            M.updateTextFields();
+                        }, 600);
+                    },
+                    complete: function () {
+                        stopOrderWatch()
+                    } // Callback for Modal close
+                });
 
                     //start push messaging
                     try {
