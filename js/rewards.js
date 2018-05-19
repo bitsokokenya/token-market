@@ -411,10 +411,6 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                         oid:  actionid,
                         do: 'sell',
                         user: localStorage.getItem('bits-user-name'),
-                        amount: $("#newTradeAmount").val(),
-                        coin: activeCoin,
-                        rate: $("#newTradePrice").val(),
-                        fiat: baseCd,
                         txHash: r
                     }).then(function (e) {
                         if (e.status == 'ok') {
