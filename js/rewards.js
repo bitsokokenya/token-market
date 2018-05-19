@@ -217,7 +217,7 @@ function stopOrderWatch() {
 function setOrderCallbacks() {
 
     $(".tradeOrderFooterComplete").click(function () {
-        $(this).html('<div class="preloader-wrapper active" style="width:30px;height:30px;"><div class="spinner-layer spinner-green-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div> </div></div>');
+        $(this).html('<div class="preloader-wrapper active" style="padding :10px;width:25px;height:25px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div> </div></div>');
         console.log($(this).attr("oid"), $(this).attr("action"));
         if ($(this).attr("action") == 'transfer') {
             //buy from orderbook
@@ -384,6 +384,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
 
         } else if ($(this).attr("action") == 'sell') {
             //buy from orderbook
+            
             console.log('selling from orderbook')
 
         } else if ($(this).attr("action") == 'manage') {
@@ -686,7 +687,9 @@ function tradeManager(oid, action) {
 
     $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
     $(".tradeOrderFooter").append('<a href="#!" action="' + action + '" oid="' + oid + '" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
-
+    
+    
+    setOrderCallbacks();
 
     if (action == 'transfer') {
 
@@ -722,9 +725,14 @@ function tradeManager(oid, action) {
 
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
-
+        $(".tradeOrderFooterComplete").attr("disabled", false);
         $(".confTradeForm").css("display", 'block');
         $(".newTradeForm").css("display", 'block');
+        
+
+        $("#newTradeTotal").attr("disabled", true);
+        $("#newTradePrice").attr("disabled", true);
+        $("#newTradeAmount").attr("disabled", true);
 
         return;
 
@@ -738,7 +746,6 @@ function tradeManager(oid, action) {
 
     $(".confTradeForm").css("display", 'block');
 
-    setOrderCallbacks();
     var store = getObjectStore('data', 'readwrite').get("market-orders");
     store.onsuccess = function (event) {
 
