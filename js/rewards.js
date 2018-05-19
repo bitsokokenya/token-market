@@ -381,7 +381,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
             console.log('buying from orderbook')
 
         } else if ($(this).attr("action") == 'sell') {
-            //buy from orderbook
+            //selling from orderbook
             
             console.log('selling from orderbook')
    if(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)>parseFloat($("#newTradeAmount").val())){         
@@ -425,7 +425,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                                 console.log('!INFO: ', err);
 
                                 M.toast({
-                                    displayLength: 5000,
+                                    displayLength: 50000,
                                     classes: 'tran-suc-toast',
                                     html: '<span >Sent! Please wait for balance update..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
                                 });
