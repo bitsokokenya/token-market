@@ -7,9 +7,6 @@ var baseCd;
 var deliveryGuys;
 
 function openOrder(oid, act) {
-    $("#tradeOrder").modal({
-        onOpenEnd:walletStatus()
-    }).modal("open")
     $("#newTradeTotal").val('')
     $("#newTransferTotal").val('');
     $("#newTransferAmount").val('');
@@ -1519,6 +1516,7 @@ function starting() {
                         setTimeout(function () {
                             M.updateTextFields();
                         }, 600);
+                        walletStatus();
                     },
                     complete: function () {
                         stopOrderWatch()
