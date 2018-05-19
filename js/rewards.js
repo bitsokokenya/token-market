@@ -1299,7 +1299,6 @@ function orderBookManager(baseX, baseCd) {
                         myOrdCount = 0;
                         myEscrowCount = 0;
 
-                        console.log('THIS  THIS  THIS ', oDs);
                         for (var ii in oDs) {
                             try {
 
@@ -1314,15 +1313,12 @@ function orderBookManager(baseX, baseCd) {
                                 var deci = 5;
                             }
 
-                            console.log('THIS  THIS  THIS 0', oDs[ii]);
-
                             if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending' && oDs[ii].trading == 'false') {
 
                                 //this is a buy order
                                 oDs[ii].type = 'buy';
 
-                                console.log('THIS  THIS  THIS 2', oDs[ii]);
-                                if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
+                                 if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                                     myOrdCount++;
                                     try {
 
