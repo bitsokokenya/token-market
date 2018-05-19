@@ -213,7 +213,8 @@ function setOrderCallbacks() {
 
     $(".tradeOrderFooterComplete").click(function () {
         $(this).html('<div class="preloader-wrapper active" style="padding :10px;width:25px;height:25px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div> </div></div>');
-        console.log($(this).attr("oid"), $(this).attr("action"));
+        
+                var actionid=$(this).attr("oid");
         if ($(this).attr("action") == 'transfer') {
             //buy from orderbook
             console.log('transferring from wallet');
@@ -242,7 +243,6 @@ function setOrderCallbacks() {
                 // TO-DO 
                 // enable payment using mobile money and cards, currently only eth payments are processed
                 
-                var actionid=$(this).attr("oid");
                 
 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 
