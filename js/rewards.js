@@ -456,11 +456,14 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
 
                 })
 }else{
+    
+                $('#tradeOrder').modal('close');
  M.toast({
-                            displayLength: 5000,
+                            displayLength: 3000,
                             classes: 'tran-error-toast',
                             html: '<span >insufficient funds</span>'
                         });
+    
 }
         } else if ($(this).attr("action") == 'manage') {
             //managing from orderbook
