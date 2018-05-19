@@ -232,7 +232,7 @@ function setOrderCallbacks() {
                 console.log(e);
                 M.toast({
                     displayLength: 5000,
-                    html: '<span >error adding order. does your wallet have enough gas?</span>'
+                    html: '<span >Error! completing previous transaction..</span>'
                 });
 
             });
@@ -450,7 +450,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                         M.toast({
                             displayLength: 5000,
                             classes: 'tran-error-toast',
-                            html: '<span >error adding order. does your wallet have enough gas?</span>'
+                            html: '<span >Error! completing previous transaction..</span>'
                         });
                     }
 
