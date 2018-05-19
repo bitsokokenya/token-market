@@ -242,6 +242,8 @@ function setOrderCallbacks() {
                 // TO-DO 
                 // enable payment using mobile money and cards, currently only eth payments are processed
                 
+                var actionid=$(this).attr("oid");
+                
 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 
                 transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', 'eth', parseFloat(sendInFiat), 1).then(function (r) {
@@ -381,6 +383,81 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
             //buy from orderbook
             
             console.log('selling from orderbook')
+            
+            try {
+
+                    var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
+                    var toastInstance = M.Toast.getInstance(toastElement);
+                    toastInstance.dismiss();
+                } catch (err) {
+                    console.log('!INFO: ', err);
+
+                    M.toast({
+                        displayLength: 5000,
+                        classes: 'tran-waiting-toast',
+                        html: '<span >adding order, please wait..</span>'
+                    });
+                }
+
+                var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
+                var atPr = $("#newTradePrice").val() / baseX;
+
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseFloat(sendInFiat)), atPr).then(function (r,e) {
+
+                    console.log(r,e);
+
+                    doFetch({
+                        action: 'manageTradeOrder',
+                        oid:  actionid,
+                        do: 'sell',
+                        user: localStorage.getItem('bits-user-name'),
+                        amount: $("#newTradeAmount").val(),
+                        coin: activeCoin,
+                        rate: $("#newTradePrice").val(),
+                        fiat: baseCd,
+                        txHash: r
+                    }).then(function (e) {
+                        if (e.status == 'ok') {
+                            $('#tradeOrder').modal('close');
+                            try {
+
+                                var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
+                                var toastInstance = M.Toast.getInstance(toastElement);
+                                toastInstance.dismiss();
+                            } catch (err) {
+                                console.log('!INFO: ', err);
+
+                                M.toast({
+                                    displayLength: 5000,
+                                    classes: 'tran-suc-toast',
+                                    html: '<span >Sent! Please wait for balance update..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
+                                });
+                            }
+
+                            orderBookManager(baseX, baseCd);
+                        }
+                    });
+
+
+
+                }).catch(function (e) {
+                    console.log(e);
+                    try {
+
+                        var toastElement = document.querySelector('#toast-container > .tran-error-toast');
+                        var toastInstance = M.Toast.getInstance(toastElement);
+                        toastInstance.dismiss();
+                    } catch (err) {
+                        console.log('!INFO: ', err);
+
+                        M.toast({
+                            displayLength: 5000,
+                            classes: 'tran-error-toast',
+                            html: '<span >error adding order. does your wallet have enough gas?</span>'
+                        });
+                    }
+
+                })
 
         } else if ($(this).attr("action") == 'manage') {
             //managing from orderbook
@@ -670,6 +747,12 @@ function tradeManager(oid, action) {
     $(".newTransferForm").css("display", 'none');
 
     $(".doTradeForm").css("display", 'none');
+    
+    
+        $("#newTradeTotal").attr("disabled", false);
+        $("#newTradePrice").attr("disabled", false);
+        $("#newTradeAmount").attr("disabled", true);
+    
 
     $(".tradeOrderFooter").html('').prepend('<a href="#!" oid="' + oid + '" style="float:left;" class="tradeOrderFooterCancel red waves-effect waves-red btn-flat" action="cancel" disabled>Dispute</a>');
     $(".tradeOrderFooter").append('<a href="#!" action="' + action + '" oid="' + oid + '" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
@@ -702,6 +785,9 @@ function tradeManager(oid, action) {
 
         $(".confTradeForm").css("display", 'block');
         $(".newTradeForm").css("display", 'block');
+        
+        
+        $("#newTradeTotal").attr("disabled", true);
 
         return;
 
