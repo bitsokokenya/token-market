@@ -18,8 +18,6 @@ function openOrder(oid, act) {
     // Callback for Modal open. Modal and trigger parameters available.
     tradeManager(oid, act);
 
-    $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
-    setOrderCallbacks();
 }
 function walletStatus() {
     if (sessionStorage.getItem('walletKey') ){return true;}else{ loadGdrive()}
@@ -468,12 +466,12 @@ function updateNewOrderDet(oid, action) {
     } else {
         var sss = 's';
     }
-
-    if (action == 'manage') {
-
-        $(".tradeOrderFooterComplete").html('update');
-
-    }
+    
+    
+    $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
+    
+        $(".newTradeForm").css("display", 'block');
+    
 
     if (parseFloat(($("#newTradePrice").val()) * parseFloat($("#newTradeAmount").val())) > 0 && $('.newTradeForm')[0].checkValidity()) {
 
@@ -549,24 +547,15 @@ function updateNewOrderDet(oid, action) {
         // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
     }
 
-    if (oid == 'new') {
-
+  
         $("#newTradeAmount").val(res.toFixed(allTokens[activeCoin].decimals));
 
         $(".transStat").html('placing new order..');
 
-    } else {
-
-        $("#newTradePrice").val(ress);
-
-        $(".transStat").html('updating order..');
-    }
-
-
 
     $(".tradeOrderTitle").html('');
     $(".completeOrderBut").prop("oid", '');
-    setOrderCallbacks();
+  //  setOrderCallbacks();
 
 }
 
@@ -704,13 +693,12 @@ function tradeManager(oid, action) {
         //this is a new order
 
         //orderTimer = setInterval(function () {}, 15000);
-        updateNewOrderDet(oid, action);
-        $(".newTradeForm").css("display", 'block');
+        updateNewOrderDet('new', action);
 
         return;
 
     } else if (action == 'manage') {
-        //this is a new order
+        //this is an existing order
 
        // orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
@@ -721,23 +709,33 @@ function tradeManager(oid, action) {
         return;
 
     } else if (action == 'sell') {
-        //this is a new order
+        //this is an existing order
 
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
         $(".tradeOrderFooterComplete").attr("disabled", false);
-        $(".confTradeForm").css("display", 'block');
-        $(".newTradeForm").css("display", 'block');
         
-
         $("#newTradeTotal").attr("disabled", true);
         $("#newTradePrice").attr("disabled", true);
         $("#newTradeAmount").attr("disabled", true);
+        
+        $(".newTradeForm").css("display", 'block');
+        
+        return;
+
+    } else if (action == 'buy') {
+        //this is an existing order
+
+        //orderTimer = setInterval(function () {}, 15000);
+        manageOrderDet(oid);
+        $(".tradeOrderFooterComplete").attr("disabled", false);
+        
+        $(".doTradeForm").css("display", 'block');
 
         return;
 
     }
-
+/*
     $(".doTradeForm").css("display", 'block');
 
     //orderTimer = setInterval(function () {
@@ -817,7 +815,7 @@ function tradeManager(oid, action) {
 
         }
     }
-
+*/
 }
 
 function myOpenOrders(oDs, deci) {
