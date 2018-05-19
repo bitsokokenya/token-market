@@ -383,7 +383,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
             //buy from orderbook
             
             console.log('selling from orderbook')
-            
+   if(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals)>parseFloat($("#newTradeAmount").val())){         
             try {
 
                     var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
@@ -454,7 +454,13 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                     }
 
                 })
-
+}else{
+ M.toast({
+                            displayLength: 5000,
+                            classes: 'tran-error-toast',
+                            html: '<span >insufficient funds</span>'
+                        });
+}
         } else if ($(this).attr("action") == 'manage') {
             //managing from orderbook
 
