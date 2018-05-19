@@ -728,8 +728,7 @@ function manageOrderDet(oid) {
                     $(".transStat").html('waiting for you to complete transaction');
                     
                     //trade address
-                var add=allOrds[ix].tranTo.address.replace('["',"['").replace('"]',"']");
-                var trnadr=JSON.parse(add).publicAddress[0];
+                var trnadr='0x'+JSON.parse(allOrds[ix].tranTo.address.replace('["',"['").replace('"]',"']")).publicAddress.replace("['",'').replace("']",'');
                 $('.tradeOrderFooterComplete').attr("oadr",trnadr);
 
 
@@ -742,8 +741,7 @@ function manageOrderDet(oid) {
                     $(".transStat").html('confirm payment below');
                     
                     //trade address
-                var add=allOrds[ix].tranFrom.address.replace('["',"['").replace('"]',"']");
-                var trnadr=JSON.parse(add).publicAddress[0];
+                var trnadr='0x'+JSON.parse(allOrds[ix].tranFrom.address.replace('["',"['").replace('"]',"']")).publicAddress.replace("['",'').replace("']",'');
                 $('.tradeOrderFooterComplete').attr("oadr",trnadr);
 
 
