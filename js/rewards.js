@@ -215,6 +215,7 @@ function setOrderCallbacks() {
         $(this).html('<div class="preloader-wrapper active" style="padding :10px;width:25px;height:25px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div> </div></div>');
         
                 var actionid=$(this).attr("oid");
+                var actionadr=$(this).attr("oadr");
         if ($(this).attr("action") == 'transfer') {
             //buy from orderbook
             console.log('transferring from wallet');
@@ -402,7 +403,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 var atPr = $("#newTradePrice").val() / baseX;
 
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseFloat(sendInFiat)), atPr).then(function (r,e) {
+                transferTokenValue(actionadr, activeCoin, (parseFloat(sendInFiat)), atPr).then(function (r,e) {
 
                     console.log(r,e);
 
@@ -652,8 +653,8 @@ function manageOrderDet(oid) {
 
                 //account for currency conversions
                 allOrds[ix].rate = JSON.stringify(parseFloat(allOrds[ix].rate) * baseConv);
-
-
+                
+                
                 //START enable or diasble cancel button
                 if (parseInt(allOrds[ix].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name')) || parseInt(allOrds[ix].tranTo.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
 
@@ -722,6 +723,13 @@ function manageOrderDet(oid) {
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
                     $(".transStat").html('waiting for you to complete transaction');
+                    
+                    //trade address
+                var add=allOrds[ix].tranTo.address.replace('["',"['").replace('"]',"']");
+                var trnadr=JSON.parse(add).publicAddress[0];
+                $('.tradeOrderFooterComplete').attr("oadr",trnadr);
+
+
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
@@ -729,6 +737,13 @@ function manageOrderDet(oid) {
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
                     $(".transStat").html('confirm payment below');
+                    
+                    //trade address
+                var add=allOrds[ix].tranFrom.address.replace('["',"['").replace('"]',"']");
+                var trnadr=JSON.parse(add).publicAddress[0];
+                $('.tradeOrderFooterComplete').attr("oadr",trnadr);
+
+
                 }
                 //    $(".tradeOrderTitle").html(action.toUpperCase() + ' ' + allOrds[ix].amount + ' ' + (allOrds[ix].coin + sss).toUpperCase())
                 $(".completeOrderBut").prop("oid", allOrds[ix].id);
