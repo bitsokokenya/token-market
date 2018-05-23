@@ -1592,7 +1592,7 @@ function starting() {
                 		
                 		*/
 
-                orderBookManager(e.data.baseEx, e.data.baseCd).then(function (e) {
+                orderBookManager(e.baseEx, e.baseCd).then(function (e) {
 
 
                     getAvailableCoins();
