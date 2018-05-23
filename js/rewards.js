@@ -1559,6 +1559,7 @@ function starting() {
         /////////////////////////////////// start update exchange rates
 
         fetchRates().then(function (e) {
+            /*
             if (e.status == "ok") {
                 coinList = e.data.data;
                 var rate = coinList[0].coinRate;
@@ -1570,6 +1571,7 @@ function starting() {
 
 
                 $("#fetchedRate").html(finalRate.toFixed(2));
+                */
                 $('.orderbook').animate({
                     scrollTop: 40
                 }, 1000);
@@ -1663,9 +1665,9 @@ function starting() {
 
 
 
-            } else {
-                console.log("error");
-            }
+           // } else {
+            //    console.log("error");
+           // }
         });
 
         ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
