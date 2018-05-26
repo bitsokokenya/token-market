@@ -1510,7 +1510,7 @@
                 });
             }
         }
-        startGoogle();
+        //startGoogle();
         Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
