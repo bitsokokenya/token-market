@@ -1335,7 +1335,7 @@ function orderBookManager(baseX, baseCd) {
                                 var deci = 5;
                             }
 
-                            if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending' && oDs[ii].trading == 'false') {
+                            if (oDs[ii].tranTo == 0 && oDs[ii].state == 'pending') {
 
                                 //this is a buy order
                                 oDs[ii].type = 'buy';
