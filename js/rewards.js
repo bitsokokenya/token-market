@@ -864,7 +864,17 @@ function tradeManager(oid, action) {
     
     setOrderCallbacks();
 
-    if (action == 'transfer') {
+     if (action == 'buy' && activeCoin.toLowerCase()=='eth') {
+        //this is an existing order
+
+        //orderTimer = setInterval(function () {}, 15000);
+         
+        $(".doTradeForm").css("display", 'block');
+        //updateNewOrderDet('new', action);
+
+        return;
+
+    } else if (action == 'transfer') {
 
         //orderTimer = setInterval(function () {}, 15000);
 
