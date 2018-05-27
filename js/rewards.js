@@ -636,9 +636,7 @@ function updateNewOrderDet(oid, action) {
         var sss = 's';
     }
     
-    
-    $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
-    
+   
         $(".newTradeForm").css("display", 'block');
     
 
@@ -878,7 +876,9 @@ function tradeManager(oid, action) {
 
         //orderTimer = setInterval(function () {}, 15000);
         updateNewOrderDet('new', action);
-
+ 
+    $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
+    
         return;
 
     } else if (action == 'manage') {
