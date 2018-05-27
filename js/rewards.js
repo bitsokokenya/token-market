@@ -639,7 +639,7 @@ function updateNewOrderDet(oid, action) {
     
     $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
     
- //       $(".newTradeForm").css("display", 'block');
+        $(".newTradeForm").css("display", 'block');
     
 
     if (parseFloat(($("#newTradePrice").val()) * parseFloat($("#newTradeAmount").val())) > 0 && $('.newTradeForm')[0].checkValidity()) {
