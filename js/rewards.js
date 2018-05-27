@@ -847,7 +847,7 @@ function tradeManager(oid, action) {
     console.log('trade managing ', oid, action);
 
     $(".newTradeForm").css("display", 'none');
-    $(".confTradeForm").css("display", 'none');
+   // $(".confTradeForm").css("display", 'none');
     $(".newTransferForm").css("display", 'none');
 
     $(".doTradeForm").css("display", 'none');
@@ -899,7 +899,7 @@ function tradeManager(oid, action) {
        // orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
 
-        $(".confTradeForm").css("display", 'block');
+        //$(".confTradeForm").css("display", 'block');
         $(".newTradeForm").css("display", 'block');
         
         
