@@ -1572,9 +1572,6 @@ function starting() {
 
                 $("#fetchedRate").html(finalRate.toFixed(2));
                 */
-                $('.orderbook').animate({
-                    scrollTop: 40
-                }, 1000);
                 /*
                             if (window.PaymentRequest) {
                                 payButton.setAttribute('style', 'display: inline;');
@@ -1624,6 +1621,11 @@ function starting() {
                         stopOrderWatch()
                     } // Callback for Modal close
                 });
+                    
+                    // center the orderbook
+                $('.orderbook').animate({
+                    scrollTop: 40
+                }, 1000);
 
                     //start push messaging
                     try {
