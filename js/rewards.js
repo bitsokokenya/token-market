@@ -318,7 +318,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 var atPr = $("#newTradePrice").val() / baseX;
 
-                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, (parseInt(sendInFiat) * 2), atPr).then(function (r) {
+                transferTokenValue('0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481', activeCoin, parseInt(sendInFiat), atPr).then(function (r) {
 
 
 
