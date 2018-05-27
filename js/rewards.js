@@ -701,9 +701,7 @@ function updateNewOrderDet(oid, action) {
        
         $(".tradeOrderSubTitle").html('NEW BUY ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
         $(".tradeOrderBody").html('you will recieve ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-        $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
-        //$(".tradeOrderFooter").append('<a href="#!" oid="new" action="buy" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
-
+        $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + allTokens[activeCoin].name + '.png')
     } else if (action == 'sell') {
 
         $("#newTradeTotal").attr("placeholder", 'Max: ' + ((((allTokens[activeCoin].balance / Math.pow(10, allTokens[activeCoin].decimals)) * 0.9) / 2) * orderPrice).toFixed(2) + ' ' + baseCd.toUpperCase());
@@ -712,8 +710,7 @@ function updateNewOrderDet(oid, action) {
 
         $(".tradeOrderSubTitle").html('NEW SELL ORDER: ' + ntt + ' ' + baseCd.toUpperCase());
         $(".tradeOrderBody").html('you will send ' + res.toFixed(allTokens[activeCoin].decimals) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-        $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + activeCoin + '.png');
-        // $(".tradeOrderFooter").append('<a href="#!" oid="new" action="sell" class="tradeOrderFooterComplete waves-effect green waves-green btn-flat" disabled>Complete</a>');
+    $(".tradeOrderImg").prop("src", '/bitsAssets/images/currencies/' + allTokens[activeCoin].name + '.png')
     }
 
   
