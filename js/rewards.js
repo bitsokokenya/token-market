@@ -627,6 +627,9 @@ for (i = 0; i < x.length; i++) {
 
 
 function updateNewOrderDet(oid, action) {
+    if($('.tradeOrderFooterComplete').attr("action")=='transfer'){
+    return;
+    }
     if (activeCoin.endsWith("s")) {
         var sss = '';
     } else {
@@ -636,7 +639,7 @@ function updateNewOrderDet(oid, action) {
     
     $("#newTradePrice").val(allTokens[activeCoin.toLowerCase()].rate * baseX);
     
-        $(".newTradeForm").css("display", 'block');
+ //       $(".newTradeForm").css("display", 'block');
     
 
     if (parseFloat(($("#newTradePrice").val()) * parseFloat($("#newTradeAmount").val())) > 0 && $('.newTradeForm')[0].checkValidity()) {
