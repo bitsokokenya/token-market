@@ -16,6 +16,7 @@ function openOrder(oid, act) {
     tradeManager(oid, act);
 
 }
+
 function walletStatus() {
     if (sessionStorage.getItem('walletKey') ){return true;}else{ loadGdrive()}
 }
@@ -97,7 +98,8 @@ function sortOrderBookColor() {
     $($("#orderbookSep").nextAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
         "background-color": "rgb(153, 255, 153)"
     });
-// center the orderbook
+    
+    // center the orderbook
                 $('.orderbook').animate({
                     scrollTop: 40
                 }, 1000);
@@ -1425,7 +1427,14 @@ function orderBookManager(baseX, baseCd) {
 
                                 //this is a buy order
                                 oDs[ii].type = 'buy';
-
+                                     
+                                if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>(parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)){
+                                       var bAc = '<a id="oid-act-' + oDs[ii].id + '" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
+                                
+                                   }else {
+                                        var bAc = '<a id="oid-act-' + oDs[ii].id + '" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
+                               
+                                }
                                  if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                                     myOrdCount++;
                                     try {
@@ -1440,14 +1449,7 @@ function orderBookManager(baseX, baseCd) {
 
                                     var bAc = '<a id="oid-act-' + oDs[ii].id + '" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                                 }
-                                
-                                if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>(parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)){
-                                       var bAc = '<a id="oid-act-' + oDs[ii].id + '" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
-                                
-                                   }else {
-                                        var bAc = '<a id="oid-act-' + oDs[ii].id + '" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                                
-                                }
 
 
                                 console.log('THIS  THIS  THIS 3', oDs[ii]);
