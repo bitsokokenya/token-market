@@ -97,7 +97,12 @@ function sortOrderBookColor() {
     $($("#orderbookSep").nextAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
         "background-color": "rgb(153, 255, 153)"
     });
+// center the orderbook
+                $('.orderbook').animate({
+                    scrollTop: 40
+                }, 1000);
 
+                    
 }
 
 function doNewTransfer() {
@@ -1622,11 +1627,6 @@ function starting() {
                     } // Callback for Modal close
                 });
                     
-                    // center the orderbook
-                $('.orderbook').animate({
-                    scrollTop: 40
-                }, 1000);
-
                     //start push messaging
                     try {
 
