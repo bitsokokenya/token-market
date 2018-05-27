@@ -835,8 +835,8 @@ function tradeManager(oid, action) {
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
         $(".tradeOrderFooterComplete").attr("disabled", false);
-        
-        $(".doTradeForm").css("display", 'block');
+                $(".newTradeForm").css("display", 'block');
+        //$(".doTradeForm").css("display", 'block');
 
         return;
 
