@@ -384,6 +384,87 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
         } else if ($(this).attr("action") == 'buy') {
             //buy from orderbook
             console.log('buying from orderbook')
+            
+             if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>parseFloat($("#newTradeTotal").val())){         
+            try {
+
+                    var toastElement = document.querySelector('#toast-container > .tran-waiting-toast');
+                    var toastInstance = M.Toast.getInstance(toastElement);
+                    toastInstance.dismiss();
+                } catch (err) {
+                    console.log('!INFO: ', err);
+
+                    M.toast({
+                        displayLength: 5000,
+                        classes: 'tran-waiting-toast',
+                        html: '<span >adding order, please wait..</span>'
+                    });
+                }
+
+                
+                transferTokenValue(actionadr, 'eth', parseFloat($("#newTradeTotal").val()), 1).then(function (r,e) {
+
+                    console.log(r,e);
+
+                    doFetch({
+                        action: 'manageTradeOrder',
+                        oid:  actionid,
+                        do: 'buy',
+                        user: localStorage.getItem('bits-user-name'),
+                        txHash: r
+                    }).then(function (e) {
+                        if (e.status == 'ok') {
+                            $('#tradeOrder').modal('close');
+                            try {
+
+                                var toastElement = document.querySelector('#toast-container > .tran-suc-toast');
+                                var toastInstance = M.Toast.getInstance(toastElement);
+                                toastInstance.dismiss();
+                            } catch (err) {
+                                console.log('!INFO: ', err);
+
+                                M.toast({
+                                    displayLength: 50000,
+                                    classes: 'tran-suc-toast',
+                                    html: '<span >Sent! Please wait for balance update..</span><button class="btn-flat toast-action" ><a href="https://etherscan.io/tx/' + r + '" target="_blank" style="margin:0px;" class="btn-flat green-text">verify<a></button>'
+                                });
+                            }
+
+                            orderBookManager(baseX, baseCd);
+                        }
+                    });
+
+
+
+                }).catch(function (e) {
+                    console.log(e);
+                    try {
+
+                        var toastElement = document.querySelector('#toast-container > .tran-error-toast');
+                        var toastInstance = M.Toast.getInstance(toastElement);
+                        toastInstance.dismiss();
+                    } catch (err) {
+                        console.log('!INFO: ', err);
+
+                        M.toast({
+                            displayLength: 5000,
+                            classes: 'tran-error-toast',
+                            html: '<span >Error! completing previous transaction..</span>'
+                        });
+                    }
+
+                })
+}else{
+    
+                $('#tradeOrder').modal('close');
+    
+     M.toast({
+                    displayLength: 5000,
+                            classes: 'tran-error-toast',
+                    html: '<span >insufficient funds!</span><button class="btn-flat toast-action" ><a href="/tm/?cid=eth" target="_blank" class="btn-flat green-text">topup<a></button>'
+                });
+    
+}
 
         } else if ($(this).attr("action") == 'sell') {
             //selling from orderbook
