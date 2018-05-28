@@ -41,6 +41,9 @@ function upDtokenD() {
     }
 
     sortOrderBookColor();
+    setInterval(function(){
+        document.getElementById("getEthBal").innerHTML = allTokens["eth"].balance/Math.pow(10,18);
+    },20000) 
 
 }
 
