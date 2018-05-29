@@ -665,7 +665,7 @@
     </style>
     <!-- Lato Font -->
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
-    <script async defer src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
+    <script async src="https://apis.google.com/js/client:platform.js?onload=startGoogle"></script>
     <script src="https://bitsoko.co.ke/bitsAssets/js/storeManager.js"></script>
     <!--<script src="https://bitsoko.co.kehttps://bitsoko.co.ke/bitsAssets/js/locationManager.js"></script> -->
     <link href="https://bitsoko.co.ke/bitsAssets/html/connect.html" rel="import">
@@ -1524,7 +1524,7 @@
                 });
             }
         }
-        startGoogle();
+      
         Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
@@ -1587,6 +1587,7 @@
     <script>
         $(document).ready(function() {
             $('.modal').modal();
+		  startGoogle();
         });
 
         function copyToClipboard() {
