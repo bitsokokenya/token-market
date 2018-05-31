@@ -873,7 +873,7 @@ function tradeManager(oid, action) {
         //this is an existing order
 
         //orderTimer = setInterval(function () {}, 15000);
-         
+           manageOrderDet(oid);
         $(".doTradeForm").css("display", 'block');
         //updateNewOrderDet('new', action);
 
