@@ -1941,6 +1941,7 @@ function getAvailableCoins() {
 
     });
     // $('.modal').modal();
+     $('.collapsible').collapsible();
     doFetch({
         action: 'userVerified',
         uid: localStorage.getItem("bits-user-name")
