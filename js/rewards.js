@@ -811,12 +811,11 @@ function manageOrderDet(oid) {
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
                     $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
-                        baseCd.toUpperCase() + ' to ' + allOrds[ix].tranTo.name.split(" ") + ' at phone number ' + allOrds[ix].tranTo.phone +
-                        ' then enter the transaction code below.');
+                    $(".transStat").html('confirm payment below');
+                    $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                        baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone + ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranTo.icon);
 
-                    $(".transStat").html('waiting for you to complete transaction');
                     
                     //trade address
                 var trnadr='0x'+JSON.parse(allOrds[ix].tranTo.address.replace('["',"['").replace('"]',"']")).publicAddress.replace("['",'').replace("']",'');
@@ -825,11 +824,12 @@ function manageOrderDet(oid) {
 
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
                     $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
-                    $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
-                        baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranFrom.phone + ' then enter the transaction code below.');
+                    $(".transStat").html('waiting for you to complete transaction');
+                    $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
+                        baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
+                        ' then enter the transaction code below.');
                     $(".tradeOrderImg").prop("src", allOrds[ix].tranFrom.icon);
 
-                    $(".transStat").html('confirm payment below');
                     
                     //trade address
                 var trnadr='0x'+JSON.parse(allOrds[ix].tranFrom.address.replace('["',"['").replace('"]',"']")).publicAddress.replace("['",'').replace("']",'');
