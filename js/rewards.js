@@ -41,8 +41,10 @@ function upDtokenD() {
     }
 
     sortOrderBookColor();
+        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv)+' '+baseCd ;
+    
     setInterval(function(){
-        document.getElementById("getEthBal").innerHTML = allTokens["eth"].balance/Math.pow(10,18);
+        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv)+' '+baseCd ;
     },20000) 
 
 }
