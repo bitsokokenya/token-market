@@ -41,10 +41,10 @@ function upDtokenD() {
     }
 
     sortOrderBookColor();
-        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv)+' '+baseCd ;
+        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)+' '+baseCd.toUpperCase() ;
     
     setInterval(function(){
-        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv)+' '+baseCd ;
+        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)+' '+baseCd.toUpperCase() ;
     },20000) 
 
 }
