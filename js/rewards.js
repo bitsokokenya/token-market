@@ -27,7 +27,7 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-wpage').attr('href', allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
-    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX) + ' ' + baseCd.toUpperCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX,2) + ' ' + baseCd.toUpperCase());
     //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
     var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
     $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' +  allTokens[activeCoin.toLowerCase()].name);
