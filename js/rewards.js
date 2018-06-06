@@ -1880,10 +1880,10 @@ function getAvailableCoins() {
         $(".coinContent").html('').append('<div id="' + tokenTab[i] + '" class="col s12 hero" style="font-size: 2em;text-transform: uppercase; color: white; line-height: 850%; display: block; margin-top: -45px;height: 250px;"><div class="row col s5"> <div class="col s12 m12 coinDataHolda"><div class="row"><div class="col s4"><img style="width: 90px;border-radius: 50%;margin-right: -10px;top: 30px;position: relative;" src="/bitsAssets/images/currencies/' + allTokens[tokenTab[i].toLowerCase()].name.replace('-kovan', '') + '.png"></div><div class="col s8"><p style=" margin: 0px;"><span style=" border-left: solid white 15px; margin-right: 20px;"></span>' + allTokens[tokenTab[i].toLowerCase()].name + '</p></div></div></div>' +
             '</div><div class="col s12 m6 doTransActs" style="text-align: center; position: relative;padding: 0px;">' +
             '<table class="striped bordered buySell" id="blocks" style="line-height: 20px;width: 50%;float:left;display: block;margin-left: auto;margin-right: auto;background-color: transparent!important;font-size: 14px;">' +
-            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 0%;text-transform:uppercase;">Balance</th></tr><tr><th class="tokens-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
+            '<tbody style="height: 350px;"><tr><th style="padding: 0% 0% 5% 0%;text-transform:uppercase;">Balance</th></tr><tr><th class="tokens-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: right;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr>' +
-            '<tr><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: center;">' +
+            '<tr><th class="wallet-' + tokenTab[i].toLowerCase() + '-Balance" style="text-align: right;">' +
             '<div class="preloader-wrapper active" style="width:15px;height:15px;"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div>' +
             '</div><div class="circle-clipper right"><div class="circle"></div></div> </div></div></th></tr><tr>' +
             '<tr><th></th><th></th></tr>' +
