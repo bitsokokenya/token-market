@@ -1516,18 +1516,6 @@
             }
         }
       
-        Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
-            if (localStorage.getItem('bits-user-name') == null) {
-                console.log('signed out!');
-                getTradableCoins();
-            } else {
-
-                $("#notSignedIn").hide();
-                starting();
-            }
-        });
-
-
         //        $(document).on('click', '.availableCoins a', function(event) {
         //            var selectedCoin = $(this).attr("coin");
         //            $("#tokenSelect").hide();
@@ -1579,6 +1567,19 @@
         $(document).ready(function() {
             $('.modal').modal();
 		  startGoogle();
+		
+        Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
+            if (localStorage.getItem('bits-user-name') == null) {
+                console.log('signed out!');
+                getTradableCoins();
+            } else {
+
+                $("#notSignedIn").hide();
+                starting();
+            }
+        });
+
+
         });
 
         function copyToClipboard() {
