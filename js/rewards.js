@@ -1443,13 +1443,13 @@ function orderBookManager(baseX, baseCd) {
                                 //this is a buy order
                                 oDs[ii].type = 'buy';
                                      
-                                if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>(parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)  || getBitsWinOpt('cid').toLowerCase()=='eth'){
-                                       var bAc = '<a id="oid-act-' + oDs[ii].id + '" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
+                                //if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>(parseFloat(oDs[ii].amount) * parseFloat(oDs[ii].rate)).toFixed(2)  || getBitsWinOpt('cid').toLowerCase()=='eth'){
+                                var bAc = '<a id="oid-act-' + oDs[ii].id + '" class=" waves-effect waves-light btn modal-trigger" href="#tradeOrder" oid="' + oDs[ii].id + '" act="buy">BUY</a>';
                                 
-                                   }else {
-                                        var bAc = '<a id="oid-act-' + oDs[ii].id + '" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
+                                //   }else {
+                               //         var bAc = '<a id="oid-act-' + oDs[ii].id + '" class="waves-effect waves-light btn modal-trigger" href="#tradeOrder" disabled>BUY</a>';
                                
-                                }
+                                //}
                                  if (parseInt(oDs[ii].tranFrom.uid) == parseInt(localStorage.getItem('bits-user-name'))) {
                                     myOrdCount++;
                                     try {
