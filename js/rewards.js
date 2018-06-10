@@ -788,13 +788,6 @@ function manageOrderDet(oid) {
                 //END enable or diasble cancel button
 
 
-                if (allOrds[ix].coin.endsWith("s")) {
-                    var sss = ' TOKENS';
-                } else {
-                    var sss = ' TOKENS';
-                }
-
-
                 $("#newTradePrice").val(allOrds[ix].rate);
                 $("#newTradeAmount").val(allOrds[ix].amount);
                 var tAmount = parseFloat((parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2));
@@ -810,7 +803,7 @@ function manageOrderDet(oid) {
 
                 if (parseInt(allOrds[ix].tranFrom) == 0) {
 
-                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('SELLING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name).toUpperCase());
                     $(".transStat").html('confirm payment below');
                     $(".tradeOrderBody").html('Recieve ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' at phone number ' + allOrds[ix].tranTo.phone + ' then enter the transaction code below.');
@@ -823,7 +816,7 @@ function manageOrderDet(oid) {
 
 
                 } else if (parseInt(allOrds[ix].tranTo) == 0) {
-                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name + sss).toUpperCase());
+                    $(".tradeOrderSubTitle").html('BUYING ' + Math.floor10(parseFloat(allOrds[ix].amount), Math.abs(allTokens[allOrds[ix].coin].decimals) * -1) + ' ' + (allTokens[activeCoin.toLowerCase()].name).toUpperCase());
                     $(".transStat").html('waiting for you to complete transaction');
                     $(".tradeOrderBody").html('Send ' + (parseFloat(allOrds[ix].amount) * parseFloat(allOrds[ix].rate)).toFixed(2) + ' ' +
                         baseCd.toUpperCase() + ' to ' + allOrds[ix].tranFrom.name.split(" ") + ' at phone number ' + allOrds[ix].tranFrom.phone +
