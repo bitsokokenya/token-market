@@ -1940,7 +1940,13 @@ function getAvailableCoins() {
     });
     // $('.modal').modal();
      $('.collapsible').collapsible();
-    
+ M.Collapsible.getInstance(document.querySelector('.doTradeForm')).options.onOpenStart=function(e){
+     if(e.getAttribute('class')=='doPayMM'){
+         document.querySelector('.tradeOrderFooterComplete').innerText='Send Code'
+     }else if(e.getAttribute('class')=='doPayEth'){
+         document.querySelector('.tradeOrderFooterComplete').innerText='Send ETH'
+     };
+ }   
 
     doFetch({
         action: 'userVerified',
