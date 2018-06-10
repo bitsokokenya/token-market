@@ -1939,14 +1939,8 @@ function getAvailableCoins() {
 
     });
     // $('.modal').modal();
-     //$('.collapsible').collapsible();
-     document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.doTradeForm');
-    var instances = M.Collapsible.init(elems, {
-    onOpenStart:function(e){
-    console.log(e)
-    }});
-  });
+     $('.collapsible').collapsible();
+    
 
     doFetch({
         action: 'userVerified',
