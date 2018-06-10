@@ -603,11 +603,14 @@
         }
         /************ Popular Traders ******************/
         
+        .doPayMM>.collapsible-body {
+            
+         padding: 1rem!important;
+        }
         .popularTraders {
             width: 70%;
             display: none;
         }
-        
         .popularTraders table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -967,7 +970,7 @@
     <div id="tradeOrder" class="modal" style="overflow: initial;max-height: 100%;height: 100%;">
         <div class="modal-content" style="text-align:center; padding-top:0px; padding-bottom:0px;">
             <img class="tradeOrderImg" src="" style="width: 50px;border-radius:50px;width: 90px; border-radius: 50px; background: white; margin-top: -29px; -webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);">
-            <h5 class="tradeOrderSubTitle"></h5>
+            <h6 class="tradeOrderSubTitle"></h6>
             <div class="row">
                 <div class="input-field col s12">
                     <span style="font-weight:bold;">STATUS: </span>
@@ -976,8 +979,7 @@
             </div>
 
             <form class="col s12 newTradeForm">
-
-                <div class="row">
+                <div class="row" style="margin-bottom: 0px;">
                     <div class="input-field col s12">
                         <div class="row">
                             <div class="col s2">
@@ -1019,13 +1021,13 @@
                 
                 <li class="doPayMM">
                     <div class="collapsible-header">Pay using mobile money</div>
-                    <div class="collapsible-body" style="padding-top: 10px;"><span>
-                         <p class="tradeOrderBody" style="margin-top: 0; margin-bottom: 40px;"></p>
+                    <div class="collapsible-body"><span>
+                         <p class="tradeOrderBody" style="margin-top: 0; margin-bottom: 20px;"></p>
                         <form class="col s12 confTradeForm">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input placeholder="eg: F5Y7U889E3 " id="newTradeConfirmation" type="text" class="validate">
-                                    <label for="newTradeConfirmation" class="active">Transaction Code</label>
+                                    <input placeholder="eg: F5Y7U889E3 " id="newTradeConfirmation" type="text" class="validate" style="text-align:center;">
+                                    <label for="newTradeConfirmation" class="active" style="text-align:center;">Transaction Code</label>
                                 </div>
                             </div>
                         </form>
