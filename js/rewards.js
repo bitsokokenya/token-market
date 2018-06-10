@@ -930,11 +930,14 @@ function tradeManager(oid, action) {
     } else if (action == 'buy') {
         //this is an existing order
 
+        $("#newTradeTotal").attr("disabled", true);
+        $("#newTradePrice").attr("disabled", true);
+        $("#newTradeAmount").attr("disabled", true);
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
         $(".tradeOrderFooterComplete").attr("disabled", false);
                 $(".newTradeForm").css("display", 'block');
-        //$(".doTradeForm").css("display", 'block');
+        $(".doTradeForm").css("display", 'block');
 
         return;
 
