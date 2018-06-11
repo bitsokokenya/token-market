@@ -908,11 +908,11 @@ function tradeManager(oid, action) {
     } else if (action == 'sell') {
         //this is an existing order
 
-         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
         $(".tradeOrderFooterComplete").attr("disabled", false);
         
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         $("#newTradeTotal").attr("disabled", true);
         $("#newTradePrice").attr("disabled", true);
         $("#newTradeAmount").attr("disabled", true);
@@ -924,12 +924,13 @@ function tradeManager(oid, action) {
     } else if (action == 'buy') {
         //this is an existing order
 
-         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         $("#newTradeTotal").attr("disabled", true);
         $("#newTradePrice").attr("disabled", true);
         $("#newTradeAmount").attr("disabled", true);
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
+	    
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         $(".tradeOrderFooterComplete").attr("disabled", false);
                 $(".newTradeForm").css("display", 'block');
         $(".doTradeForm").css("display", 'block');
