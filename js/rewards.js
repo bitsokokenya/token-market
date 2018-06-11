@@ -390,6 +390,7 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
 
         } else if ($(this).attr("action") == 'buy') {
             //buy from orderbook
+		if(document.querySelector('.doTradeForm>.active').getAttribute("class").replace(' active','')=='doPayEth'){
             console.log('buying from orderbook')
             
              if((allTokens['eth'].balance / Math.pow(10, allTokens['eth'].decimals)*baseX*baseConv)>parseFloat($("#newTradeTotal").val())){         
@@ -472,7 +473,14 @@ var sendInFiat = $("#newTradePrice").val() * $("#newTradeAmount").val();
                 });
     
 }
-
+}else if(document.querySelector('.doTradeForm>.active').getAttribute("class").replace(' active','')=='doPayMM'){
+//buy this using mobile money transaction code
+	
+	
+	
+	
+	
+}
         } else if ($(this).attr("action") == 'sell') {
             //selling from orderbook
             
