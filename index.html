@@ -1566,7 +1566,12 @@
 		  startGoogle();
 		
         Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
-		    //Unlock Wallet
+		
+            if (localStorage.getItem('bits-user-name') == null) {
+                console.log('signed out!');
+                getTradableCoins();
+            } else {
+    //Unlock Wallet
             if (sessionStorage.getItem('walletKey')) {
                 console.log('unlocked')
             } else {
@@ -1581,11 +1586,6 @@
                 });
             }
 		
-            if (localStorage.getItem('bits-user-name') == null) {
-                console.log('signed out!');
-                getTradableCoins();
-            } else {
-
                 $("#notSignedIn").hide();
                 starting();
             }
