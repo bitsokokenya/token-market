@@ -908,6 +908,7 @@ function tradeManager(oid, action) {
     } else if (action == 'sell') {
         //this is an existing order
 
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
         $(".tradeOrderFooterComplete").attr("disabled", false);
@@ -923,6 +924,7 @@ function tradeManager(oid, action) {
     } else if (action == 'buy') {
         //this is an existing order
 
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         $("#newTradeTotal").attr("disabled", true);
         $("#newTradePrice").attr("disabled", true);
         $("#newTradeAmount").attr("disabled", true);
@@ -1940,10 +1942,20 @@ function getAvailableCoins() {
     });
     // $('.modal').modal();
      $('.collapsible').collapsible();
- M.Collapsible.getInstance(document.querySelector('.doTradeForm')).options.onOpenStart=function(e){
+M.Collapsible.getInstance(document.querySelector('.doTradeForm')).options.onOpenStart=function(e){
+     
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
+     
      if(e.getAttribute('class')=='doPayMM'){
          document.querySelector('.tradeOrderFooterComplete').innerText='Send Code'
      }else if(e.getAttribute('class')=='doPayEth'){
+		if(((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)>parseFloat($("#newTradeTotal").val())){
+
+         document.querySelector('.tradeOrderFooterComplete').removeAttribute("disabled");
+}else{
+
+         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
+}
          document.querySelector('.tradeOrderFooterComplete').innerText='Send ETH'
      };
  }   
