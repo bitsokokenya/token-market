@@ -1510,20 +1510,7 @@
 
             $("#notSignedIn").hide();
             starting();
-            //Unlock Wallet
-            if (sessionStorage.getItem('walletKey')) {
-                console.log('unlocked')
-            } else {
-                var toastHTML = '<span>Unlock wallet to trade</span><button id="unlckWallet" class="btn-flat toast-action" onclick="loadGdrive()">unlock</button>';
-                M.toast({
-                    html: toastHTML,
-                    displayLength: 100000,
-                    classes: "unlckWallet"
-                });
-                $(document).on('click', $('#unlckWallet'), function(e) {
-                    $(".unlckWallet").remove()
-                });
-            }
+        
         }
       
         //        $(document).on('click', '.availableCoins a', function(event) {
@@ -1579,6 +1566,21 @@
 		  startGoogle();
 		
         Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
+		    //Unlock Wallet
+            if (sessionStorage.getItem('walletKey')) {
+                console.log('unlocked')
+            } else {
+                var toastHTML = '<span>Unlock wallet to trade</span><button id="unlckWallet" class="btn-flat toast-action" onclick="loadGdrive()">unlock</button>';
+                M.toast({
+                    html: toastHTML,
+                    displayLength: 100000,
+                    classes: "unlckWallet"
+                });
+                $(document).on('click', $('#unlckWallet'), function(e) {
+                    $(".unlckWallet").remove()
+                });
+            }
+		
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
                 getTradableCoins();
