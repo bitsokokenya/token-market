@@ -918,9 +918,7 @@ function tradeManager(oid, action) {
 
         //orderTimer = setInterval(function () {}, 15000);
         manageOrderDet(oid);
-        $(".tradeOrderFooterComplete").attr("disabled", false);
-        
-         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
+       document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
         $("#newTradeTotal").attr("disabled", true);
         $("#newTradePrice").attr("disabled", true);
         $("#newTradeAmount").attr("disabled", true);
@@ -939,8 +937,7 @@ function tradeManager(oid, action) {
         manageOrderDet(oid);
 	    
          document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
-        $(".tradeOrderFooterComplete").attr("disabled", false);
-                $(".newTradeForm").css("display", 'block');
+               $(".newTradeForm").css("display", 'block');
         $(".doTradeForm").css("display", 'block');
 
         return;
