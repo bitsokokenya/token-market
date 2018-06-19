@@ -187,7 +187,7 @@ function orderWatch(cod) {
                 $(".transStat").html(e.msg);
                 M.toast({
                     displayLength: 2000,
-                    html: '<span class="toastlogin">order not confirmed!</span>'
+                    html: '<span class="toastlogin">waiting for seller to confirm</span>'
                 });
 
             }
