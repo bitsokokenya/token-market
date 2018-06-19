@@ -996,10 +996,20 @@
                 </div>
             </form>
 
-            <ul class="collapsible doTradeForm">
+            <ul class="collapsible doTradeForm popout">
                 
-                <li class="doPayEth">
-                    <div class="collapsible-header">Pay using ethereum</div>
+                <li class="doPayEth"  style="pointer-events:none;">
+                    <div class="collapsible-header">Pay using ethereum
+  <!-- Switch -->
+  <div class="doPayEth-switch">
+    <label>
+      disabled
+      <input type="checkbox">
+      <span class="lever"></span>
+      enabled
+    </label>
+  </div>
+</div>
                     <div class="collapsible-body" style="padding-top: 10px;">
 			
                 <div style="">
@@ -1021,8 +1031,18 @@
                     </div>
                 </li>
                 
-                <li class="doPayMM">
-                    <div class="collapsible-header">Pay using mobile money</div>
+                <li class="doPayMM" style="pointer-events:none;">
+                    <div class="collapsible-header">Pay using mobile money
+			<!-- Switch -->
+  <div class="doPayMM-switch">
+    <label>
+      disabled
+      <input type="checkbox">
+      <span class="lever"></span>
+      enabled
+    </label>
+  </div>
+			</div>
                     <div class="collapsible-body"><span>
                          <p class="tradeOrderBody" style="margin-top: 0; margin-bottom: 20px;"></p>
                         <form class="col s12 confTradeForm">
@@ -1036,8 +1056,18 @@
                     </span>
                     </div>
                 </li>
-                <li style="display:none;" class="doPaycard">
-                    <div class="collapsible-header">Pay using credit card</div>
+                <li style="display:none;pointer-events:none;" class="doPaycard">
+                    <div class="collapsible-header">Pay using credit card
+			<!-- Switch -->
+  <div class="doPaycard-switch">
+    <label>
+      disabled
+      <input type="checkbox">
+      <span class="lever"></span>
+      enabled
+    </label>
+  </div>
+			</div>
                     <div class="collapsible-body" style="padding-top: 0px; padding-bottom: 10px;">
                         <span> 
                             <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
