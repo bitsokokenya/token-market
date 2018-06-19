@@ -161,11 +161,7 @@ document.addEventListener('DOMContentLoaded',function() {
     document.querySelector('#newTradeConfirmation').oninput=function(e){orderWatch(e.target.value)};
 	paySwits=document.querySelectorAll('.doTradeForm .switch')
 for(var i in paySwits){
-paySwits[i].onchange=managePaySwit();
-}
-},false);
-
-function managePaySwit(){
+paySwits[i].onchange=function(){
 	
 	var pCls=this.getAttribute("class").replace(' switch','');
 	switch (pCls) {
@@ -201,7 +197,10 @@ function managePaySwit(){
  
 		} 
 	
+};
 }
+},false);
+
 
 function orderWatch(cod) {
     if (cod.length > 0) {
