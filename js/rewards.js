@@ -165,12 +165,12 @@ paySwits[i].onchange=managePaySwit();
 }
 },false);
 
-function managePaySwit(e){
+function managePaySwit(){
 	
-	var pCls=e.target.getAttribute("class");
+	var pCls=this.getAttribute("class").replace(' switch','');
 	switch (pCls) {
       case 'doPayEth-switch': 
-			if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+			if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
 			   
             doTradeCola.open(1);
 			   }else{
@@ -179,7 +179,7 @@ function managePaySwit(e){
 			   }
       break;
          case 'doPayMM-switch': 
-            	if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+            	if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
 			   
             doTradeCola.open(2);
 			   }else{
@@ -188,7 +188,7 @@ function managePaySwit(e){
 			   }
       break;
          case 'doPaycard-switch': 
-            	if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+            	if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
 			   
             doTradeCola.open(3);
 			   }else{
