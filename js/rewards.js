@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded',function() {
     document.querySelector('#newTradeConfirmation').oninput=function(e){orderWatch(e.target.value)};
 	paySwits=document.querySelectorAll('.doTradeForm .switch')
 for(var i in paySwits){
-swits[i].onchange=managePaySwit();
+paySwits[i].onchange=managePaySwit();
 }
 },false);
 
