@@ -164,6 +164,7 @@ for(var i in paySwits){
 paySwits[i].onchange=function(){
 	
 	var pCls=this.getAttribute("class").replace(' switch','');
+	console.log(this,this.target,pCls);
 	switch (pCls) {
       case 'doPayEth-switch': 
 		if(document.querySelector('.'+pCls.replace('-switch','')).checked){
