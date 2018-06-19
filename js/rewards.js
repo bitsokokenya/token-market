@@ -166,30 +166,39 @@ paySwits[i].onchange=function(){
 	var pCls=this.getAttribute("class").replace(' switch','');
 	switch (pCls) {
       case 'doPayEth-switch': 
-			if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
+		if(document.querySelector('.'+pCls.replace('-switch','')).checked){
 			   
-            doTradeCola.open(1);
+            doTradeCola.open(0);
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "all";
 			   }else{
 		
-            doTradeCola.close(1);	   
+            doTradeCola.close(0);
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "none";	   
 			   }
       break;
          case 'doPayMM-switch': 
-            	if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
+            	if(document.querySelector('.'+pCls.replace('-switch','')).checked){
 			   
-            doTradeCola.open(2);
+            doTradeCola.open(1);
+			
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "all";
 			   }else{
 		
-            doTradeCola.close(2);	   
+            doTradeCola.close(1);	   
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "none";
 			   }
       break;
          case 'doPaycard-switch': 
-            	if(document.querySelector('.'+e.target.getAttribute("class").replace('-switch','')).checked){
+            	if(document.querySelector('.'+pCls.replace('-switch','')).checked){
 			   
-            doTradeCola.open(3);
+            doTradeCola.open(2);
+			
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "all";
 			   }else{
 		
-            doTradeCola.close(3);	   
+            doTradeCola.close(2);	
+				   
+			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "none";
 			   }
       break;
         default:
