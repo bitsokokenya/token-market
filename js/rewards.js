@@ -157,13 +157,18 @@ function doNewTransfer() {
 
 }
 
-function orderWatch() {
-    if ($("#newTradeConfirmation").val().length > 0) {
+document.addEventListener('DOMContentLoaded',function() {
+    document.querySelector('#newTradeConfirmation').oninput=function(e){orderWatch(e.target.value)};
+},false);
+
+
+function orderWatch(cod) {
+    if (cod.length > 0) {
         doFetch({
             action: 'orderWatcher',
             oid: $('.tradeOrderFooterComplete').attr("oid"),
             user: localStorage.getItem('bits-user-name'),
-            orderRef: $("#newTradeConfirmation").val()
+            orderRef: cod
         }).then(function (e) {
             if (e.status == 'ok') {
 
@@ -199,6 +204,7 @@ function orderWatch() {
 
 
 }
+
 
 function refreshOrderBook() {
 
