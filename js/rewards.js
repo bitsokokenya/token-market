@@ -159,8 +159,49 @@ function doNewTransfer() {
 
 document.addEventListener('DOMContentLoaded',function() {
     document.querySelector('#newTradeConfirmation').oninput=function(e){orderWatch(e.target.value)};
+	paySwits=document.querySelectorAll('.doTradeForm .switch')
+for(var i in paySwits){
+swits[i].onchange=managePaySwit();
+}
 },false);
 
+function managePaySwit(e){
+	
+	var pCls=e.target.getAttribute("class");
+	switch (pCls) {
+      case 'doPayEth-switch': 
+			if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+			   
+            doTradeCola.open(1);
+			   }else{
+		
+            doTradeCola.close(1);	   
+			   }
+      break;
+         case 'doPayMM-switch': 
+            	if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+			   
+            doTradeCola.open(2);
+			   }else{
+		
+            doTradeCola.close(2);	   
+			   }
+      break;
+         case 'doPaycard-switch': 
+            	if(document.querySelector('.'+e.target.getAttribute("class")).checked){
+			   
+            doTradeCola.open(3);
+			   }else{
+		
+            doTradeCola.close(3);	   
+			   }
+      break;
+        default:
+            console.log('info! unknown payment method');
+ 
+		} 
+	
+}
 
 function orderWatch(cod) {
     if (cod.length > 0) {
@@ -1954,7 +1995,8 @@ function getAvailableCoins() {
     });
     // $('.modal').modal();
      $('.collapsible').collapsible();
-M.Collapsible.getInstance(document.querySelector('.doTradeForm')).options.onOpenStart=function(e){
+doTradeCola=M.Collapsible.getInstance(document.querySelector('.doTradeForm'));
+doTradeCola.options.onOpenStart=function(e){
      
          document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
      
