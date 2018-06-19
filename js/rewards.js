@@ -167,7 +167,7 @@ paySwits[i].onchange=function(){
 	console.log(this,this.target,pCls);
 	switch (pCls) {
       case 'doPayEth-switch': 
-		if(document.querySelector('.'+pCls.replace('-switch','')).checked){
+		if(document.querySelector('.'+pCls.replace('-switch','')+' input').checked){
 			   
             doTradeCola.open(0);
 			document.querySelector('.'+pCls.replace('-switch','')).style["pointer-events"] = "all";
@@ -178,7 +178,7 @@ paySwits[i].onchange=function(){
 			   }
       break;
          case 'doPayMM-switch': 
-            	if(document.querySelector('.'+pCls.replace('-switch','')).checked){
+            	if(document.querySelector('.'+pCls.replace('-switch','')+' input').checked){
 			   
             doTradeCola.open(1);
 			
@@ -190,7 +190,7 @@ paySwits[i].onchange=function(){
 			   }
       break;
          case 'doPaycard-switch': 
-            	if(document.querySelector('.'+pCls.replace('-switch','')).checked){
+            	if(document.querySelector('.'+pCls.replace('-switch','')+' input').checked){
 			   
             doTradeCola.open(2);
 			
