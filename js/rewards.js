@@ -1699,9 +1699,18 @@ function discoverExchange(e) {
 
 }
 
-
+started=false;
+statInt=setInterval(function(){
+if(!started){
+starting();
+}
+	
+},450)
 function starting() {
 
+started=true;
+	//bad hack fix, sometimes the ready callbacks are not working :?{
+        clearInterval(statInt);
     //user wants to trade so hide default landing page
     if (getBitsWinOpt('uid') || getBitsWinOpt('cid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
