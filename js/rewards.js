@@ -2319,7 +2319,7 @@ function sendPaymentToServer(instrumentResponse) {
             });
     }, 2000);
 }
-
+/*
 //Open User Account
 $(document).on("click", "#topUpToken", function () {
     $("#tradeOrder").modal({
@@ -2331,7 +2331,7 @@ $(document).on("click", "#topUpToken", function () {
         $("#userAccount").modal("open");
     }, 2000);
 })
-
+*/
 /**
  * Converts the payment instrument into a JSON string.
  *
