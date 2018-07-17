@@ -487,3 +487,35 @@ function orderBookManager(baseX, baseCd) {
 
     });
 }
+
+
+function sortOrderBookColor() {
+
+
+    var x = document.querySelectorAll(".element-all-coin");
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = 'none';
+    }
+    var x = document.querySelectorAll('.element-' + activeCoin.toLowerCase() + '-coin');
+    var i;
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = 'table-row';
+    }
+
+
+    $($("#orderbookSep").prevAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
+        "background-color": "rgb(255, 188, 188)"
+    });
+    $($("#orderbookSep").nextAll("tr.element-" + activeCoin.toLowerCase() + "-coin")[0]).css({
+        "background-color": "rgb(153, 255, 153)"
+    });
+    
+    // center the orderbook
+                $('.orderbook').animate({
+                    scrollTop: 40
+                }, 1000);
+
+                    
+}
+
