@@ -959,6 +959,7 @@
         <div class="modal-content" style="text-align:center; padding-top:0px; padding-bottom:0px;">
             <img class="tradeOrderImg" src="" style="width: 50px;border-radius:50px;width: 90px; border-radius: 50px; background: white; margin-top: -29px; -webkit-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75); box-shadow: 0px 9px 23px -5px rgba(0,0,0,0.75);">
             <h6 class="tradeOrderSubTitle" style="margin: 1.5rem 0 1.5rem 0;"></h6>
+            <span id="buySteps" style="color: grey; border: solid #e4e4e4 1px; padding: 10px; border-radius: 3px;display:none;"><span id="step1" style="color: green; padding-right: 15px;cursor: -webkit-grab;">Step 1</span> > <span id="step2" style="padding-left: 15px;cursor: -webkit-grab;"> Step 2</span></span>
             <div class="row" style="display:none;margin-top:10px;">
                 <div class="input-field col s12">
                     <span style="font-weight:bold;">STATUS: </span>
@@ -966,7 +967,7 @@
                 </div>
             </div>
 
-            <form class="col s12 newTradeForm" style="margin-top:10px;">
+            <form class="col s12 newTradeForm" style="margin-top:30px;">
                 <div class="row" style="margin-bottom: 0px;">
                     <div class="input-field col s12">
                         <div class="row">
@@ -995,8 +996,10 @@
                 </div>
             </form>
 
+            <button class="btn" id="slctPmntMthd" style="margin-left: auto; margin-right: auto; margin-bottom: 30px;">select payment method</button>
             
-            <div class="row">
+            <div class="row stepsHide">
+                <p style="text-align: center;">Select payment method below</p>
                 <div class="col s12">
                     <ul class="tabs doTradeForm popout">
                         <li class="tab col s3" style="width: 33%">
