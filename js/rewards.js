@@ -463,28 +463,6 @@ function getAvailableCoins() {
         });
 
     });
-    // $('.modal').modal();
-    $('.collapsible').collapsible();
-    console.log(M.Tabs.getInstance(document.querySelector(".doTradeForm")))
-
-    M.Tabs.getInstance(document.querySelector(".doTradeForm")).options.onShow = function (e) {
-
-
-        document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
-
-        if (e.getAttribute('class') == 'doPayMM') {
-            document.querySelector('.tradeOrderFooterComplete').innerText = 'Send Code'
-        } else if (e.getAttribute('class') == 'doPayEth') {
-            if (((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) > parseFloat($("#newTradeTotal").val())) {
-
-                document.querySelector('.tradeOrderFooterComplete').removeAttribute("disabled");
-            } else {
-
-                document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
-            }
-            document.querySelector('.tradeOrderFooterComplete').innerText = 'Send ETH'
-        };
-    }
 
     doFetch({
         action: 'userVerified',
