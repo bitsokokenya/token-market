@@ -415,7 +415,7 @@ function getAvailableCoins() {
             '</tr></tbody></table></div></div></div></div>');
 
         // $('ul.tabs').tabs('select_tab', 'tab_id');
-        $('ul.tabs').tabs();
+//        $('ul.tabs').tabs();
         try {
             if (allTokens[tokenTab[i]].balance > 0) {
                 $('.trade-' + tokenTab[i] + '-Button').attr('disabled', false)
