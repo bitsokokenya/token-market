@@ -18,7 +18,11 @@ function openOrder(oid, act) {
 }
 
 function walletStatus() {
-    if (sessionStorage.getItem('walletKey') ){return true;}else{ loadGdrive()}
+    if (sessionStorage.getItem('walletKey')) {
+        return true;
+    } else {
+        loadGdrive()
+    }
 }
 
 function upDtokenD() {
@@ -27,10 +31,10 @@ function upDtokenD() {
     $('.coindata-' + activeCoin.toLowerCase() + '-wpage').attr('href', allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
     $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
-    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX,2) + ' ' + baseCd.toUpperCase());
+    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX, 2) + ' ' + baseCd.toUpperCase());
     //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
     var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
-    $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' +  allTokens[activeCoin.toLowerCase()].name);
+    $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' + allTokens[activeCoin.toLowerCase()].name);
     $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
     if (parseFloat(thBal) > 0) {
         $(".new-trade-buy-Button").attr("disabled", false);
@@ -41,11 +45,11 @@ function upDtokenD() {
     }
 
     sortOrderBookColor();
-        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)+' '+baseCd.toUpperCase() ;
-    
-    setInterval(function(){
-        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)+' '+baseCd.toUpperCase() ;
-    },20000) 
+    document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) + ' ' + baseCd.toUpperCase();
+
+    setInterval(function () {
+        document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) + ' ' + baseCd.toUpperCase();
+    }, 20000)
 
 }
 
@@ -146,18 +150,19 @@ function stopOrderWatch() {
         console.log(e);
     }
 }
-started=false;
-statInt=setInterval(function(){
-if(!started){
-starting();
-}
-	
-},450)
+started = false;
+statInt = setInterval(function () {
+    if (!started) {
+        starting();
+    }
+
+}, 450)
+
 function starting() {
 
-started=true;
-	//bad hack fix, sometimes the ready callbacks are not working :?{
-        clearInterval(statInt);
+    started = true;
+    //bad hack fix, sometimes the ready callbacks are not working :?{
+    clearInterval(statInt);
     //user wants to trade so hide default landing page
     if (getBitsWinOpt('uid') || getBitsWinOpt('cid')) $("#tokenSelect").hide();
     walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
@@ -197,28 +202,28 @@ started=true;
 
                 $("#fetchedRate").html(finalRate.toFixed(2));
                 */
-                /*
-                            if (window.PaymentRequest) {
-                                payButton.setAttribute('style', 'display: inline;');
-                                payButton.addEventListener('click', function () {
-                                    initPaymentRequest().show().then(function (instrumentResponse) {
-                                            sendPaymentToServer(instrumentResponse);
-                                        })
-                                        .catch(function (err) {
-                                            ChromeSamples.setStatus(err);
-                                        });
-                                });
-                            } else {
-                                console.log('This browser does not support web payments');
-                            }
-                		
-                		*/
+            /*
+                        if (window.PaymentRequest) {
+                            payButton.setAttribute('style', 'display: inline;');
+                            payButton.addEventListener('click', function () {
+                                initPaymentRequest().show().then(function (instrumentResponse) {
+                                        sendPaymentToServer(instrumentResponse);
+                                    })
+                                    .catch(function (err) {
+                                        ChromeSamples.setStatus(err);
+                                    });
+                            });
+                        } else {
+                            console.log('This browser does not support web payments');
+                        }
+            		
+            		*/
 
-                orderBookManager(e.baseEx, e.baseCd).then(function (e) {
+            orderBookManager(e.baseEx, e.baseCd).then(function (e) {
 
 
-                    getAvailableCoins();
-                    sortOrderBookColor();
+                getAvailableCoins();
+                sortOrderBookColor();
 
 
                 $('#tradeOrder').modal({
@@ -227,15 +232,15 @@ started=true;
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
                     ready: function (modal, trigger) {
-                        
-                            console.log($(trigger).attr('oid'), $(trigger).attr('act'));
+
+                        console.log($(trigger).attr('oid'), $(trigger).attr('act'));
                         if (!getBitsOpt('oid') || !getBitsOpt('act')) {
 
                             openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
-                        }else{
-                        
-                        location.hash='';
-                        
+                        } else {
+
+                            location.hash = '';
+
                         }
                         setTimeout(function () {
                             M.updateTextFields();
@@ -246,50 +251,50 @@ started=true;
                         stopOrderWatch()
                     } // Callback for Modal close
                 });
-                    
-                    //start push messaging
-                    try {
 
-                        startPushManager();
-                    } catch (er) {
-                        console.log('INFO! not started messaging ', er)
-                    }
+                //start push messaging
+                try {
 
-                    //set interval to update token balance;
-                    setInterval(function () {
-                        upDtokenD();
-                    }, 10000);
+                    startPushManager();
+                } catch (er) {
+                    console.log('INFO! not started messaging ', er)
+                }
 
-                    // start first transaction
-                    doFirstBuy();
+                //set interval to update token balance;
+                setInterval(function () {
+                    upDtokenD();
+                }, 10000);
+
+                // start first transaction
+                doFirstBuy();
 
 
-                    
-                    if (getBitsOpt('oid')) {
-                        // start open requested order
-                        openOrder(getBitsOpt('oid'), 'manage');
+
+                if (getBitsOpt('oid')) {
+                    // start open requested order
+                    openOrder(getBitsOpt('oid'), 'manage');
                     // end open requested order
-                        
-                    }else if(getBitsOpt('act')=='transfer'){
 
-                            openOrder('new', 'transfer');
+                } else if (getBitsOpt('act') == 'transfer') {
 
-                            $("#newTransferConfirmation").val(getBitsOpt('dest'));
+                    openOrder('new', 'transfer');
 
-                            $("#newTransferAmount").val(getBitsOpt('amount'));
+                    $("#newTransferConfirmation").val(getBitsOpt('dest'));
 
-                        }
+                    $("#newTransferAmount").val(getBitsOpt('amount'));
 
-
-
-
-                });
+                }
 
 
 
-           // } else {
+
+            });
+
+
+
+            // } else {
             //    console.log("error");
-           // }
+            // }
         });
 
         ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
@@ -302,9 +307,9 @@ started=true;
         }, 450);
     })
     profileImg();
-    
+
     matchAddrUser();
-    
+
     $(".newTransferForm").on('change', '#newTransferConfirmation', function (e) {
         var selectedUser = $("#newTransferConfirmation").val();
         console.log(selectedUser)
@@ -459,25 +464,27 @@ function getAvailableCoins() {
 
     });
     // $('.modal').modal();
-     $('.collapsible').collapsible();
-doTradeCola=M.Collapsible.getInstance(document.querySelector('.doTradeForm'));
-doTradeCola.options.onOpenStart=function(e){
-     
-         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
-     
-     if(e.getAttribute('class')=='doPayMM'){
-         document.querySelector('.tradeOrderFooterComplete').innerText='Send Code'
-     }else if(e.getAttribute('class')=='doPayEth'){
-		if(((allTokens["eth"].balance/Math.pow(10,18))*baseX*baseConv).toFixed(2)>parseFloat($("#newTradeTotal").val())){
+    $('.collapsible').collapsible();
+    console.log(M.Tabs.getInstance(document.querySelector(".doTradeForm")))
 
-         document.querySelector('.tradeOrderFooterComplete').removeAttribute("disabled");
-}else{
+    M.Tabs.getInstance(document.querySelector(".doTradeForm")).options.onShow = function (e) {
 
-         document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
-}
-         document.querySelector('.tradeOrderFooterComplete').innerText='Send ETH'
-     };
- }   
+
+        document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
+
+        if (e.getAttribute('class') == 'doPayMM') {
+            document.querySelector('.tradeOrderFooterComplete').innerText = 'Send Code'
+        } else if (e.getAttribute('class') == 'doPayEth') {
+            if (((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) > parseFloat($("#newTradeTotal").val())) {
+
+                document.querySelector('.tradeOrderFooterComplete').removeAttribute("disabled");
+            } else {
+
+                document.querySelector('.tradeOrderFooterComplete').setAttribute("disabled", true);
+            }
+            document.querySelector('.tradeOrderFooterComplete').innerText = 'Send ETH'
+        };
+    }
 
     doFetch({
         action: 'userVerified',
