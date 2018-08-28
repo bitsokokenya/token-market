@@ -162,7 +162,7 @@ function tradeManager(oid, action) {
 
     } else if (action == 'manage') {
         $("#buySteps").css("display", "none");
-        $("#slctPmntMthd").css("display", "none");
+        $("#slctPmntMthd").css("display", "block");
         //this is an existing order
 
         // orderTimer = setInterval(function () {}, 15000);
