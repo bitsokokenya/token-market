@@ -66,7 +66,7 @@
 	    input{
 	    height: 2rem!important;
 	    }
-	    
+
         div[data-target="toast-container"]>.tap-target-content {
             top: -150px !important;
             right: 0px !important;
@@ -75,7 +75,7 @@
             padding: 0px !important;
         }
         /*---------------------------- css by sam for token market -----------------------------------------------------------------*/
-        
+
         .tap-target-wave::before,
         .tap-target-wave::after {
             content: '';
@@ -86,43 +86,43 @@
             border-radius: 50%;
             background-color: #29cfff26 !important;
         }
-        
+
         table.bordered>thead>tr,
         table.bordered>tbody>tr {
             border-bottom: 1px solid rgba(255, 255, 255, 0.53) !important;
         }
         /* ------------------------------- end css by sam ------------------------------------------------------------------------------ */
-        
+
         body {
             font-family: 'Lato', sans-serif !important;
             overflow-x: hidden;
         }
-        
+
         .tap-target-wrapper {
             position: fixed!important;
         }
-        
+
         .tap-target {
             background-color: rgb(15, 95, 118)!important;
         }
-        
+
         #tradeOrder {
             overflow: initial;
         }
-        
+
         .input-field {
             margin: 5px 0!important;
         }
-        
+
         .col .row {
             margin-left: 2.5px!important;
             margin-right: 2.5px!important;
         }
-        
+
         .tabs .tab a.active {
             color: rgb(0, 94, 118) !important;
         }
-        
+
         .tabs .indicator {
             position: absolute;
             top: 0 !important;
@@ -130,22 +130,22 @@
             background-color: rgb(0, 94, 118) !important;
             will-change: left, right;
         }
-        
+
         .odbk-txt {
             margin: 8px 0px 0px 35px;
             text-align: left;
             display: inline-block;
             float: left;
         }
-        
+
         .imgTab {
             left: 5%;
         }
-        
+
         #openOrders {
             overflow: visible;
         }
-        
+
         @media screen and (max-width: 780px) {
             #openOrders {
                 margin: 0% !important;
@@ -159,7 +159,7 @@
                 margin-top: 0px !important;
             }
         }
-        
+
         @media screen and (max-width: 480px) {
             .doTransActs {
                 margin-top: 95px!important;
@@ -185,46 +185,46 @@
                 width: 120px !important;
             }
         }
-        
+
         .hero {
             background: linear-gradient(rgba(15, 95, 118, 0.84), rgba(15, 95, 118, 0.87)), url(./images/blockchain3.jpg);
         }
-        
+
         #chartdiv {
             width: 100%;
             height: 500px;
         }
-        
+
         #tradeOrder {
             overflow: visible;
         }
-        
+
         #chartdiv a {
             display: none !important;
         }
-        
+
         .export-main {
             display: none !important;
         }
-        
+
         #coins li {
             display: inline-block;
             padding: 20px;
         }
-        
+
         #coins {
             color: white;
         }
-        
+
         #buyCoin {
             display: block;
         }
-        
+
         .availableCoins li {
             padding: 5px;
             display: inline-block;
         }
-        
+
         @media screen and (min-width: 780px) {
             #logo {
                 width: 20%;
@@ -232,22 +232,22 @@
                 padding: 10px;
             }
         }
-        
+
         @media screen and (min-width: 480px) {
             .orderGraph {
                 padding: 0px 0px;
             }
         }
         /***************** Spinner *************/
-        
+
         input[type=number]::-webkit-inner-spin-button {
             opacity: 1 !important;
         }
-        
+
         .spinner {
             position: relative;
         }
-        
+
         .spinner::before {
             position: absolute;
             top: 50%;
@@ -261,7 +261,7 @@
             will-change: box-shadow;
             animation: spinner 1.3s infinite linear;
         }
-        
+
         @keyframes spinner {
             0%,
             100% {
@@ -289,17 +289,17 @@
                 box-shadow: 0 -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0 0 0, -2em -2em 0 .2em;
             }
         }
-        
+
         .spinner {
             flex-basis: 33.333%;
             height: 200px;
         }
         /**** Blinker *****/
-        
+
         .blink {
             animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
         }
-        
+
         @keyframes blinker {
             from {
                 opacity: 1;
@@ -309,7 +309,7 @@
             }
         }
         /* Popup container */
-        
+
         .popup {
             position: relative;
             display: inline-block;
@@ -320,7 +320,7 @@
             user-select: none;
         }
         /* The actual popup */
-        
+
         .popup .popuptext {
             width: 160px;
             background-color: #555;
@@ -335,7 +335,7 @@
             margin-left: -57px;
         }
         /* Popup arrow */
-        
+
         .popup .popuptext::after {
             content: "";
             position: absolute;
@@ -347,13 +347,13 @@
             border-color: #555 transparent transparent transparent;
         }
         /* Toggle this class - hide and show the popup */
-        
+
         .popup .show {
             visibility: visible;
             -webkit-animation: fadeIn 1s;
             animation: fadeIn 1s;
         }
-        
+
         .buyPopupText {
             width: 345px;
             background-color: white;
@@ -367,37 +367,37 @@
             left: 50%;
             margin-left: -57px;
         }
-        
+
         .buyTour {
             opacity: 0;
             transform: scale(0.8);
             transition: .6s ease opacity, .6s ease transform;
         }
-        
+
         .orderBookTour {
             opacity: 0;
             transform: scale(0.8);
             transition: .6s ease opacity, .6s ease transform;
         }
-        
+
         .sellTour {
             opacity: 0;
             transform: scale(0.8);
             transition: .6s ease opacity, .6s ease transform;
         }
-        
+
         .transferTour {
             opacity: 0;
             transform: scale(0.8);
             transition: .6s ease opacity, .6s ease transform;
         }
-        
+
         .myOrdersTour {
             opacity: 0;
             transform: scale(0.8);
             transition: .6s ease opacity, .6s ease transform;
         }
-        
+
         .buyPopupText::after {
             content: "";
             position: absolute;
@@ -409,7 +409,7 @@
             border-color: white transparent transparent transparent;
             transform: rotate(-90deg);
         }
-        
+
         .sellPopupText {
             width: 238px;
             background-color: white;
@@ -423,7 +423,7 @@
             left: 50%;
             margin-left: -85px;
         }
-        
+
         .sellPopupText::after {
             content: "";
             position: absolute;
@@ -435,7 +435,7 @@
             border-color: white transparent transparent transparent;
             transform: rotate(180deg);
         }
-        
+
         .transferPopupText {
             width: 340px;
             background-color: white;
@@ -449,7 +449,7 @@
             left: 50%;
             margin-left: -90px;
         }
-        
+
         .transferPopupText::after {
             content: "";
             position: absolute;
@@ -461,7 +461,7 @@
             border-color: white transparent transparent transparent;
             transform: rotate(180deg);
         }
-        
+
         .orderBookPopupText {
             width: 455px;
             background-color: white;
@@ -475,7 +475,7 @@
             left: 40%;
             margin-left: 120px;
         }
-        
+
         .myOrdersPopupText {
             width: 455px;
             background-color: white;
@@ -489,7 +489,7 @@
             left: 40%;
             margin-left: 120px;
         }
-        
+
         .orderBookPopupText::after {
             content: "";
             position: absolute;
@@ -501,7 +501,7 @@
             border-color: white transparent transparent transparent;
         }
         /* Add animation (fade in the popup) */
-        
+
         @-webkit-keyframes fadeIn {
             from {
                 opacity: 0;
@@ -510,7 +510,7 @@
                 opacity: 1;
             }
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -519,21 +519,21 @@
                 opacity: 1;
             }
         }
-        
+
         #dropdown1 {
             top: 55px !important;
             left: 90% !important;
             width: 69px !important;
         }
-        
+
         .tradeOrderFooter {
             padding: 0px 35px;
         }
-        
+
         .confTradeForm .row {
             margin: 0px;
         }
-        
+
         @media screen and (max-width: 480px) {
             .coinInfo {
                 margin-bottom: 35px;
@@ -557,7 +557,7 @@
             }
         }
         /******* Side Nav ******/
-        
+
         .sidenav {
             height: 100%;
             width: 0;
@@ -570,7 +570,7 @@
             transition: 0.5s;
             padding-top: 60px;
         }
-        
+
         .sidenav a {
             padding: 8px 8px 8px 32px;
             text-decoration: none;
@@ -579,11 +579,11 @@
             display: block;
             transition: 0.3s;
         }
-        
+
         .sidenav a:hover {
             color: #f1f1f1;
         }
-        
+
         .sidenav .closebtn {
             position: absolute;
             top: 0;
@@ -591,7 +591,7 @@
             font-size: 36px;
             margin-left: 50px;
         }
-        
+
         @media screen and (max-height: 450px) {
             .sidenav {
                 padding-top: 15px;
@@ -600,16 +600,16 @@
                 font-size: 18px;
             }
         }
-        
+
         #userAccount {
             max-height: 100%;
         }
         /************ Popular Traders ******************/
-        
+
         .doTradeForm>li>.collapsible-body {
-            
+
          padding: 1rem!important;
-		
+
         }
         .popularTraders {
             width: 70%;
@@ -621,48 +621,48 @@
             width: 100%;
             background: white;
         }
-        
+
         .popularTraders td,
         .popularTraders th {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
-        
+
         .popularTraders tr:nth-child(even) {
             background-color: #dddddd;
         }
-        
+
         .popularTraders h4 {
             color: white;
             font-size: 1.6em;
             padding-left: 10px;
         }
         /************ Popular Token ******************/
-        
+
         .popularToken {
             width: 70%;
             display: none;
         }
-        
+
         .popularToken table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
             width: 100%;
             background: white;
         }
-        
+
         .popularToken td,
         .popularToken th {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
-        
+
         .popularToken tr:nth-child(even) {
             background-color: #dddddd;
         }
-        
+
         .popularToken h4 {
             color: white;
             font-size: 1.6em;
@@ -690,7 +690,7 @@
         <div class="customGPlusSignIn" id="customBtn" style="text-align:center;padding:2%;">
             <a class="waves-effect waves-light btn">
                 <i class=" left loginBtn--google" style="line-height: 35px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width: 20px;margin-top: 9px;" xml:space="preserve" class=""><g><path style="fill: white;" d="M113.47,309.408L95.648,375.94l-65.139,1.378C11.042,341.211,0,299.9,0,256  c0-42.451,10.324-82.483,28.624-117.732h0.014l57.992,10.632l25.404,57.644c-5.317,15.501-8.215,32.141-8.215,49.456  C103.821,274.792,107.225,292.797,113.47,309.408z" data-original="#FBBB00" class="" data-old_color="#FBBB00"></path><path style="fill: white;" d="M507.527,208.176C510.467,223.662,512,239.655,512,256c0,18.328-1.927,36.206-5.598,53.451  c-12.462,58.683-45.025,109.925-90.134,146.187l-0.014-0.014l-73.044-3.727l-10.338-64.535  c29.932-17.554,53.324-45.025,65.646-77.911h-136.89V208.176h138.887L507.527,208.176L507.527,208.176z" data-original="#518EF8" class="active-path" data-old_color="#518EF8"></path><path style="fill: white;" d="M416.253,455.624l0.014,0.014C372.396,490.901,316.666,512,256,512  c-97.491,0-182.252-54.491-225.491-134.681l82.961-67.91c21.619,57.698,77.278,98.771,142.53,98.771  c28.047,0,54.323-7.582,76.87-20.818L416.253,455.624z" data-original="#28B446" class="" data-old_color="#070707"></path><path style="fill: white;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012  c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0  C318.115,0,375.068,22.126,419.404,58.936z" data-original="#F14336" class="" data-old_color="#F14336"></path></g> 
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;width: 20px;margin-top: 9px;" xml:space="preserve" class=""><g><path style="fill: white;" d="M113.47,309.408L95.648,375.94l-65.139,1.378C11.042,341.211,0,299.9,0,256  c0-42.451,10.324-82.483,28.624-117.732h0.014l57.992,10.632l25.404,57.644c-5.317,15.501-8.215,32.141-8.215,49.456  C103.821,274.792,107.225,292.797,113.47,309.408z" data-original="#FBBB00" class="" data-old_color="#FBBB00"></path><path style="fill: white;" d="M507.527,208.176C510.467,223.662,512,239.655,512,256c0,18.328-1.927,36.206-5.598,53.451  c-12.462,58.683-45.025,109.925-90.134,146.187l-0.014-0.014l-73.044-3.727l-10.338-64.535  c29.932-17.554,53.324-45.025,65.646-77.911h-136.89V208.176h138.887L507.527,208.176L507.527,208.176z" data-original="#518EF8" class="active-path" data-old_color="#518EF8"></path><path style="fill: white;" d="M416.253,455.624l0.014,0.014C372.396,490.901,316.666,512,256,512  c-97.491,0-182.252-54.491-225.491-134.681l82.961-67.91c21.619,57.698,77.278,98.771,142.53,98.771  c28.047,0,54.323-7.582,76.87-20.818L416.253,455.624z" data-original="#28B446" class="" data-old_color="#070707"></path><path style="fill: white;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012  c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0  C318.115,0,375.068,22.126,419.404,58.936z" data-original="#F14336" class="" data-old_color="#F14336"></path></g>
                     </svg>
                 </i> google signin</a>
         </div>
@@ -831,7 +831,7 @@
                     <li style="display:none;">
                         <svg id="startTour" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 496.158 496.158" style="enable-background:new 0 0 496.158 496.158;width: 30px;margin: 12px 0px;" xml:space="preserve" href='#' data-activates='dropdown1'>
                             <path style="fill:#005E77;" d="M496.158,248.085c0-137.022-111.069-248.082-248.075-248.082C111.07,0.003,0,111.063,0,248.085  c0,137.001,111.07,248.07,248.083,248.07C385.089,496.155,496.158,385.086,496.158,248.085z"/>
-                            <path style="fill:#FFFFFF;" d="M138.216,173.592c0-13.915,4.467-28.015,13.403-42.297c8.933-14.282,21.973-26.11,39.111-35.486  c17.139-9.373,37.134-14.062,59.985-14.062c21.238,0,39.99,3.921,56.25,11.755c16.26,7.838,28.818,18.495,37.683,31.97  c8.861,13.479,13.293,28.125,13.293,43.945c0,12.452-2.527,23.367-7.581,32.739c-5.054,9.376-11.062,17.469-18.018,24.279  c-6.959,6.812-19.446,18.275-37.463,34.388c-4.981,4.542-8.975,8.535-11.975,11.976c-3.004,3.443-5.239,6.592-6.702,9.447  c-1.466,2.857-2.603,5.713-3.406,8.57c-0.807,2.855-2.015,7.875-3.625,15.051c-2.784,15.236-11.501,22.852-26.147,22.852  c-7.618,0-14.028-2.489-19.226-7.471c-5.201-4.979-7.8-12.377-7.8-22.192c0-12.305,1.902-22.962,5.713-31.97  c3.808-9.01,8.861-16.92,15.161-23.73c6.296-6.812,14.794-14.904,25.488-24.28c9.373-8.202,16.15-14.392,20.325-18.567  c4.175-4.175,7.69-8.823,10.547-13.953c2.856-5.126,4.285-10.691,4.285-16.699c0-11.718-4.36-21.605-13.074-29.663  c-8.717-8.054-19.961-12.085-33.728-12.085c-16.116,0-27.981,4.065-35.596,12.195c-7.618,8.13-14.062,20.105-19.336,35.925  c-4.981,16.555-14.43,24.829-28.345,24.829c-8.206,0-15.127-2.891-20.764-8.679C141.035,186.593,138.216,180.331,138.216,173.592z   M245.442,414.412c-8.937,0-16.737-2.895-23.401-8.68c-6.667-5.784-9.998-13.877-9.998-24.279c0-9.229,3.22-16.991,9.668-23.291  c6.444-6.297,14.354-9.448,23.73-9.448c9.229,0,16.991,3.151,23.291,9.448c6.296,6.3,9.448,14.062,9.448,23.291  c0,10.255-3.296,18.312-9.888,24.17C261.7,411.481,254.084,414.412,245.442,414.412z"/>    
+                            <path style="fill:#FFFFFF;" d="M138.216,173.592c0-13.915,4.467-28.015,13.403-42.297c8.933-14.282,21.973-26.11,39.111-35.486  c17.139-9.373,37.134-14.062,59.985-14.062c21.238,0,39.99,3.921,56.25,11.755c16.26,7.838,28.818,18.495,37.683,31.97  c8.861,13.479,13.293,28.125,13.293,43.945c0,12.452-2.527,23.367-7.581,32.739c-5.054,9.376-11.062,17.469-18.018,24.279  c-6.959,6.812-19.446,18.275-37.463,34.388c-4.981,4.542-8.975,8.535-11.975,11.976c-3.004,3.443-5.239,6.592-6.702,9.447  c-1.466,2.857-2.603,5.713-3.406,8.57c-0.807,2.855-2.015,7.875-3.625,15.051c-2.784,15.236-11.501,22.852-26.147,22.852  c-7.618,0-14.028-2.489-19.226-7.471c-5.201-4.979-7.8-12.377-7.8-22.192c0-12.305,1.902-22.962,5.713-31.97  c3.808-9.01,8.861-16.92,15.161-23.73c6.296-6.812,14.794-14.904,25.488-24.28c9.373-8.202,16.15-14.392,20.325-18.567  c4.175-4.175,7.69-8.823,10.547-13.953c2.856-5.126,4.285-10.691,4.285-16.699c0-11.718-4.36-21.605-13.074-29.663  c-8.717-8.054-19.961-12.085-33.728-12.085c-16.116,0-27.981,4.065-35.596,12.195c-7.618,8.13-14.062,20.105-19.336,35.925  c-4.981,16.555-14.43,24.829-28.345,24.829c-8.206,0-15.127-2.891-20.764-8.679C141.035,186.593,138.216,180.331,138.216,173.592z   M245.442,414.412c-8.937,0-16.737-2.895-23.401-8.68c-6.667-5.784-9.998-13.877-9.998-24.279c0-9.229,3.22-16.991,9.668-23.291  c6.444-6.297,14.354-9.448,23.73-9.448c9.229,0,16.991,3.151,23.291,9.448c6.296,6.3,9.448,14.062,9.448,23.291  c0,10.255-3.296,18.312-9.888,24.17C261.7,411.481,254.084,414.412,245.442,414.412z"/>
                         </svg>
                     </li>
                     <li style="line-height: 10px; background: #005E77; padding: 5px; border-radius: 50%; margin: 12px 0px;">
@@ -885,12 +885,12 @@
     </div>
 </section>
 -->
-    <!-- 
+    <!--
     <section style="text-align:center;">
-        
+
         <a class="waves-effect waves-light btn modal-trigger" href="#modal1">buy <span class="activeCoin imgCoin"></span></a>
 
-        
+
         <div id="modal1" class="modal" style="width:40%;">
             <div class="modal-content" style="padding:0px; border-radius:5px;">
                 <div style="text-align: center; background:#0F5F76; margin: 0px; padding: 10px; color: white; height: 18vh;">
@@ -916,7 +916,7 @@
             </div>
         </div>
     </section>
- 
+
 <section class="buyPoints" style="width: 40%; display: block; margin-left: auto; margin-right: auto; background: #e9e9e9; margin-top: 60px; border-radius: 3px;text-align: center;">
     <div>
         <h6 style="background:#0F5F76;padding: 50px;font-size: 1.6em; color: white; font-weight: bold;">BUY POINTS</h6>
@@ -997,7 +997,7 @@
             </form>
 
             <button class="btn" id="slctPmntMthd" style="margin-left: auto; margin-right: auto; margin-bottom: 30px;">select payment method</button>
-            
+
             <div class="row stepsHide">
                 <p style="text-align: center;">Select payment method below</p>
                 <div class="col s12">
@@ -1072,7 +1072,7 @@
                     </span>
                 </div>
                 <div id="test3" class="col s12">
-                    <span>     
+                    <span>
                         <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                         <br>
                         <span style="">pay with credit card. Inclusive of 5% card fees.</span>
@@ -1127,8 +1127,8 @@
                 <p style="text-align: center; font-size: 1.3em; margin: 0px;">ORDERBOOK</p>
                 <div class="popup orderBookTour" style="position: absolute;z-index:10;display:none;">
                     <span class="orderBookPopupText" id="myPopup" style="">
-                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
-                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openMyOrderTour" style=" float: right;">next</a> 
+                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer">
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat openMyOrderTour" style=" float: right;">next</a>
                         </div>
                     </span>
                 </div>
@@ -1254,8 +1254,8 @@
             <section class="graph row myOrdersSec" style="width:100%; height:100%;padding: 0px 2.5%; margin-bottom: 0px; overflow: scroll;overflow-x: hidden;">
                 <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
                     <span class="myOrdersPopupText" id="myPopup" style="">
-                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
-                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> 
+                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer">
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a>
                         </div>
                     </span>
                 </div>
@@ -1295,8 +1295,8 @@
             <p style="text-align: center; font-size: 1.3em;text-transform:uppercase;">trade history</p>
             <div class="popup myOrdersTour" style="position: absolute; z-index: 10; display: none;">
                 <span class="myOrdersPopupText" id="myPopup" style="">
-                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer"> 
-                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a> 
+                        <p style=" font-weight: 500; text-transform: initial; padding: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p><div class="modal-footer">
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat finishTour" style=" float: right;">finish</a>
                         </div>
                     </span>
             </div>
@@ -1334,11 +1334,11 @@
             <span>
                 <div class="row" style="padding: 15px 0%; margin-bottom: 0px;padding-top: 0px;">
                     <h4 style="text-align: center; font-size: 1.7em; padding-top: 10px;">Settings</h4>
-                    <div class="col s6 js-push-button-notification-title">Notifications</div>    
+                    <div class="col s6 js-push-button-notification-title">Notifications</div>
                     <div class="col s6">
                         <div class="switch">
                             <label>
-                            <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification"> 
+                            <input style="background: rgb(128, 210, 147);" type="checkbox" class="js-push-button-notification">
                              <span style="margin-top:3px;" class="lever right"></span>
             </label>
         </div>
@@ -1351,7 +1351,7 @@
                             <svg style="position: absolute; left: 8px; top: 8px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 486.866 486.866" style="enable-background:new 0 0 486.866 486.866;" xml:space="preserve">
                                 <g>
                                     <path d="M393.904,214.852h-8.891v-72.198c0-76.962-61.075-141.253-137.411-142.625c-2.084-0.038-6.254-0.038-8.338,0   C162.927,1.4,101.853,65.691,101.853,142.653v1.603c0,16.182,13.118,29.3,29.3,29.3c16.182,0,29.299-13.118,29.299-29.3v-1.603   c0-45.845,37.257-83.752,82.98-83.752s82.981,37.907,82.981,83.752v72.198H92.963c-13.702,0-24.878,14.139-24.878,31.602v208.701   c0,17.44,11.176,31.712,24.878,31.712h300.941c13.703,0,24.878-14.271,24.878-31.712V246.452   C418.783,228.989,407.607,214.852,393.904,214.852z M271.627,350.591v63.062c0,7.222-6.046,13.332-13.273,13.332h-29.841   c-7.228,0-13.273-6.11-13.273-13.332v-63.062c-7.009-6.9-11.09-16.44-11.09-26.993c0-19.999,15.459-37.185,35.115-37.977   c2.083-0.085,6.255-0.085,8.337,0c19.656,0.792,35.115,17.978,35.115,37.977C282.717,334.149,278.637,343.69,271.627,350.591z" fill="#FFFFFF"/>
-                                </g>    
+                                </g>
                             </svg>
                             </i>Unlock</span></button>
         </div>
@@ -1410,7 +1410,7 @@
                     <rect x="153.6" y="0" width="17.067" height="85.333"></rect>
                     <rect x="119.467" y="51.2" width="17.067" height="68.267"></rect>
                     <path d="M187.733,392.533h-128c-4.71,0-8.533,3.823-8.533,8.533v51.2c0,4.71,3.823,8.533,8.533,8.533h128  c4.71,0,8.533-3.823,8.533-8.533v-51.2C196.267,396.356,192.444,392.533,187.733,392.533z M179.2,443.733H68.267V409.6H179.2  V443.733z"></path>
-                    <rect x="452.267" y="256" width="17.067" height="204.8"></rect>    
+                    <rect x="452.267" y="256" width="17.067" height="204.8"></rect>
                 </svg>
             </div>
             <h5 style="text-align: center; padding: 5%; margin:0px;">Select a wallet</h5>
@@ -1418,6 +1418,20 @@
         </div>
     </div>
 
+    <div id='buyTokensWindow' style="height: 100%; background: white; position: absolute; top: 0; width: 100%; z-index: 1000; text-align:center; display:none;">
+        <h1 style="font-size: 2em;">INSUFFICIENT TOKENS</h1>
+        <p>Buy tokens to access token market</p>
+        <p>Minimum: 1000 bits</p>
+        <form class="col s12" style="width: 200px; margin-left: auto; margin-right: auto; margin-top: 40px;">
+            <div class="row">
+                <div class="input-field">
+                    <input placeholder="Enter amount" id="tokenPurchaseInput" type="text" class="validate" type="number">
+                    <label for="first_name">Tokens</label>
+                </div>
+            </div>
+        </form>
+        <a class="waves-effect waves-light btn" id="tokenPurchaseBtn">purchase</a>
+    </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
@@ -1557,9 +1571,9 @@
 
             $("#notSignedIn").hide();
             starting();
-        
+
         }
-      
+
         //        $(document).on('click', '.availableCoins a', function(event) {
         //            var selectedCoin = $(this).attr("coin");
         //            $("#tokenSelect").hide();
@@ -1611,9 +1625,9 @@
         $(document).ready(function() {
             $('.modal').modal();
 		  startGoogle();
-		
+
         Promise.all([indexDbReady, gDriveReady, serverConnectReady]).then(values => {
-		
+
             if (localStorage.getItem('bits-user-name') == null) {
                 console.log('signed out!');
                 getTradableCoins();
@@ -1632,7 +1646,7 @@
                     $(".unlckWallet").remove()
                 });
             }
-		
+
                 $("#notSignedIn").hide();
                 starting();
             }

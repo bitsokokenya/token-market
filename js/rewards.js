@@ -26,31 +26,32 @@ function walletStatus() {
 }
 
 function upDtokenD() {
-
-
-    $('.coindata-' + activeCoin.toLowerCase() + '-wpage').attr('href', allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
-    $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
-    $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
-    $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX, 2) + ' ' + baseCd.toUpperCase());
-    //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
-    var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
-    $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' + allTokens[activeCoin.toLowerCase()].name);
-    $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
-    if (parseFloat(thBal) > 0) {
-        $(".new-trade-buy-Button").attr("disabled", false);
-        $(".new-trade-sell-Button").attr("disabled", false);
+    if (allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) < 1000) {
+        buyTokensUsingMobileMoney();
     } else {
-        $(".new-trade-buy-Button").attr("disabled", true);
-        $(".new-trade-sell-Button").attr("disabled", true);
-    }
+        $('.coindata-' + activeCoin.toLowerCase() + '-wpage').attr('href', allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
+        $('.coindata-' + activeCoin.toLowerCase() + '-wpage').html(allTokens[activeCoin.toLowerCase()].webpage.toLowerCase());
+        $('.coindata-' + activeCoin.toLowerCase() + '-mcap').html(numberify(((allTokens[activeCoin.toLowerCase()].rate * baseX) * allTokens[activeCoin.toLowerCase()].supply)) + ' ' + baseCd.toUpperCase());
+        $('.coindata-' + activeCoin.toLowerCase() + '-price').html(numberify(allTokens[activeCoin.toLowerCase()].rate * baseX, 2) + ' ' + baseCd.toUpperCase());
+        //console.log(allTokens[activeCoin.toLowerCase()].balance, Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals), allTokens[activeCoin.toLowerCase()].rate, baseX, baseCd.toUpperCase());
+        var thBal = numberify((allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) * allTokens[activeCoin.toLowerCase()].rate * baseX), 2);
+        $('.tokens-' + activeCoin.toLowerCase() + '-Balance').html('').append(allTokens[activeCoin.toLowerCase()].balance / Math.pow(10, allTokens[activeCoin.toLowerCase()].decimals) + ' ' + allTokens[activeCoin.toLowerCase()].name);
+        $('.wallet-' + activeCoin.toLowerCase() + '-Balance').html('').append(thBal + ' ' + baseCd.toUpperCase());
+        if (parseFloat(thBal) > 0) {
+            $(".new-trade-buy-Button").attr("disabled", false);
+            $(".new-trade-sell-Button").attr("disabled", false);
+        } else {
+            $(".new-trade-buy-Button").attr("disabled", true);
+            $(".new-trade-sell-Button").attr("disabled", true);
+        }
 
-    sortOrderBookColor();
-    document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) + ' ' + baseCd.toUpperCase();
-
-    setInterval(function () {
+        sortOrderBookColor();
         document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) + ' ' + baseCd.toUpperCase();
-    }, 20000)
 
+        setInterval(function() {
+            document.getElementById("getEthBal").innerHTML = ((allTokens["eth"].balance / Math.pow(10, 18)) * baseX * baseConv).toFixed(2) + ' ' + baseCd.toUpperCase();
+        }, 20000)
+    }
 }
 
 function doFirstBuy() {
@@ -65,10 +66,10 @@ function doFirstBuy() {
         $("#newFirstBuy td:last-child").attr('id', 'newFirstBuyBut')
 
         if (allTokens[activeCoin.toLowerCase()].balance == 0) {
-            window.setTimeout(function () {
+            window.setTimeout(function() {
 
                 discoverExchange('dfb');
-                window.setTimeout(function () {
+                window.setTimeout(function() {
 
                     discoverExchange('dfb');
                 }, 200);
@@ -93,7 +94,7 @@ function orderWatch(cod) {
             oid: $('.tradeOrderFooterComplete').attr("oid"),
             user: localStorage.getItem('bits-user-name'),
             orderRef: cod
-        }).then(function (e) {
+        }).then(function(e) {
             if (e.status == 'ok') {
 
                 $(".tradeOrderFooterCancel").html("dispute");
@@ -132,7 +133,7 @@ function orderWatch(cod) {
 
 function refreshOrderBook() {
 
-    orderBookManager(baseX, baseCd).then(function (e) {
+    orderBookManager(baseX, baseCd).then(function(e) {
 
 
         getAvailableCoins();
@@ -151,7 +152,7 @@ function stopOrderWatch() {
     }
 }
 started = false;
-statInt = setInterval(function () {
+statInt = setInterval(function() {
     if (!started) {
         starting();
     }
@@ -165,10 +166,10 @@ function starting() {
     clearInterval(statInt);
     //user wants to trade so hide default landing page
     if (getBitsWinOpt('uid') || getBitsWinOpt('cid')) $("#tokenSelect").hide();
-    walletFunctions(localStorage.getItem('bits-user-name')).then(function (u) {
+    walletFunctions(localStorage.getItem('bits-user-name')).then(function(u) {
 
         new M.Modal(document.querySelector('#userAccount'), {
-            ready: function (e) {
+            ready: function(e) {
                 showAddr('0x' + localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
 
                 if (localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'))) {
@@ -188,7 +189,7 @@ function starting() {
 
         /////////////////////////////////// start update exchange rates
 
-        fetchRates().then(function (e) {
+        fetchRates().then(function(e) {
             /*
             if (e.status == "ok") {
                 coinList = e.data.data;
@@ -216,10 +217,10 @@ function starting() {
                         } else {
                             console.log('This browser does not support web payments');
                         }
-            		
+
             		*/
 
-            orderBookManager(e.baseEx, e.baseCd).then(function (e) {
+            orderBookManager(e.baseEx, e.baseCd).then(function(e) {
 
 
                 getAvailableCoins();
@@ -231,7 +232,7 @@ function starting() {
                     opacity: .5, // Opacity of modal background
                     inDuration: 300, // Transition in duration
                     outDuration: 200, // Ending top style attribute
-                    ready: function (modal, trigger) {
+                    ready: function(modal, trigger) {
 
                         console.log($(trigger).attr('oid'), $(trigger).attr('act'));
                         if (!getBitsOpt('oid') || !getBitsOpt('act')) {
@@ -242,12 +243,12 @@ function starting() {
                             location.hash = '';
 
                         }
-                        setTimeout(function () {
+                        setTimeout(function() {
                             M.updateTextFields();
                         }, 600);
                         walletStatus();
                     },
-                    complete: function () {
+                    complete: function() {
                         stopOrderWatch()
                     } // Callback for Modal close
                 });
@@ -261,7 +262,7 @@ function starting() {
                 }
 
                 //set interval to update token balance;
-                setInterval(function () {
+                setInterval(function() {
                     upDtokenD();
                 }, 10000);
 
@@ -299,10 +300,10 @@ function starting() {
 
         ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
 
-    }).catch(function (err) {
+    }).catch(function(err) {
 
         console.log('!info ', err)
-        setTimeout(function () {
+        setTimeout(function() {
             starting();
         }, 450);
     })
@@ -310,7 +311,7 @@ function starting() {
 
     matchAddrUser();
 
-    $(".newTransferForm").on('change', '#newTransferConfirmation', function (e) {
+    $(".newTransferForm").on('change', '#newTransferConfirmation', function(e) {
         var selectedUser = $("#newTransferConfirmation").val();
         console.log(selectedUser)
         for (var i in deliveryGuys) {
@@ -415,7 +416,7 @@ function getAvailableCoins() {
             '</tr></tbody></table></div></div></div></div>');
 
         // $('ul.tabs').tabs('select_tab', 'tab_id');
-//        $('ul.tabs').tabs();
+        //        $('ul.tabs').tabs();
         try {
             if (allTokens[tokenTab[i]].balance > 0) {
                 $('.trade-' + tokenTab[i] + '-Button').attr('disabled', false)
@@ -434,7 +435,7 @@ function getAvailableCoins() {
 
 
     $(".activeCoin").text(activeCoin)
-    $(document).on("click", ".coinTab li a", function () {
+    $(document).on("click", ".coinTab li a", function() {
         activeCoin = $(".active").attr('href').replace(/#/, '');
         $("#tokenImg").attr("src", "/bitsAssets/images/currencies/" + activeCoin + ".png");
 
@@ -450,7 +451,7 @@ function getAvailableCoins() {
             x[i].style.display = 'table-row';
         }
 
-        fetchRates().then(function (e) {
+        fetchRates().then(function(e) {
             if (e.status == "ok") {
                 upDtokenD();
                 doFirstBuy();
@@ -467,7 +468,7 @@ function getAvailableCoins() {
     doFetch({
         action: 'userVerified',
         uid: localStorage.getItem("bits-user-name")
-    }).then(function (e) {
+    }).then(function(e) {
         if (e.status == "ok") {} else if (e.status == "bad") {
             $(".MobileModal").modal("open")
         } else {
@@ -480,7 +481,7 @@ function getAvailableCoins() {
 function getTradableCoins() {
 
 
-    fetchRates().then(function (e) {
+    fetchRates().then(function(e) {
         var tTab = allTokens['allTokens'];
         if (getBitsWinOpt('cid') != undefined) {
 
@@ -523,7 +524,7 @@ function getTradableCoins() {
 
 
 //Enable Loyalty
-$('.loyaltyCls').click(function () {
+$('.loyaltyCls').click(function() {
     $('#loyaltyModal').modal('close');
 });
 
@@ -531,13 +532,13 @@ $('.loyaltyCls').click(function () {
 
 //payButton.setAttribute('style', 'display: none;');
 
-$(document).on("click", "#rewardsPage", function () {
+$(document).on("click", "#rewardsPage", function() {
     $(".navbar-color").css("box-shadow", "none");
 });
 
 
 //Clear Local Storage
-$("#reload").click(function () {
+$("#reload").click(function() {
     localStorage.clear();
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
@@ -557,90 +558,90 @@ $("#reload").click(function () {
     location.reload();
 })
 //TOUR
-$('#startTour').click(function () {
+$('#startTour').click(function() {
     var buyTour = $(".buyTour");
     var ctr = 1;
     buyTour.className = buyTour.className !== 'show' ? 'show' : 'hide';
     if (buyTour.className === 'show') {
         buyTour.css("display", "block");
-        window.setTimeout(function () {
+        window.setTimeout(function() {
             buyTour.css("opacity", "1");
             buyTour.css("transform", "scale(1)");
         }, 0);
     }
     $(".transferTour").css("opacity", "0");
     $(".transferTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".transferTour").css("display", "none");
     }, 700);
     $(".sellTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".sellTour").css("display", "none");
     }, 700);
     $(".orderBookTour").css("opacity", "0");
     $(".orderBookTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".orderBookTour").css("display", "none");
     }, 700);
     $(".myOrdersTour").css("opacity", "0");
     $(".myOrdersTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".myOrdersTour").css("display", "none");
     }, 700);
 })
-$(document).on('touchstart click', '.openSellTour', function (event) {
+$(document).on('touchstart click', '.openSellTour', function(event) {
     $(".buyTour").css("opacity", "0");
     $(".buyTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".buyTour").css("display", "none");
     }, 700);
 
     $(".sellTour").css("display", "block");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".sellTour").css("opacity", "1");
         $(".sellTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.openTransferTour', function (event) {
+$(document).on('touchstart click', '.openTransferTour', function(event) {
     $(".sellTour").css("opacity", "0");
     $(".sellTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".sellTour").css("display", "none");
     }, 700);
     $(".transferTour").css("display", "block");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".transferTour").css("opacity", "1");
         $(".transferTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.openOrderBookTour', function (event) {
+$(document).on('touchstart click', '.openOrderBookTour', function(event) {
     $(".transferTour").css("opacity", "0");
     $(".transferTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".transferTour").css("display", "none");
     }, 700);
     $(".orderBookTour").css("display", "block");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".orderBookTour").css("opacity", "1");
         $(".orderBookTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.openMyOrderTour', function (event) {
+$(document).on('touchstart click', '.openMyOrderTour', function(event) {
     $(".orderBookTour").css("opacity", "0");
     $(".orderBookTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".orderBookTour").css("display", "none");
     }, 700);
     $(".myOrdersTour").css("display", "block");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".myOrdersTour").css("opacity", "1");
         $(".myOrdersTour").css("transform", "scale(1)");
     }, 0);
 });
-$(document).on('touchstart click', '.finishTour', function (event) {
+$(document).on('touchstart click', '.finishTour', function(event) {
     $(".myOrdersTour").css("opacity", "0");
     $(".myOrdersTour").css("transform", "scale(0)");
-    window.setTimeout(function () {
+    window.setTimeout(function() {
         $(".myOrdersTour").css("display", "none");
     }, 700);
 });
@@ -650,7 +651,7 @@ $(document).on('touchstart click', '.finishTour', function (event) {
 //Get Profile Image
 function profileImg() {
     var userId = localStorage.getItem("bits-user-name")
-    getObjectStore('data', 'readwrite').get("user-profile-" + userId + "").onsuccess = function (event) {
+    getObjectStore('data', 'readwrite').get("user-profile-" + userId + "").onsuccess = function(event) {
         var userProfImg = JSON.parse(event.srcElement.result).image;
         var userProfName = JSON.parse(event.srcElement.result).name;
         $(".userImg").attr("src", userProfImg);
@@ -674,7 +675,7 @@ function closeNav() {
 
 
 //Buy Store Tokens
-$("#tokenPrice").click(function () {
+$("#tokenPrice").click(function() {
     var tokenValue = $("#tokenVal").val();
     if (tokenValue == "") {
         M.toast({
@@ -682,7 +683,7 @@ $("#tokenPrice").click(function () {
             displayLength: 3000
         })
     } else {
-        transferTokenValue("0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481", "0xb72627650f1149ea5e54834b2f468e5d430e67bf", parseFloat(tokenValue), allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate).then(function (r) {
+        transferTokenValue("0x7D1Ce470c95DbF3DF8a3E87DCEC63c98E567d481", "0xb72627650f1149ea5e54834b2f468e5d430e67bf", parseFloat(tokenValue), allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate).then(function(r) {
             console.log("This is the TRID" + r);
             doFetch({
                 action: "payOrderEth",
@@ -693,7 +694,7 @@ $("#tokenPrice").click(function () {
                 baseCd: baseCd,
                 shop: localStorage.getItem("soko-active-store"),
                 tran: r
-            }).then(function (e) {
+            }).then(function(e) {
                 if (e.status == 'ok') {
                     $(".prodCatToast").remove();
                     M.toast({
@@ -720,7 +721,7 @@ function matchAddrUser() {
     doFetch({
         action: 'getAllUsers',
         data: inputVal
-    }).then(function (e) {
+    }).then(function(e) {
         var dat = {}
         deliveryGuys = e.users;
 
@@ -732,7 +733,7 @@ function matchAddrUser() {
 
         }
 
-        $("#newTransferConfirmation").keyup(function () {
+        $("#newTransferConfirmation").keyup(function() {
             var textCounter = $(this).val().length;
             var inputVal = $("#newTransferConfirmation").val();
             if (textCounter >= 3) {} else {
@@ -747,6 +748,41 @@ function matchAddrUser() {
 }
 
 //Select wallet
-$(document).on("click", ".selectedWallet", function (e) {
+$(document).on("click", ".selectedWallet", function(e) {
     $(this).html('<div class="preloader-wrapper active" style="width: 20px; height: 20px; margin: 5px 15px;"> <div class="spinner-layer spinner-blue-only"> <div class="circle-clipper left"> <div class="circle"></div></div><div class="gap-patch"> <div class="circle"></div></div><div class="circle-clipper right"> <div class="circle"></div></div></div></div>')
 })
+
+//Buy tokens using mobile money to access token market
+function buyTokensUsingMobileMoney() {
+    $('#buyTokensWindow').css('display', 'block')
+    var amount = $('#tokenPurchaseInput').val()
+
+    $('#tokenPurchaseBtn').click(function(e) {
+        if (amount == '') {
+            M.toast({
+                html: 'Please enter amount'
+            })
+        } else {
+            doFetch({
+                action: 'getInsufficientFundsOrderbook',
+                contract: "0xb72627650f1149ea5e54834b2f468e5d430e67bf",
+                rate: allTokens["0xb72627650f1149ea5e54834b2f468e5d430e67bf"].rate * baseX,
+                total: amount,
+                act: 'buy',
+                countryCode: baseCd
+            }).then(function(e) {
+                if (e.status == "ok") {
+                    document.getElementById("insufficientFundsModal").style.display = "block";
+                    insufficientOrderNum = e.data.num;
+                    return insufficientOrderNum;
+                } else {
+                    M.toast({
+                        html: "Unable to complete transaction"
+                    });
+                    clearCart();
+                }
+            });
+        }
+    })
+
+}
