@@ -166,148 +166,150 @@ function starting() {
     clearInterval(statInt);
     //user wants to trade so hide default landing page
     if (getBitsWinOpt('uid') || getBitsWinOpt('cid')) $("#tokenSelect").hide();
-    walletFunctions(localStorage.getItem('bits-user-name')).then(function(u) {
+    if(localStorage.getItem('bits-user-name') == null){}else{
+        walletFunctions(localStorage.getItem('bits-user-name')).then(function(u) {
 
-        new M.Modal(document.querySelector('#userAccount'), {
-            ready: function(e) {
-                showAddr('0x' + localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
+            new M.Modal(document.querySelector('#userAccount'), {
+                ready: function(e) {
+                    showAddr('0x' + localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name')));
 
-                if (localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'))) {
+                    if (localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'))) {
 
-                    var adr = '0x' + localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'));
-                } else {
-                    var adr = 'wallet locked';
+                        var adr = '0x' + localStorage.getItem('bits-user-address-' + localStorage.getItem('bits-user-name'));
+                    } else {
+                        var adr = 'wallet locked';
 
+                    }
+
+                    $(".userWalletAddress").html(adr);
                 }
-
-                $(".userWalletAddress").html(adr);
-            }
-        });
-        var newDisc;
+            });
+            var newDisc;
 
 
 
-        /////////////////////////////////// start update exchange rates
+            /////////////////////////////////// start update exchange rates
 
-        fetchRates().then(function(e) {
-            /*
-            if (e.status == "ok") {
-                coinList = e.data.data;
-                var rate = coinList[0].coinRate;
-                var bankCharges = 5; // %
-                baseX = e.data.baseEx;
-                baseCd = e.data.baseCd;
-                finalRate = rate * (e.data.baseEx + ((e.data.baseEx * bankCharges) / 100)); //inclusive bank charges
-
-
-
-                $("#fetchedRate").html(finalRate.toFixed(2));
-                */
-            /*
-                        if (window.PaymentRequest) {
-                            payButton.setAttribute('style', 'display: inline;');
-                            payButton.addEventListener('click', function () {
-                                initPaymentRequest().show().then(function (instrumentResponse) {
-                                        sendPaymentToServer(instrumentResponse);
-                                    })
-                                    .catch(function (err) {
-                                        ChromeSamples.setStatus(err);
-                                    });
-                            });
-                        } else {
-                            console.log('This browser does not support web payments');
-                        }
-
-            		*/
-
-            orderBookManager(e.baseEx, e.baseCd).then(function(e) {
+            fetchRates().then(function(e) {
+                /*
+                if (e.status == "ok") {
+                    coinList = e.data.data;
+                    var rate = coinList[0].coinRate;
+                    var bankCharges = 5; // %
+                    baseX = e.data.baseEx;
+                    baseCd = e.data.baseCd;
+                    finalRate = rate * (e.data.baseEx + ((e.data.baseEx * bankCharges) / 100)); //inclusive bank charges
 
 
-                getAvailableCoins();
-                sortOrderBookColor();
+
+                    $("#fetchedRate").html(finalRate.toFixed(2));
+                    */
+                /*
+                            if (window.PaymentRequest) {
+                                payButton.setAttribute('style', 'display: inline;');
+                                payButton.addEventListener('click', function () {
+                                    initPaymentRequest().show().then(function (instrumentResponse) {
+                                            sendPaymentToServer(instrumentResponse);
+                                        })
+                                        .catch(function (err) {
+                                            ChromeSamples.setStatus(err);
+                                        });
+                                });
+                            } else {
+                                console.log('This browser does not support web payments');
+                            }
+
+                		*/
+
+                orderBookManager(e.baseEx, e.baseCd).then(function(e) {
 
 
-                $('#tradeOrder').modal({
-                    dismissible: true, // Modal can be dismissed by clicking outside of the modal
-                    opacity: .5, // Opacity of modal background
-                    inDuration: 300, // Transition in duration
-                    outDuration: 200, // Ending top style attribute
-                    ready: function(modal, trigger) {
+                    getAvailableCoins();
+                    sortOrderBookColor();
 
-                        console.log($(trigger).attr('oid'), $(trigger).attr('act'));
-                        if (!getBitsOpt('oid') || !getBitsOpt('act')) {
 
-                            openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
-                        } else {
+                    $('#tradeOrder').modal({
+                        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+                        opacity: .5, // Opacity of modal background
+                        inDuration: 300, // Transition in duration
+                        outDuration: 200, // Ending top style attribute
+                        ready: function(modal, trigger) {
 
-                            location.hash = '';
+                            console.log($(trigger).attr('oid'), $(trigger).attr('act'));
+                            if (!getBitsOpt('oid') || !getBitsOpt('act')) {
 
-                        }
-                        setTimeout(function() {
-                            M.updateTextFields();
-                        }, 600);
-                        walletStatus();
-                    },
-                    complete: function() {
-                        stopOrderWatch()
-                    } // Callback for Modal close
+                                openOrder($(trigger).attr('oid'), $(trigger).attr('act'));
+                            } else {
+
+                                location.hash = '';
+
+                            }
+                            setTimeout(function() {
+                                M.updateTextFields();
+                            }, 600);
+                            walletStatus();
+                        },
+                        complete: function() {
+                            stopOrderWatch()
+                        } // Callback for Modal close
+                    });
+
+                    //start push messaging
+                    try {
+
+                        startPushManager();
+                    } catch (er) {
+                        console.log('INFO! not started messaging ', er)
+                    }
+
+                    //set interval to update token balance;
+                    setInterval(function() {
+                        upDtokenD();
+                    }, 10000);
+
+                    // start first transaction
+                    doFirstBuy();
+
+
+
+                    if (getBitsOpt('oid')) {
+                        // start open requested order
+                        openOrder(getBitsOpt('oid'), 'manage');
+                        // end open requested order
+
+                    } else if (getBitsOpt('act') == 'transfer') {
+
+                        openOrder('new', 'transfer');
+
+                        $("#newTransferConfirmation").val(getBitsOpt('dest'));
+
+                        $("#newTransferAmount").val(getBitsOpt('amount'));
+
+                    }
+
+
+
+
                 });
 
-                //start push messaging
-                try {
-
-                    startPushManager();
-                } catch (er) {
-                    console.log('INFO! not started messaging ', er)
-                }
-
-                //set interval to update token balance;
-                setInterval(function() {
-                    upDtokenD();
-                }, 10000);
-
-                // start first transaction
-                doFirstBuy();
 
 
-
-                if (getBitsOpt('oid')) {
-                    // start open requested order
-                    openOrder(getBitsOpt('oid'), 'manage');
-                    // end open requested order
-
-                } else if (getBitsOpt('act') == 'transfer') {
-
-                    openOrder('new', 'transfer');
-
-                    $("#newTransferConfirmation").val(getBitsOpt('dest'));
-
-                    $("#newTransferAmount").val(getBitsOpt('amount'));
-
-                }
-
-
-
-
+                // } else {
+                //    console.log("error");
+                // }
             });
 
+            ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
 
+        }).catch(function(err) {
 
-            // } else {
-            //    console.log("error");
-            // }
+            console.log('!info ', err)
+            setTimeout(function() {
+                starting();
+            }, 450);
         });
-
-        ///////////////////////////// end update exchange rates//////////////////////////////////////////////////////////////////////
-
-    }).catch(function(err) {
-
-        console.log('!info ', err)
-        setTimeout(function() {
-            starting();
-        }, 450);
-    })
-    profileImg();
+        profileImg();
+    }
 
     matchAddrUser();
 
