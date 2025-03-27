@@ -1,0 +1,19 @@
+.logo {
+  @apply rounded-full bg-white text-0.875 text-high;
+}
+
+.logo--xs {
+  @apply w-4 h-4;
+}
+
+.logo--sm {
+  @apply w-6 h-6;
+}
+
+.logo--md {
+  @apply w-8 h-8;
+}
+
+.logo--lg {
+  @apply w-10 md:h-10;
+}
