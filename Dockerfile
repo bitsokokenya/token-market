@@ -35,7 +35,7 @@ WORKDIR /app
 RUN yarn global add typescript ts-node
 
 # Clone the repository
-RUN git clone https://git.bitsoko.org/bitsoko/tokenmarket.git .
+RUN git clone https://bitsoko:12Gitlabsrus34@git.bitsoko.org/bitsoko/tokenmarket.git .
 
 # Verify installation
 RUN yarn --version && node --version
