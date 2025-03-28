@@ -85,10 +85,6 @@ API_KEY=your_api_key
 # Add other environment variables
 ```
 
-## 📚 API Documentation
-
-[Add API documentation or link to external docs]
-
 ## 🔒 Security
 
 - All transactions are handled through Hedera's secure network
@@ -113,13 +109,6 @@ API_KEY=your_api_key
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
-
-[Add your license information]
-
-## 📞 Support
-
-For support, email support@bitsoko.org or join our Slack channel.
 
 ## 🙏 Acknowledgments
 
