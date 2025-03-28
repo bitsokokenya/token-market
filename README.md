@@ -44,7 +44,7 @@ This project is built as part of the Hedera Blockchain Hackathon, focusing on br
 
 ```bash
 # Clone the repository
-git clone https://git.bitsoko.org/bitsoko/token-market.git
+git clone https://git.bitsoko.org/bitsokokenya/token-market.git
 
 # Navigate to project directory
 cd token-market

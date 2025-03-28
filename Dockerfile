@@ -35,7 +35,7 @@ WORKDIR /app
 RUN yarn global add typescript ts-node
 
 # Clone the repository
-RUN git clone https://bitsoko:12Gitlabsrus34@git.bitsoko.org/bitsoko/token-market.git .
+RUN git clone https://github.com/bitsokokenya/token-market.git .
 
 # Verify installation
 RUN yarn --version && node --version
@@ -46,7 +46,7 @@ RUN yarn install
 #RUN yarn build
 
 # Expose port 3000 for the application
-EXPOSE 3000
+EXPOSE 1234
 
 # Create an entrypoint script
 RUN echo '#!/bin/sh\n\
