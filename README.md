@@ -1,9 +1,10 @@
 # Token Market Platform
 
-A decentralized platform enabling SMEs (Small, Medium, and Micro Enterprises) to raise funding through tokenization against Bitcoin and HBAR using automated market maker (AMM) algorithms.
+A decentralized platform built on Hedera blockchain enabling SMEs (Small, Medium, and Micro Enterprises) to raise funding through tokenization against Bitcoin and HBAR using automated market maker (AMM) algorithms.
 
 ## 🚀 Features
 
+- **Hedera Integration**: Leveraging Hedera's secure, fast, and low-cost network
 - **Tokenization**: Businesses can issue tokens against Bitcoin or HBAR
 - **Automated Market Making**: Token prices are balanced automatically using standard AMM algorithms
 - **Direct Pool Management**: 
@@ -13,8 +14,17 @@ A decentralized platform enabling SMEs (Small, Medium, and Micro Enterprises) to
 - **Investment Positions**: Users can buy into business liquidity pools and withdraw anytime
 - **Transparent Operations**: Real-time visibility of profits and losses
 
+## 💫 Hedera Blockchain Integration
+
+This project is built as part of the Hedera Blockchain Hackathon, focusing on bringing innovative financial solutions to SMEs in Africa.
+
+<img src="path_to_hedera_nse_image.png" alt="Hedera Council x NSE" width="400"/>
+
+*Building the future together with Hedera and Nairobi Securities Exchange*
+
 ## 🛠️ Technology Stack
 
+- Hedera Network & SDKs
 - Node.js
 - TypeScript
 - Next.js
@@ -26,6 +36,7 @@ A decentralized platform enabling SMEs (Small, Medium, and Micro Enterprises) to
 - Yarn package manager
 - Docker (for containerized deployment)
 - Git
+- Hedera testnet account
 
 ## 🚀 Getting Started
 
@@ -74,7 +85,7 @@ API_KEY=your_api_key
 
 ## 🔒 Security
 
-- All transactions are handled through secure pools
+- All transactions are handled through Hedera's secure network
 - Automated market maker ensures fair price discovery
 - Business funds are managed through smart contracts
 - Regular security audits performed
@@ -86,6 +97,7 @@ API_KEY=your_api_key
 - [ ] Enhanced risk assessment tools
 - [ ] Mobile application
 - [ ] Multi-chain support
+- [ ] Integration with additional African exchanges
 
 ## 🤝 Contributing
 
@@ -105,9 +117,11 @@ For support, email support@bitsoko.org or join our Slack channel.
 
 ## 🙏 Acknowledgments
 
+- Hedera Council
+- Nairobi Securities Exchange
 - Bitsoko Services team
 - Community contributors
 
 ---
 
-Developed with ❤️ by Bitsoko Services
+Developed with ❤️ by Bitsoko Services for the Hedera Blockchain Hackathon
