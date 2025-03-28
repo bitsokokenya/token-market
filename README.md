@@ -18,7 +18,7 @@ A decentralized platform built on Hedera blockchain enabling SMEs (Small, Medium
 
 This project is built as part of the Hedera Blockchain Hackathon, focusing on bringing innovative financial solutions to SMEs in Africa.
 
-<img src="screenshots/hed-hack.jpg" alt="Hedera Council x NSE" width="400"/>
+<img src="screenshot/hed-hack.jpg" alt="Hedera Council x NSE" width="400"/>
 
 *Building the future together with Hedera and Nairobi Securities Exchange*
 
