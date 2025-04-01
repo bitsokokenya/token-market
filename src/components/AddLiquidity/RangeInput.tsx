@@ -1,15 +1,35 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { tickToPrice, priceToClosestTick, nearestUsableTick } from '@uniswap/v3-sdk';
-import { Price, CurrencyAmount, Token } from '@uniswap/sdk-core';
-
-import TokenLabel from '../TokenLabel';
+import { HederaToken } from '../../utils/tokens';
 import { formatInput } from '../../utils/numbers';
+import TokenLabel from '../TokenLabel';
+
+// Constants for tick math
+const MIN_TICK = -887272;
+const MAX_TICK = 887272;
+
+// Helper function to convert tick to price
+const tickToPrice = (tick: number): number => {
+  return Math.pow(1.0001, tick);
+};
+
+// Helper function to convert price to tick
+const priceToTick = (price: number): number => {
+  return Math.log(price) / Math.log(1.0001);
+};
+
+// Helper to find nearest tick that's divisible by tick spacing
+const nearestUsableTick = (tick: number, tickSpacing: number): number => {
+  const rounded = Math.round(tick / tickSpacing) * tickSpacing;
+  if (rounded < MIN_TICK) return MIN_TICK;
+  if (rounded > MAX_TICK) return MAX_TICK;
+  return rounded;
+};
 
 interface RangeInputProps {
   label: string;
   initTick: number;
-  baseToken: Token;
-  quoteToken: Token;
+  baseToken: HederaToken;
+  quoteToken: HederaToken;
   tickSpacing: number;
   tabIndex?: number;
   reverse: boolean;
@@ -28,26 +48,24 @@ function RangeInput({
   onChange,
   onFocus,
 }: RangeInputProps) {
-  const inputEl = useRef(null);
+  const inputEl = useRef<HTMLInputElement>(null);
 
   const [input, setInput] = useState<string>('0.00');
   const [tick, setTick] = useState<number>(initTick);
 
-  const [token0, token1] = useMemo(() => {
-    return [baseToken, quoteToken];
-  }, [quoteToken, baseToken]);
-
+  // When initTick changes, update our internal tick state
   useEffect(() => {
     setTick(initTick);
   }, [initTick]);
 
+  // When tick changes, update the input field with the correct price
   useEffect(() => {
-    const price = parseFloat(tickToPrice(token1, token0, tick).toSignificant(16));
-
+    const price = tickToPrice(tick);
     setInput(formatInput(price, false, tickSpacing === 1 ? 8 : 4));
-  }, [token0, token1, tick, tickSpacing]);
+  }, [tick, tickSpacing]);
 
-  const handleInput = (ev: { target: any }) => {
+  // Handle user input in the price field
+  const handleInput = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = ev.target;
     if (value === '') {
       setInput('0.00');
@@ -57,43 +75,39 @@ function RangeInput({
     setInput(value);
   };
 
+  // Calculate tick from the price input
   const calculateTick = () => {
     const inputVal = parseFloat(input);
-    if (Number.isNaN(inputVal)) {
+    if (Number.isNaN(inputVal) || inputVal === 0) {
       setInput('0.00');
       return;
     }
 
-    if (inputVal === 0) {
-      return;
-    }
-
-    const price = new Price({
-      quoteAmount: CurrencyAmount.fromRawAmount(
-        token0,
-        Math.ceil(inputVal * Math.pow(10, token0.decimals)),
-      ),
-      baseAmount: CurrencyAmount.fromRawAmount(
-        token1,
-        Math.ceil(1 * Math.pow(10, token1.decimals)),
-      ),
-    });
-
-    const tickFromPrice = priceToClosestTick(price);
+    // Convert price to tick
+    const tickFromPrice = priceToTick(inputVal);
+    
+    // Find nearest tick that's divisible by tickSpacing
     const closestTick = nearestUsableTick(tickFromPrice, tickSpacing);
+    
     setTick(closestTick);
-
     onChange(closestTick);
   };
 
+  // Decrease the tick/price value
   const decreaseValue = () => {
-    setTick(reverse ? tick + tickSpacing : tick - tickSpacing);
+    const newTick = reverse ? tick + tickSpacing : tick - tickSpacing;
+    setTick(newTick);
+    onChange(newTick);
   };
 
+  // Increase the tick/price value
   const increaseValue = () => {
-    setTick(reverse ? tick - tickSpacing : tick + tickSpacing);
+    const newTick = reverse ? tick - tickSpacing : tick + tickSpacing;
+    setTick(newTick);
+    onChange(newTick);
   };
 
+  // Handle focus on the input field
   const handleFocus = () => {
     if (inputEl.current) {
       onFocus(inputEl.current);

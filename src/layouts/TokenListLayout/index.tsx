@@ -74,7 +74,7 @@ function TokenListLayout() {
       </div>
       {filteredTokens && !filteredTokens.length && (
         <div className="text-center text-1 md:text-1 text-low mt-4 flex justify-center items-center h-20">
-          {showZeroBalances ? 'No tokens found.' : 'No tokens with non-zero balance found.'}
+          {showZeroBalances ? 'Connect your wallet to see your tokens.' : 'No tokens with non-zero balance found.'}
         </div>
       )}
       <div className="w-full mt-8 flex gap-8 md:gap-20 overflow-x-auto pb-12">

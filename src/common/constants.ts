@@ -33,9 +33,24 @@ export class HederaToken {
   public equals(other: HederaToken): boolean {
     return this.tokenId === other.tokenId;
   }
+
+  get hederaAccountId(): string {
+    return this.tokenId;
+  }
+
+  getEvmAddress(): string {
+    return this.address;
+  }
+
+  getHederaAccountId(): string {
+    return this.tokenId;
+  }
 }
 
+export const ISTESTNET = true;
+
 // Hedera token definitions
+//  HBAR: new HederaToken('0.0.1183558', 18, 'HBAR', 'Hedera') > ('tokenid', decimals, 'symbol', 'name')
 export const HEDERA_TOKENS = {
   HBAR: new HederaToken('0.0.1183558', 18, 'HBAR', 'Hedera'),
   USDC: new HederaToken('0.0.1183558', 6, 'USDC', 'USD Coin'),
@@ -58,7 +73,24 @@ export const BLOCK_EXPLORER_URL: { [key: number]: string } = {
 };
 
 // SaucerSwap API URL
-export const SAUCERSWAP_API_URL = 'https://test-api.saucerswap.finance';
+// testnet
+export const SAUCERSWAP_TESTNET_API_URL = 'https://test-api.saucerswap.finance';
+// mainnet
+export const SAUCERSWAP_MAINNET_API_URL = 'https://api.saucerswap.finance';
+
+
+    // Factory address
+  export  const FACTORY_TESTNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b';
+  export  const FACTORY_MAINNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b';
+    
+    // Hedera testnet JSON RPC URL
+  export  const HEDERA_TESTNET_RPC = 'https://testnet.hashio.io/api';
+  // Hedera testnet JSON RPC URL
+export  const HEDERA_MAINNET_RPC = 'https://mainnet.hashio.io/api';
+
+
+    
+
 
 // Application routes
 export const ROUTES = {

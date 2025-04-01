@@ -1,5 +1,5 @@
 import React from 'react';
-import { Token } from '@uniswap/sdk-core';
+import { HederaToken } from '../../utils/tokens';
 
 import TokenLogo from '../TokenLogo';
 import TokenLabel from '../TokenLabel';
@@ -9,8 +9,8 @@ import { getChainNameAndColor } from '../../utils/chains';
 export type TokenSize = 'lg' | 'md' | 'sm' | 'xs';
 
 interface Props {
-  baseToken: Token;
-  quoteToken: Token;
+  baseToken: HederaToken;
+  quoteToken: HederaToken;
   fee?: number;
   onClick: () => void;
   tabIndex?: number;

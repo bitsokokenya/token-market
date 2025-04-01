@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AccountId, AccountBalanceQuery, Client, AccountAllowanceQuery, AccountAllowanceApproveTransaction } from '@hashgraph/sdk';
-import { Token } from '@uniswap/sdk-core';
+import { AccountId, AccountBalanceQuery, Client } from '@hashgraph/sdk';
+import { HederaToken } from '../utils/tokens';
 
-export function useTokenFunctions(token: Token | undefined) {
+export function useTokenFunctions(token: HederaToken | undefined) {
   const [balance, setBalance] = useState<string>('0');
   const [allowance, setAllowance] = useState<string>('0');
   const [loading, setLoading] = useState(false);
@@ -22,10 +22,12 @@ export function useTokenFunctions(token: Token | undefined) {
       const tokenBalance = await query.execute(client);
       
       // Get the balance for the specific token using the token address directly (already in 0.0.XXXX format)
-      const balance = tokenBalance.tokens.get(token.address);
-      
-      if (balance) {
-        return balance.toString();
+      if (tokenBalance.tokens) {
+        const balance = tokenBalance.tokens.get(token.address);
+        
+        if (balance) {
+          return balance.toString();
+        }
       }
       
       return '0';
@@ -39,19 +41,15 @@ export function useTokenFunctions(token: Token | undefined) {
     if (!token) return '0';
 
     try {
-      // Create Hedera client
-      const client = Client.forMainnet(); // or forTestnet() based on your network
-
-      // Create the allowance query using addresses directly (already in 0.0.XXXX format)
-      const query = new AccountAllowanceQuery()
-        .setOwnerAccountId(AccountId.fromString(owner))
-        .setSpenderAccountId(AccountId.fromString(spender))
-        .setTokenId(token.address);
-
-      // Execute the query
-      const allowance = await query.execute(client);
+      // Use API endpoint to fetch allowances instead of direct SDK call
+      const response = await fetch(`/api/token/allowance?owner=${owner}&spender=${spender}&token=${token.address}`);
       
-      return allowance.toString();
+      if (!response.ok) {
+        throw new Error('Failed to fetch allowance');
+      }
+      
+      const data = await response.json();
+      return data.allowance || '0';
     } catch (error) {
       console.error('Failed to get allowance:', error);
       return '0';
@@ -62,20 +60,25 @@ export function useTokenFunctions(token: Token | undefined) {
     if (!token) return false;
 
     try {
-      // Create Hedera client
-      const client = Client.forMainnet(); // or forTestnet() based on your network
-
-      // Create the approval transaction using addresses directly (already in 0.0.XXXX format)
-      const transaction = new AccountAllowanceApproveTransaction()
-        .approveTokenAllowance(token.address, spender, amount)
-        .freezeWith(client);
-
-      // Sign and execute the transaction
-      const signedTx = await transaction.sign(client.operatorKey!);
-      const txResponse = await signedTx.execute(client);
-      const receipt = await txResponse.getReceipt(client);
-
-      return receipt.status === 'SUCCESS';
+      // Use API endpoint to approve token instead of direct SDK call
+      const response = await fetch('/api/token/approve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: token.address,
+          spender,
+          amount,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to approve token');
+      }
+      
+      const data = await response.json();
+      return data.success === true;
     } catch (error) {
       console.error('Failed to approve token:', error);
       return false;

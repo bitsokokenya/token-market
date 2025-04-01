@@ -43,18 +43,24 @@ const LandingLayout: NextPage = () => {
       </div>
       <div className="flex flex-col md:flex-row justify-between items-start my-4 w-full flex-1">
         <div className="w-full lg:max-w-sm sm:mr-4 px-8 py-16 rounded-lg flex items-center text-center justify-center flex-col text-high bg-gradient-to-b from-surface-10 to-transparent">
-          <h3 className="text-1.5 lg:text-2 font-semibold tracking-tighter">Insightful</h3>
-          <span>Deep insights with AI powered analysis of your business investments.</span>
+          <h3 className="text-1.5 lg:text-2 font-semibold tracking-tighter">For Business</h3>
+          <span>Raise funding for your business. Immediate access to capital. Funds disbursment governed by DAO</span>
         </div>
         <div className="w-full lg:max-w-sm sm:mr-4 px-8 mt-6 md:mt-0 py-16 rounded-lg flex items-center text-center justify-center flex-col text-high bg-gradient-to-b from-surface-10 to-transparent">
-          <h3 className="text-1.5 lg:text-2 font-semibold tracking-tighter">Secure</h3>
-          <span>Permissionless investment management powered by secure always-on Hedera blockchain .</span>
+          <h3 className="text-1.5 lg:text-2 font-semibold tracking-tighter">For Investors</h3>
+          <span>Get access to a wide array of business investment options. Transparent price visibility. Secure, always-on deposits and withdrawals. </span>
         </div>
         <div className="w-full lg:max-w-sm px-8 py-16 mt-6 md:mt-0 rounded-lg flex items-center text-center justify-center flex-col text-high bg-gradient-to-b from-surface-10 to-transparent">
           <h3 className="text-1.5 lg:text-2 font-semibold tracking-tighter">Future Proof</h3>
-          <span>We're developing the best in-class defi pool manager for SME's with built-in support for bitcoin lightning network.</span>
+          <span>We're developing the best in-class defi investment manager for SME's with built-in support for bitcoin lightning network.</span>
         </div>
       </div>
+      <div className="w-full lg:max-w-sm px-8 py-16 mt-6 md:mt-0 rounded-lg flex items-center text-center justify-center flex-col text-high bg-gradient-to-b from-surface-10 to-transparent">
+      <span>Testnet Contract: <a href="https://hashscan.io/testnet/contract/0.0.5808181">0.0.5808181</a></span> 
+      <span>Total Liquidity: <a href="#">KES 0.00</a></span> 
+        
+        </div>
+        
     </div>
   );
 };

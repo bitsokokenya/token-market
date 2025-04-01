@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Token, Fraction } from "@uniswap/sdk-core";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
 
@@ -7,19 +6,16 @@ import { ChainID } from "../types/enums";
 import { useAddress } from "../providers/AddressProvider";
 import { useFetchTokenBalances, TokenBalance } from "./fetch";
 import { formatInput } from "../utils/numbers";
-import { oneTokenUnit, priceFromTick } from "../utils/tokens";
-import { hederaTokenIdToEvmAddress } from "../common/constants";
+import { HederaToken, oneTokenUnit, priceFromTick, Fraction } from "../utils/tokens";
 
 function getToken(chainId: number, address: string, metadata: any) {
-  // Convert Hedera account ID to Ethereum-style address
-  const evmAddress = hederaTokenIdToEvmAddress(address);
-  
-  return new Token(
-    chainId,
-    evmAddress,
+  return new HederaToken(
+    address, // tokenId (Hedera format)
     metadata.decimals,
     metadata.symbol,
-    metadata.name
+    metadata.name,
+    metadata.logo,
+    chainId
   );
 }
 

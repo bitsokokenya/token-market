@@ -33,6 +33,14 @@ export const HashConnectButton: React.FC = () => {
   const [showQR, setShowQR] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const handleNewBiz = async () => {
+    if (connected) {
+      //await disconnect();
+    } else {
+      setShowQR(true);
+      //await connect();
+    }
+  };
   const handleClick = async () => {
     if (connected) {
       await disconnect();
@@ -53,7 +61,14 @@ export const HashConnectButton: React.FC = () => {
   return (
     <div className="relative">
       {connected ? (
+
         <div className="flex items-center gap-2">
+        <button
+        onClick={handleNewBiz}
+        className="px-4 py-2 rounded-lg font-medium bg-green-500 hover:bg-green-600 text-white"
+        >
+        For Business
+        </button>
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-10">
             <span className="text-sm text-high">
               {accountId || 'Connecting..'}

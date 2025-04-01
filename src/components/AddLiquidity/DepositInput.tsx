@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Token } from '@uniswap/sdk-core';
+import { HederaToken, isNativeToken } from '../../utils/tokens';
 
 import TokenLabel from '../TokenLabel';
 import TokenLogo from '../TokenLogo';
 import { formatInput } from '../../utils/numbers';
-import { isNativeToken } from '../../utils/tokens';
+import { getChainNameAndColor } from '../../utils/chains';
 
 interface DepositInputProps {
-  token: Token;
+  token: HederaToken;
   value: number;
   balance: string;
   tabIndex: number;
@@ -30,6 +30,7 @@ function DepositInput({
   const inputEl = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState<string>('0.00');
   const [dirty, setDirty] = useState(false);
+  const [chainName, chainColor, chainLogoName] = getChainNameAndColor(token.chainId);
 
   useEffect(() => {
     const input = formatInput(value, false);
@@ -48,6 +49,10 @@ function DepositInput({
 
     if (token.chainId === 137) {
       return wrapped ? 'Use MATIC' : 'Use WMATIC';
+    }
+
+    if (token.chainId === 296 || token.chainId === 295) {
+      return wrapped ? 'Use HBAR' : 'Use WHBAR';
     }
 
     return wrapped ? 'Use ETH' : 'Use WETH';
@@ -90,7 +95,11 @@ function DepositInput({
   return (
     <div className="w-full flex flex-wrap items-start border rounded p-2 my-2 relative">
       <div className="w-1/3 flex items-center p-1 my-1 justify-between bg-surface-20 border border-element-10 rounded">
-        <TokenLogo name={token.name} address={token.address} />
+        <TokenLogo 
+          chain={chainLogoName}
+          name={token.name} 
+          address={token.address} 
+        />
         <TokenLabel name={token.name} symbol={token.symbol} wrapped={wrapped} />
       </div>
       <input

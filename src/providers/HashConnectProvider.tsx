@@ -8,6 +8,7 @@ interface HashConnectContextType {
   accountId: string | null;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
+  sendTransaction: (accountId: string, transaction: any) => Promise<any>;
 }
 
 const HashConnectContext = createContext<HashConnectContextType | null>(null);
@@ -25,6 +26,7 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [pairingString, setPairingString] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [accountId, setAccountId] = useState<string | null>(null);
+  const [topic, setTopic] = useState<string | null>(null);
 
   useEffect(() => {
     const initializeHashConnect = async () => {
@@ -45,6 +47,7 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
           if (data.accountIds && data.accountIds.length > 0) {
             setAccountId(data.accountIds[0]);
             setConnected(true);
+            setTopic(data.topic);
             console.log("Paired:", data);
             // Save session data so it can be reused after a reload
             localStorage.setItem("hashconnectSession", JSON.stringify(data));
@@ -52,18 +55,16 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
         });
 
         // Handle connection status changes
-        hashconnectInstance.connectionStatusChangeEvent.on((connectionStatus: boolean) => {
+        hashconnectInstance.connectionStatusChangeEvent.on((connectionStatus: string) => {
           console.log("Connection status changed:", connectionStatus);
-          setConnected(connectionStatus);
-        });
-
-        // Handle disconnection
-        hashconnectInstance.disconnectionEvent.on((data: any) => {
-          console.log("Disconnected", data);
-          setConnected(false);
-          setAccountId(null);
-          localStorage.removeItem("hashconnectSession");
-          hashconnectInstance.disconnect();
+          setConnected(connectionStatus === "connected");
+          
+          // Handle disconnection via the connection status change
+          if (connectionStatus !== "connected") {
+            setAccountId(null);
+            setTopic(null);
+            localStorage.removeItem("hashconnectSession");
+          }
         });
 
         // Initialize HashConnect
@@ -74,7 +75,9 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
         if (existingSession) {
           const sessionData = JSON.parse(existingSession);
           console.log("Existing session found, reconnecting...");
-          //await hashconnectInstance.connect(sessionData);
+          setAccountId(sessionData.accountIds[0]);
+          setTopic(sessionData.topic);
+          setConnected(true);
         } else {
           console.log("No existing session found");
           setConnected(false);
@@ -106,13 +109,53 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const disconnect = async () => {
     if (hashconnect) {
       try {
-        //await hashconnect.disconnect();
+        if (topic) {
+          await hashconnect.disconnect(topic);
+        }
         setConnected(false);
         setAccountId(null);
+        setTopic(null);
         localStorage.removeItem("hashconnectSession");
       } catch (error) {
         console.error("Failed to disconnect:", error);
       }
+    }
+  };
+
+  const sendTransaction = async (accountId: string, transaction: any) => {
+    if (!hashconnect || !connected || !topic) {
+      console.error("HashConnect not ready or not connected");
+      return { success: false, error: "HashConnect not ready or not connected" };
+    }
+
+    try {
+      console.log("Sending transaction via HashConnect...");
+      
+      // Create transaction data
+      const transactionBytes = await transaction.freezeWithSigner(() => { });
+      
+      // Request signature from the wallet
+      const response = await hashconnect.sendTransaction(topic, {
+        topic: topic,
+        byteArray: transactionBytes,
+        metadata: {
+          accountToSign: accountId,
+          returnTransaction: false
+        }
+      });
+      
+      console.log("Transaction response:", response);
+      
+      return {
+        success: true,
+        response: response
+      };
+    } catch (error) {
+      console.error("Failed to send transaction:", error);
+      return {
+        success: false,
+        error: error
+      };
     }
   };
 
@@ -125,6 +168,7 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
         accountId,
         connect,
         disconnect,
+        sendTransaction
       }}
     >
       {children}

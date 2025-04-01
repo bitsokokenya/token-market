@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 
 import { ROUTES } from '../../common/constants';
 import { useCurrencyConversions } from '../../providers/CurrencyConversionProvider';
 import { usePools } from '../../providers/CombinedPoolsProvider';
+import { HederaToken } from '../../utils/tokens';
 
 import BackArrow from '../../components/icons/LeftArrow';
 import Card from '../../components/Card';
@@ -24,28 +25,106 @@ const PoolDetailsPage = () => {
   const { convertToGlobalFormatted } = useCurrencyConversions();
   const { query } = useRouter();
 
-  const id = query.id;
+  const id = query.id as string;
+
+  // Enhanced debugging for pool loading
+  useEffect(() => {
+    console.log('Pool Details Debug:', {
+      loadingPools,
+      poolId: id,
+      availablePools: pools?.map(p => ({
+        id: p.address,
+        tokens: `${p.baseToken?.symbol}/${p.quoteToken?.symbol}`,
+        baseTokenId: p.baseToken instanceof HederaToken ? p.baseToken.getHederaAccountId() : p.baseToken?.address || 'unknown',
+        quoteTokenId: p.quoteToken instanceof HederaToken ? p.quoteToken.getHederaAccountId() : p.quoteToken?.address || 'unknown',
+      }))
+    });
+  }, [loadingPools, pools, id]);
 
   // Select a single pool
   const pool = useMemo(() => {
     if (loadingPools) {
+      console.log('Still loading pools...');
       return null;
     }
 
-    return pools.find((pool) => pool.address === id);
+    if (!id) {
+      console.log('No pool ID provided in URL');
+      return null;
+    }
+
+    // Try to find pool by Hedera account ID
+    const foundPool = pools.find((pool) => {
+      const poolAddress = pool.address;
+      const matches = poolAddress === id;
+      
+      // Add null checks before accessing token properties
+      const baseTokenSymbol = pool?.baseToken?.symbol || '???';
+      const quoteTokenSymbol = pool?.quoteToken?.symbol || '???';
+      
+      console.log('Pool matching:', {
+        poolAddress,
+        urlId: id,
+        matches,
+        tokens: `${baseTokenSymbol}/${quoteTokenSymbol}`,
+        baseTokenId: pool?.baseToken instanceof HederaToken 
+          ? pool.baseToken.getHederaAccountId() 
+          : pool?.baseToken?.address || 'unknown',
+        quoteTokenId: pool?.quoteToken instanceof HederaToken 
+          ? pool.quoteToken.getHederaAccountId() 
+          : pool?.quoteToken?.address || 'unknown',
+      });
+      
+      return matches;
+    });
+
+    if (!foundPool) {
+      console.log('No matching pool found for ID:', id);
+    } else {
+      // Add null checks before accessing token properties
+      const baseTokenSymbol = foundPool?.baseToken?.symbol || '???';
+      const quoteTokenSymbol = foundPool?.quoteToken?.symbol || '???';
+      
+      console.log('Found matching pool:', {
+        id: foundPool.address,
+        tokens: `${baseTokenSymbol}/${quoteTokenSymbol}`,
+        baseTokenId: foundPool?.baseToken instanceof HederaToken 
+          ? foundPool.baseToken.getHederaAccountId() 
+          : foundPool?.baseToken?.address || 'unknown',
+        quoteTokenId: foundPool?.quoteToken instanceof HederaToken 
+          ? foundPool.quoteToken.getHederaAccountId() 
+          : foundPool?.quoteToken?.address || 'unknown',
+      });
+    }
+
+    return foundPool;
   }, [loadingPools, pools, id]);
 
   if (!pool?.positions) {
+    console.log('Pool loading state:', {
+      hasPool: !!pool,
+      hasPositions: !!pool?.positions,
+      poolId: id,
+      loadingPools
+    });
     return (
-      <div>
+      <div className="flex flex-col space-y-4">
         <div className="flex items-center">
-          <div className="flex flex-col">
-            <div className="bg-surface-10 rounded w-32 h-4"></div>
-            <div className="bg-surface-10 rounded-sm w-96 h-12 mt-4"></div>
-          </div>
+          <Link href={`${ROUTES.HOME}${location.search}`} className="text-0.875 font-medium text-medium flex items-center">
+            <BackArrow />
+            <span className="ml-2">Home</span>
+          </Link>
         </div>
-        <div className="bg-surface-10 rounded w-full h-20 mt-8"></div>
-        <div className="bg-surface-10 rounded w-full h-20 mt-4"></div>
+        <div className="animate-pulse">
+          <div className="flex items-center">
+            <div className="flex flex-col">
+              <div className="bg-surface-10 rounded w-32 h-4"></div>
+              <div className="bg-surface-10 rounded-sm w-96 h-12 mt-4"></div>
+            </div>
+          </div>
+          <div className="bg-surface-10 rounded w-full h-20 mt-8"></div>
+          <div className="bg-surface-10 rounded w-full h-20 mt-4"></div>
+        </div>
       </div>
     );
   }
@@ -68,25 +147,27 @@ const PoolDetailsPage = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <Link href={`${ROUTES.HOME}${location.search}`}>
-        <a className="text-0.875 font-medium text-medium flex items-center">
-          <BackArrow />
-          <span className="ml-2">Home</span>
-        </a>
+      <Link href={`${ROUTES.HOME}${location.search}`} className="text-0.875 font-medium text-medium flex items-center">
+        <BackArrow />
+        <span className="ml-2">Home</span>
       </Link>
       <div className="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mt-4">
         <div className="flex mt-8 md:mt-0">
-          <PoolButton
-            baseToken={baseToken}
-            quoteToken={quoteToken}
-            fee={entity.fee / 10000}
-            showNetwork={true}
-            onClick={() => {}}
-            size="lg"
-          />
+          {baseToken && quoteToken ? (
+            <PoolButton
+              baseToken={baseToken}
+              quoteToken={quoteToken}
+              fee={entity.fee / 10000}
+              showNetwork={true}
+              onClick={() => {}}
+              size="lg"
+            />
+          ) : (
+            <div className="text-lg font-medium">Unknown Pool</div>
+          )}
           <div className="hidden lg:flex flex-col ml-6 mt-8 md:-mt-3">
             <span className="text-medium text-0.6875">
-              Current Price ({baseToken.symbol === 'WETH' ? 'ETH' : baseToken.symbol})
+              Current Price ({baseToken?.symbol === 'WETH' ? 'ETH' : baseToken?.symbol || '???'})
             </span>
             <span className="text-1.25 lg:text-2 font-semibold text-high">{currentPrice}</span>
           </div>
@@ -95,13 +176,13 @@ const PoolDetailsPage = () => {
           <Card>
             <div className="text-0.875 text-medium whitespace-nowrap">Uncollected Fees</div>
             <div className="text-1.25 md:text-1.75 my-1 font-semibold text-high">
-              {convertToGlobalFormatted(poolUncollectedFees)}
+              {poolUncollectedFees ? convertToGlobalFormatted(poolUncollectedFees) : '0'}
             </div>
           </Card>
           <Card>
             <div className="text-0.875  text-brand-dark-primary">Total Value</div>
             <div className="text-1.25 md:text-1.75 my-1 font-semibold">
-              {convertToGlobalFormatted(poolUncollectedFees.add(poolLiquidity))}
+              {poolUncollectedFees && poolLiquidity ? convertToGlobalFormatted(poolUncollectedFees.add(poolLiquidity)) : '0'}
             </div>
           </Card>
         </div>
@@ -115,16 +196,25 @@ const PoolDetailsPage = () => {
             className="text-0.75"
           />
           <div className="flex items-center">
-            <Button
-              href={`/add?quoteToken=${quoteToken.symbol}&baseToken=${baseToken.symbol}&fee=3000`}
-              size="md"
-              className="ml-2"
-            >
-              <div className="flex items-center -ml-1">
-                <Plus />
-                <span className="ml-1">New Position</span>
-              </div>
-            </Button>
+            {baseToken && quoteToken ? (
+              <Button
+                href={`/add?quoteToken=${quoteToken.symbol}&baseToken=${baseToken.symbol}&fee=3000`}
+                size="md"
+                className="ml-2"
+              >
+                <div className="flex items-center -ml-1">
+                  <Plus />
+                  <span className="ml-1">New Position</span>
+                </div>
+              </Button>
+            ) : (
+              <Button size="md" className="ml-2" disabled>
+                <div className="flex items-center -ml-1">
+                  <Plus />
+                  <span className="ml-1">New Position</span>
+                </div>
+              </Button>
+            )}
             <DropdownMenu
               options={[
                 {

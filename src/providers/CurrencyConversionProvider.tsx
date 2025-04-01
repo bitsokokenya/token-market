@@ -1,19 +1,17 @@
 import React, { ReactNode, useContext, useCallback, useState } from "react";
-import { Token, Currency, CurrencyAmount } from "@uniswap/sdk-core";
-import { tickToPrice } from "@uniswap/v3-sdk";
-
-import { HEDERA_TOKENS, hederaTokenIdToEvmAddress } from "../common/constants";
+import { HEDERA_TOKENS } from "../common/constants";
 import { ChainID } from "../types/enums";
 import { formatCurrency } from "../utils/numbers";
 import { useAppSettings } from "./AppSettingsProvider";
+import { HederaToken, CurrencyAmount } from "../utils/tokens";
 
 import { useFetchPriceFeed } from "../hooks/fetch";
 
 const CurrencyConversionsContext = React.createContext({
-  convertToGlobal: (val: CurrencyAmount<Currency>): number => {
+  convertToGlobal: (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): number => {
     return 0;
   },
-  convertToGlobalFormatted: (val: CurrencyAmount<Token>): string => {
+  convertToGlobalFormatted: (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): string => {
     return "$0";
   },
   formatCurrencyWithSymbol: (val: number, chainId: number): string => {
@@ -29,25 +27,26 @@ interface Props {
   children: ReactNode;
 }
 
-// Base tokens for Hedera
-const baseTokens: { [key: string]: Token } = {
-  USDC: new Token(
+// Base tokens for Hedera using HederaToken class
+const baseTokens: { [key: string]: HederaToken } = {
+  USDC: new HederaToken(
     ChainID.HederaTestnet,
-    hederaTokenIdToEvmAddress(HEDERA_TOKENS.USDC.tokenId),
+    HEDERA_TOKENS.USDC.tokenId,
     HEDERA_TOKENS.USDC.decimals,
     HEDERA_TOKENS.USDC.symbol,
     HEDERA_TOKENS.USDC.name
   ),
-  HBAR: new Token(
+  HBAR: new HederaToken(
     ChainID.HederaTestnet,
-    hederaTokenIdToEvmAddress(HEDERA_TOKENS.HBAR.tokenId),
+    HEDERA_TOKENS.HBAR.tokenId,
     HEDERA_TOKENS.HBAR.decimals,
     HEDERA_TOKENS.HBAR.symbol,
     HEDERA_TOKENS.HBAR.name
   ),
 };
 
-const baseTokenAddresses = Object.values(baseTokens).map((t) => t.address);
+// Update to use Hedera account IDs
+const baseTokenAddresses = Object.values(baseTokens).map((t) => t.getHederaAccountId());
 
 export const CurrencyConversionsProvider = ({ children }: Props) => {
   const { getGlobalCurrencyToken } = useAppSettings();
@@ -60,67 +59,108 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
     priceFeedLastLoaded
   );
 
-  const getHBARPrice = useCallback(
-    (token: Token) => {
+  // Get price relative to HBAR
+  const getTokenPrice = useCallback(
+    (token: HederaToken) => {
       if (loadingPriceFeed) {
         return 0;
       }
 
-      const tick = priceFeed[token.address];
+      const tokenId = token.getHederaAccountId();
+      const tick = priceFeed[tokenId];
+      
       if (!tick) {
-        console.error("no matching price pool found for base token ", token);
+        console.error("No matching price pool found for token:", {
+          id: token.getHederaAccountId(),
+          symbol: token.symbol
+        });
         return 0;
       }
-      return parseFloat(
-        tickToPrice(token, baseTokens.HBAR, tick).toSignificant(8)
-      );
+      
+      // Simple price calculation based on tick
+      return parseFloat(tick.toString()) / Math.pow(10, baseTokens.HBAR.decimals - token.decimals);
     },
     [loadingPriceFeed, priceFeed]
   );
 
   const convertToGlobal = useCallback(
-    (val: CurrencyAmount<Currency>): number => {
+    (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): number => {
       if (!val) {
-        console.warn('Attempted to convert undefined CurrencyAmount');
+        console.warn('Attempted to convert undefined value');
         return 0;
       }
 
       try {
-        const valFloat = parseFloat(val.toSignificant(15));
-        const globalCurrencyToken = getGlobalCurrencyToken(val.currency.chainId);
-        if (val.currency.equals(globalCurrencyToken)) {
-          return valFloat;
+        // Handle different input types
+        if (typeof val === 'number') {
+          return val; // Already a number, return as is
         }
-
-        let price = 0;
-        if (
-          val.currency.isNative ||
-          val.currency.equals(baseTokens.HBAR)
-        ) {
-          price = 1;
-        } else {
-          let currency = baseTokens[val.currency.symbol as string];
-          if (!currency) {
-            console.error("base token not found", val.currency);
-            return 0;
+        
+        if (typeof val === 'string') {
+          return parseFloat(val); // Convert string to number
+        }
+        
+        // Handle object with toExact method but not a full CurrencyAmount
+        if (typeof val === 'object' && 'toExact' in val && typeof val.toExact === 'function') {
+          const valStr = val.toExact();
+          const valFloat = parseFloat(valStr);
+          
+          // If this is a plain object with toExact (not a CurrencyAmount), return the parsed value
+          if (!('token' in val)) {
+            return valFloat;
           }
-          price = getHBARPrice(currency);
-        }
+          
+          // Now we know val is a CurrencyAmount
+          const globalCurrencyToken = getGlobalCurrencyToken(val.token.chainId);
+          
+          if (val.token.equals(globalCurrencyToken)) {
+            return valFloat;
+          }
 
-        if (globalCurrencyToken.symbol === "USDC") {
-          const usdcPrice = getHBARPrice(baseTokens.USDC);
-          // Convert USDC to KES (assuming 1 USDC = 150 KES)
-          const KES_RATE = 150;
-          return valFloat * (price / usdcPrice) * KES_RATE;
-        }
+          let price = 0;
+          if (val.token.equals(baseTokens.HBAR)) {
+            price = 1;
+          } else {
+            // Try to find the token by symbol first
+            let token = baseTokens[val.token.symbol];
+            
+            if (!token) {
+              // If not found by symbol, try to find by token ID
+              const tokenId = val.token.getHederaAccountId();
+              const foundToken = Object.values(baseTokens).find(t => t.getHederaAccountId() === tokenId);
+              
+              if (foundToken) {
+                token = foundToken;
+              } else {
+                console.error("Base token not found:", {
+                  id: val.token.getHederaAccountId(), 
+                  symbol: val.token.symbol
+                });
+                return 0;
+              }
+            }
+            
+            price = getTokenPrice(token);
+          }
 
-        return price * valFloat;
+          if (globalCurrencyToken.symbol === "USDC") {
+            const usdcPrice = getTokenPrice(baseTokens.USDC);
+            const KES_RATE = 150;
+            return valFloat * (price / usdcPrice) * KES_RATE;
+          }
+
+          return price * valFloat;
+        }
+        
+        // If we get here, the value is not in a supported format
+        console.warn('Unsupported value type in convertToGlobal:', val);
+        return 0;
       } catch (error) {
         console.error('Error converting currency amount:', error);
         return 0;
       }
     },
-    [getGlobalCurrencyToken, getHBARPrice]
+    [getGlobalCurrencyToken, getTokenPrice]
   );
 
   const formatCurrencyWithSymbol = useCallback(
@@ -136,17 +176,38 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
   );
 
   const convertToGlobalFormatted = useCallback(
-    (val: CurrencyAmount<Token>): string => {
-      if (!val || !val.currency) {
-        console.warn('Attempted to format undefined CurrencyAmount or currency');
+    (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): string => {
+      if (!val) {
+        console.warn('Attempted to format undefined CurrencyAmount or token');
         return formatCurrencyWithSymbol(0, ChainID.HederaTestnet);
       }
 
       try {
-        return formatCurrencyWithSymbol(
-          convertToGlobal(val),
-          val.currency.chainId
-        );
+        // If val is a string or number, convert it to a number
+        if (typeof val === 'string' || typeof val === 'number') {
+          const numValue = typeof val === 'string' ? parseFloat(val) : val;
+          return formatCurrencyWithSymbol(numValue, ChainID.HederaTestnet);
+        }
+
+        // Handle object with toExact method (could be our custom value object from priceFromTick)
+        if (typeof val === 'object' && 'toExact' in val) {
+          // Check if it's a CurrencyAmount (has token property) or our custom value object
+          if (!('token' in val)) {
+            // For custom value objects, use default chainId
+            const numValue = parseFloat(val.toExact());
+            return formatCurrencyWithSymbol(numValue, ChainID.HederaTestnet);
+          }
+          
+          // It's a CurrencyAmount, use its token.chainId
+          return formatCurrencyWithSymbol(
+            convertToGlobal(val),
+            val.token.chainId
+          );
+        }
+
+        // Unknown value type, use default
+        console.warn('Unsupported value type in convertToGlobalFormatted:', val);
+        return formatCurrencyWithSymbol(0, ChainID.HederaTestnet);
       } catch (error) {
         console.error('Error formatting currency amount:', error);
         return formatCurrencyWithSymbol(0, ChainID.HederaTestnet);

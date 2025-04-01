@@ -38,6 +38,12 @@ const HomeLayout = () => {
 
   const { addresses } = useAddress();
 
+  const handleRowClick = useCallback((address: string) => {
+    // Extract the pool ID from the address (assuming it's in the format 0.0.xxxxxxx)
+    const poolId = address.split('.')[2];
+    router.push(`/pool/0.0.${poolId}`);
+  }, [router]);
+
   // Add detailed debug logging
   useEffect(() => {
     console.log('HomeLayout Debug:', {
@@ -125,10 +131,6 @@ const HomeLayout = () => {
     );
   }, [loading, pools, convertToGlobal]);
 
-  function handleRowClick(address: string) {
-    router.push(`${ROUTES.POOL_DETAILS}/${address}${location.search}`);
-  }
-
   if (loading || !addressReady) {
     return (
       <div className="w-full h-full flex items-start">
@@ -194,7 +196,7 @@ const HomeLayout = () => {
       <div className="w-full mt-4 md:mt-12">
         <div className="w-full flex justify-between py-4 border-b border-element-10 mb-8">
           <div className="w-2/3 flex items-center">
-            <h2 className="font-bold text-1.25 text-high">All Pools</h2>
+            <h2 className="font-bold text-1.25 text-high">BusinessPools</h2>
             <span className="text-0.875 ml-2 text-medium flex">
               ({formatCurrencyWithSymbol(totalLiquidity + totalUncollectedFees, ChainID.HederaTestnet)})
             </span>

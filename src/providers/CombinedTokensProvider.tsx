@@ -48,9 +48,24 @@ export const CombinedTokensProvider = ({ children }: Props) => {
     return hederaTokens
       .map((token) => {
         const priceTick = priceFeed[token.address];
+        
+        // Make sure we can safely pass token.value to convertToGlobal
+        let globalValue = 0;
+        try {
+          globalValue = convertToGlobal(token.value);
+        } catch (error) {
+          console.warn(`Failed to convert token value for ${token.symbol}:`, error);
+          // Fallback: try to extract the number value directly
+          if (token.value && typeof token.value.valueOf === 'function') {
+            globalValue = token.value.valueOf();
+          } else if (token.value && typeof token.value === 'object' && token.value.toString) {
+            globalValue = parseFloat(token.value.toString());
+          }
+        }
+        
         return {
           ...token,
-          globalValue: convertToGlobal(token.value),
+          globalValue,
           price: priceTick
             ? priceFromTick(token.entity, priceTick)
             : token.price,

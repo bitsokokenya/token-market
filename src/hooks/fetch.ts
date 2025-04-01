@@ -6,7 +6,7 @@ import { AccountBalanceQuery, Long, TokenId } from '@hashgraph/sdk';
 import { Client } from '@hashgraph/sdk';
 
 import { TxTypes } from '../types/enums';
-import { SAUCERSWAP_API_URL } from '../common/constants';
+import { SAUCERSWAP_TESTNET_API_URL, SAUCERSWAP_MAINNET_API_URL } from '../common/constants';
 
 export interface TransactionV2 {
   id: string;
@@ -194,7 +194,7 @@ export function useFetchPositions(accountId: string | null) {
       setError(null);
 
       try {
-        const url = `${SAUCERSWAP_API_URL}/v2/nfts/${accountId}/positions`;
+        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/nfts/${accountId}/positions`;
         console.log('Fetching positions from URL:', url);
         
         const response = await fetch(url, {
@@ -283,7 +283,7 @@ export function useFetchPools(
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_API_URL}/v2/pools/full`;
+        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/full`;
         console.log('Fetching from URL:', url);
         const res = await fetch(url);
         if (!res.ok) {
@@ -303,6 +303,7 @@ export function useFetchPools(
           totalPools: pools.length,
           samplePool: pools[0]
         });
+
 
         // Filter pools if not fetching all
         const filteredPools = addresses.includes('all') 
@@ -414,7 +415,7 @@ export function useFetchPriceFeed(
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_API_URL}/v2/pools/full`;
+        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/full`;
         const res = await fetch(url);
         if (!res.ok) {
           console.error('Failed to fetch price feed');
@@ -474,7 +475,7 @@ async function fetchTokenMetadata(): Promise<Map<string, any>> {
   }
 
   try {
-    const response = await fetch(`${SAUCERSWAP_API_URL}/tokens/full`);
+    const response = await fetch(`${SAUCERSWAP_TESTNET_API_URL}/tokens/full`);
     if (!response.ok) {
       throw new Error('Failed to fetch token metadata');
     }
@@ -650,7 +651,7 @@ export function useFetchPoolData(poolId: number): { loading: boolean; poolData: 
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_API_URL}/v2/pools/${poolId}`;
+        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/${poolId}`;
         const res = await fetch(url);
         if (!res.ok) {
           console.error('Failed to fetch pool data');

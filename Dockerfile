@@ -12,13 +12,13 @@
 #    docker build -t tokenmarket .
 #
 # 2. Run in production mode:
-#    docker run -p 3000:3000 -e NODE_ENV=production tokenmarket
+#    docker run -p 1234:1234 -e NODE_ENV=production tokenmarket
 #
 # 3. Run in development mode:
-#    docker run -p 3000:3000 -e NODE_ENV=development tokenmarket
+#    docker run -p 1234:1234 -v $(pwd):/app --name tokenmarket -e NODE_ENV=development tokenmarket
 #
 # 4. Run with environment variables:
-#    docker run -p 3000:3000 -e NODE_ENV=production -e API_KEY=your_key tokenmarket
+#    docker run -p 1234:1234 -e NODE_ENV=production -e API_KEY=your_key tokenmarket
 #
 # Use Node.js LTS as base image
 FROM node:18-slim

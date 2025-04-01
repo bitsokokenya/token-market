@@ -12,34 +12,52 @@ import {
   Legend,
   ReferenceLine,
 } from 'recharts';
-import { tickToPrice } from '@uniswap/v3-sdk';
-// import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-import { Token } from '@uniswap/sdk-core';
-import { Pool } from '@uniswap/v3-sdk';
-
+import { HederaToken } from '../../utils/tokens';
 import { usePoolPriceData } from '../../hooks/usePoolPriceData';
 import { usePoolLiquidityData } from '../../hooks/usePoolLiquidityData';
 import Menu from '../Menu/Menu';
-// import Icon from '../../../components/Icon/Icon';
 import ChartPeriodSelector from '../ChartPeriodSelector';
+
+// Helper function to convert tick to price
+const tickToPrice = (tick: number): number => {
+  return Math.pow(1.0001, tick);
+};
+
+// Constants for tick math
+const MIN_TICK = -887272;
+const MAX_TICK = 887272;
+
+// Simple pool interface for RangeData
+interface SimplePool {
+  token0: HederaToken;
+  token1: HederaToken;
+  fee: number;
+  tickSpacing: number;
+  tickCurrent: number;
+  liquidity: string;
+}
 
 interface Props {
   chainId: number | undefined;
-  pool: Pool;
+  pool: SimplePool;
   tickLower: number;
   tickUpper: number;
-  baseToken: Token;
-  quoteToken: Token;
+  baseToken: HederaToken;
+  quoteToken: HederaToken;
 }
 
 function RangeData({ chainId, pool, tickLower, tickUpper, quoteToken, baseToken }: Props) {
   const [menuOpened, setMenuOpened] = useState(false);
   const [period, setPeriod] = useState<number>(30);
-
   const [chart, setChart] = useState(0);
 
-  const poolAddress = Pool.getAddress(quoteToken, baseToken, pool.fee).toLowerCase();
+  // Generate a pool address for the API (simplified from Uniswap's implementation)
+  const poolAddress = useMemo(() => {
+    // Simple hash-like combination of token addresses and fee
+    const combinedString = `${quoteToken.address}-${baseToken.address}-${pool.fee}`;
+    return combinedString;
+  }, [quoteToken, baseToken, pool.fee]);
 
   const { priceData, minPrice, maxPrice, meanPrice, stdev } = usePoolPriceData(
     chainId || 1,
@@ -62,11 +80,8 @@ function RangeData({ chainId, pool, tickLower, tickUpper, quoteToken, baseToken 
       return [0, 0];
     }
 
-    const convertToPrice = (tick: number) => {
-      return parseFloat(tickToPrice(quoteToken, baseToken, tick).toSignificant(8));
-    };
-
-    return [convertToPrice(tickLower), convertToPrice(tickUpper)];
+    // Convert tick to price using simplified function
+    return [tickToPrice(tickLower), tickToPrice(tickUpper)];
   }, [tickLower, tickUpper, baseToken, quoteToken]);
 
   const domain = useMemo(() => {
@@ -93,7 +108,6 @@ function RangeData({ chainId, pool, tickLower, tickUpper, quoteToken, baseToken 
       <div className="mb-2">
         <button className="text-lg text-center" onClick={() => setMenuOpened(!menuOpened)}>
           <span>{chartTitles[chart]}</span>
-          {/* <Icon className="pl-1 text-xl" icon={faCaretDown} /> */}
         </button>
         {menuOpened && (
           <Menu onClose={() => setMenuOpened(false)}>

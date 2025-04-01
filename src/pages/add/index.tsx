@@ -1,217 +1,443 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Token } from '@uniswap/sdk-core';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { HederaToken } from '../../utils/tokens';
 
-import NewPools from '../../components/AddLiquidity/NewPools';
-import ExistingPools from '../../components/AddLiquidity/ExistingPools';
 import NewPosition from '../../components/AddLiquidity/NewPosition';
 import SearchInput from '../../components/AddLiquidity/SearchInput';
+import ExistingPools from '../../components/AddLiquidity/ExistingPools';
 
 import { useChainId } from '../../hooks/useChainId';
-import { usePoolsForNetwork } from '../../hooks/usePoolsForNetwork';
-
-import { getQuoteAndBaseToken } from '../../utils/tokens';
 import { loadTokens, findTokens, TokenListItem } from '../../components/AddLiquidity/utils';
-import { ROUTES } from '../../common/constants';
+import { useHashConnect } from '../../providers/HashConnectProvider';
+
+import { FACTORY_TESTNET_ADDRESS,
+   FACTORY_MAINNET_ADDRESS,
+   HEDERA_MAINNET_RPC,
+   HEDERA_TESTNET_RPC,
+   ISTESTNET } from '../../common/constants';
+
+import { ABI } from '../../abis/abi'
+
+
+// Import the Hedera ID to EVM address conversion function
+function hederaIdToEvmAddress(hederaId: string): string {
+  // If it's already an EVM address, return as is
+  if (hederaId.startsWith('0x')) {
+    return hederaId;
+  }
+
+  // Parse the Hedera ID
+  const parts = hederaId.split('.');
+  if (parts.length !== 3) {
+    throw new Error(`Invalid Hedera ID format: ${hederaId}`);
+  }
+
+  // Get the last number which is the account/token number
+  const number = parseInt(parts[2], 10);
+  
+  // Convert to hex and pad to 40 characters (20 bytes)
+  const hex = number.toString(16).padStart(40, '0');
+  
+  return `0x${hex}`;
+}
+
+// Add function to check if a pool exists
+async function checkIfPoolExists(
+  token0: string, 
+  token1: string, 
+  fee: number, 
+  isTestnet = ISTESTNET
+): Promise<{ exists: boolean; address: string | null; error?: any }> {
+  try {
+    // Get appropriate network configuration based on environment
+    const networkConfig = isTestnet 
+      ? {
+          rpcUrl: HEDERA_TESTNET_RPC,
+          factoryAddress: FACTORY_TESTNET_ADDRESS, // Testnet factory
+          chainId: 296
+        }
+      : {
+          rpcUrl: HEDERA_MAINNET_RPC,
+          factoryAddress: FACTORY_MAINNET_ADDRESS, // Mainnet factory
+          chainId: 295
+        };
+    
+        console.log('USING config:'+JSON.stringify(networkConfig));
+    // Set up ethers provider
+    const ethers = require('ethers');
+    const provider = new ethers.providers.JsonRpcProvider(
+      networkConfig.rpcUrl,
+      {
+        name: isTestnet ? 'hedera-testnet' : 'hedera-mainnet',
+        chainId: networkConfig.chainId,
+      }
+    );
+    
+    // Create contract interface
+    const factoryInterface = new ethers.utils.Interface(ABI);
+    
+    // Initialize the factory contract
+    const factoryContract = new ethers.Contract(
+      networkConfig.factoryAddress, 
+      factoryInterface, 
+      provider
+    );
+    
+    // Convert Hedera token IDs to EVM addresses
+    const token0Evm = hederaIdToEvmAddress(token0);
+    const token1Evm = hederaIdToEvmAddress(token1);
+    
+    // Call getPool function to check if pool exists
+    const poolAddress = await factoryContract.getPool(token0Evm, token1Evm, fee);
+    
+    // If the pool doesn't exist, this will be the zero address
+    if (poolAddress === '0x0000000000000000000000000000000000000000') {
+      return { exists: false, address: null };
+    }
+    
+    return { exists: true, address: poolAddress };
+  } catch (error) {
+    console.error('Error checking if pool exists:', error);
+    return { exists: false, address: null, error };
+  }
+}
 
 function AddLiquidity() {
   const chainId = useChainId();
   const { query } = useRouter();
   const router = useRouter();
-  const { baseToken: baseTokenSymbol, quoteToken: quoteTokenSymbol, fee } = query;
-
-  // keep timestamp static
-  // This page ends up being re-rendered this prevents it
-  const timestamp = 1234;
-  const onlyForInjected = true;
-  const { pools } = usePoolsForNetwork(chainId || 1, timestamp, onlyForInjected);
+  const { baseToken: baseTokenSymbol, quoteToken: quoteTokenSymbol, fee, tab } = query;
+  const { accountId } = useHashConnect();
 
   const [tokens, setTokens] = useState<TokenListItem[]>([]);
-  const [selectedBaseToken, setSelectedBaseToken] = useState<Token | null>(null);
-  const [selectedQuoteToken, setSelectedQuoteToken] = useState<Token | null>(null);
-  const [selectedFee, setSelectedFee] = useState<number | null>(null);
-  const [selectedPositions, setSelectedPositions] = useState<any[] | null>(null);
   const [searchInput, setSearchInput] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'new' | 'existing'>('new');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  // Add state for pool existence
+  const [poolStatus, setPoolStatus] = useState<{
+    checking: boolean;
+    exists: boolean | null;
+    address: string | null;
+  }>({
+    checking: false,
+    exists: null,
+    address: null
+  });
+
+  // Set active tab based on URL query
+  useEffect(() => {
+    if (tab === 'existing') {
+      setActiveTab('existing');
+    } else if (tab === 'new' || query.baseTokenId || query.quoteTokenId || baseTokenSymbol || quoteTokenSymbol) {
+      setActiveTab('new');
+    }
+  }, [tab, query.baseTokenId, query.quoteTokenId, baseTokenSymbol, quoteTokenSymbol]);
 
   // Load tokens only once when chainId changes
   useEffect(() => {
     if (!chainId) return;
 
     const loadTokensData = async () => {
-      const results = await loadTokens(chainId as number);
-      setTokens(results);
+      try {
+        setIsLoading(true);
+        const results = await loadTokens(chainId as number);
+        // Convert Token[] to TokenListItem[]
+        const tokenListItems: TokenListItem[] = results.map(token => ({
+          chainId: chainId as number,
+          address: token.address,
+          decimals: token.decimals,
+          symbol: token.symbol || '',
+          name: token.name || ''
+        }));
+        setTokens(tokenListItems);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error loading tokens:', error);
+        setError('Failed to load tokens. Please refresh the page.');
+        setIsLoading(false);
+      }
     };
 
     loadTokensData();
   }, [chainId]);
 
-  // Set selected tokens when URL parameters change
+  // Check if pool exists when token IDs and fee are provided
   useEffect(() => {
-    if (!chainId || !tokens.length || !baseTokenSymbol || !quoteTokenSymbol || !fee) return;
+    if (!query.baseTokenId || !query.quoteTokenId || !query.fee) return;
 
-    const matches = findTokens(chainId as number, tokens, [
-      baseTokenSymbol as string,
-      quoteTokenSymbol as string,
-    ]);
-
-    // invalid tokens
-    if (matches.length !== 2) return;
-
-    const toToken = ({ address, decimals, symbol, name }: TokenListItem) => {
-      return new Token(chainId as number, address, decimals, symbol, name);
+    const checkPool = async () => {
+      setPoolStatus(prev => ({ ...prev, checking: true }));
+      try {
+        // Determine if we're on testnet based on chain ID
+        const isTestnet = chainId === 296; // 296 is Hedera Testnet
+        
+        const result = await checkIfPoolExists(
+          query.baseTokenId as string,
+          query.quoteTokenId as string,
+          Number(query.fee),
+          isTestnet
+        );
+        
+        setPoolStatus({
+          checking: false,
+          exists: result.exists,
+          address: result.address
+        });
+        
+        console.log(`Pool ${result.exists ? 'exists' : 'does not exist'}`, 
+          result.exists ? `at address ${result.address}` : '');
+      } catch (error) {
+        console.error('Error checking pool existence:', error);
+        setPoolStatus({
+          checking: false,
+          exists: null,
+          address: null
+        });
+      }
     };
+    
+    checkPool();
+  }, [query.baseTokenId, query.quoteTokenId, query.fee, chainId]);
 
-    const [quoteToken, baseToken] = getQuoteAndBaseToken(
-      chainId as number,
-      toToken(matches[0]),
-      toToken(matches[1]),
-    );
-
-    // Only update if values are different
-    if (!selectedBaseToken?.equals(baseToken) || !selectedQuoteToken?.equals(quoteToken) || selectedFee !== parseInt(fee as string, 10)) {
-      setSelectedBaseToken(baseToken);
-      setSelectedQuoteToken(quoteToken);
-      setSelectedFee(parseInt(fee as string, 10));
-    }
-  }, [chainId, tokens, baseTokenSymbol, quoteTokenSymbol, fee, selectedBaseToken, selectedQuoteToken, selectedFee]);
-
-  // Set positions when pool changes
+  // Handle direct token IDs if they are provided
   useEffect(() => {
-    if (!pools || !selectedBaseToken || !selectedQuoteToken || !selectedFee) return;
-
-    const matchingPool = pools.find(
-      (p) =>
-        p.baseToken.equals(selectedBaseToken) &&
-        p.quoteToken.equals(selectedQuoteToken) &&
-        p.entity.fee === selectedFee,
-    );
-
-    if (matchingPool && (!selectedPositions || selectedPositions.length !== matchingPool.positions.length)) {
-      setSelectedPositions(matchingPool.positions);
+    if (!chainId) return;
+    
+    // If direct token IDs are provided, use them without matching
+    if (query.baseTokenId && query.quoteTokenId) {
+      console.log('Using direct token IDs:', query.baseTokenId, query.quoteTokenId);
+      
+      // Try to find the token details in our loaded tokens list
+      const findTokenDetails = (tokenId: string) => {
+        const matchingToken = tokens.find(t => t.address === tokenId);
+        return {
+          address: tokenId,
+          decimals: matchingToken?.decimals || 8, // Default to 8 decimals if not found
+          symbol: matchingToken?.symbol || tokenId.split('.').pop() || 'Token', // Use last part of ID as symbol
+          name: matchingToken?.name || `Token ${tokenId}` // Use ID in name
+        };
+      };
+      
+      // Get token details if available, or use defaults
+      const baseTokenDetails = findTokenDetails(query.baseTokenId as string);
+      const quoteTokenDetails = findTokenDetails(query.quoteTokenId as string);
+      
+      // Update URL with all required parameters
+      const url = new URL(window.location.href);
+      
+      // Keep the original IDs in the URL
+      url.searchParams.set('baseTokenId', query.baseTokenId as string);
+      url.searchParams.set('quoteTokenId', query.quoteTokenId as string);
+      
+      // Add additional parameters needed by the form
+      url.searchParams.set('baseTokenDecimals', baseTokenDetails.decimals.toString());
+      url.searchParams.set('quoteTokenDecimals', quoteTokenDetails.decimals.toString());
+      url.searchParams.set('baseTokenSymbol', baseTokenDetails.symbol);
+      url.searchParams.set('quoteTokenSymbol', quoteTokenDetails.symbol);
+      url.searchParams.set('baseTokenName', baseTokenDetails.name);
+      url.searchParams.set('quoteTokenName', quoteTokenDetails.name);
+      url.searchParams.set('initFee', query.fee as string || '3000');
+      
+      window.history.replaceState({}, '', url.toString());
+      return;
     }
-  }, [pools, selectedBaseToken, selectedQuoteToken, selectedFee, selectedPositions]);
+    
+    // Only run symbol matching if we have tokens loaded and symbols to match
+    if (!tokens.length || !baseTokenSymbol || !quoteTokenSymbol) return;
 
-  const resetSelections = useCallback(() => {
-    setSelectedBaseToken(null);
-    setSelectedQuoteToken(null);
-    setSelectedFee(null);
-    setSelectedPositions(null);
-  }, []);
+    try {
+      const matches = findTokens(chainId as number, tokens, [
+        baseTokenSymbol as string,
+        quoteTokenSymbol as string,
+      ]);
 
-  const handlePoolClick = useCallback((baseToken: Token, quoteToken: Token, fee: number, positions: any[]) => {
-    setSelectedBaseToken(baseToken);
-    setSelectedQuoteToken(quoteToken);
-    setSelectedFee(fee);
-    setSelectedPositions(positions);
+      if (matches.length !== 2) {
+        setError(`Could not find tokens: ${baseTokenSymbol}, ${quoteTokenSymbol}`);
+        return;
+      }
 
-    router.push(
-      {
-        pathname: ROUTES.ADD,
-        query: { quoteToken: quoteToken.symbol, baseToken: baseToken.symbol, fee },
+      // Update URL with token IDs
+      const url = new URL(window.location.href);
+      
+      // Make sure we use Hedera format addresses
+      url.searchParams.set('baseTokenId', matches[0].address);
+      url.searchParams.set('quoteTokenId', matches[1].address);
+      url.searchParams.set('baseTokenDecimals', matches[0].decimals.toString());
+      url.searchParams.set('quoteTokenDecimals', matches[1].decimals.toString());
+      url.searchParams.set('baseTokenSymbol', matches[0].symbol);
+      url.searchParams.set('quoteTokenSymbol', matches[1].symbol);
+      url.searchParams.set('baseTokenName', matches[0].name);
+      url.searchParams.set('quoteTokenName', matches[1].name);
+      url.searchParams.set('initFee', fee as string || '3000');
+      
+      window.history.replaceState({}, '', url.toString());
+    } catch (error) {
+      console.error('Error setting tokens:', error);
+      setError('Error setting tokens. Please verify token parameters.');
+    }
+  }, [chainId, tokens, baseTokenSymbol, quoteTokenSymbol, fee, query.baseTokenId, query.quoteTokenId]);
+
+  const handlePoolClick = (baseToken: any, quoteToken: any, fee: number, positions: any[]) => {
+    // Get token IDs, preserving the Hedera format (0.0.xxxxx)
+    const baseTokenId = baseToken.tokenId;
+    const quoteTokenId = quoteToken.tokenId;
+    
+    console.log('Router pushing to add page with:', {
+      baseTokenId,
+      quoteTokenId,
+      fee
+    });
+    
+    router.push({
+      pathname: '/add',
+      query: {
+        baseTokenId: baseTokenId,
+        quoteTokenId: quoteTokenId,
+        fee: fee,
+        tab: 'new' // Force switch to the "new" tab
       },
-      undefined,
-      { shallow: true },
-    );
-  }, [router]);
+    });
+  };
 
-  const handleNewTabClick = useCallback(() => {
-    resetSelections();
-    router.push(
-      {
-        pathname: ROUTES.ADD,
-      },
-      undefined,
-      { shallow: true },
-    );
-  }, [router, resetSelections]);
-
-  const handleExistingTabClick = useCallback(() => {
-    resetSelections();
-    router.push(
-      {
-        pathname: ROUTES.ADD,
-        query: { tab: 'existing' },
-      },
-      undefined,
-      { shallow: true },
-    );
-  }, [router, resetSelections]);
-
-  const handleCancelNewPosition = useCallback(() => {
-    resetSelections();
-    router.push(
-      {
-        pathname: ROUTES.ADD,
-        query: { tab: 'new' },
-      },
-      undefined,
-      { shallow: true },
-    );
-  }, [router, resetSelections]);
-
-  const handleClickBack = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    router.back();
-  }, [router]);
-
-  const selectedTab = query.tab === 'existing' ? 'existing' : 'new';
+  // Render pool status message
+  const renderPoolStatus = () => {
+    if (poolStatus.checking) {
+      return (
+        <div className="flex items-center mb-4 p-4 bg-blue-50 text-blue-700 rounded">
+          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Checking if pool exists...
+        </div>
+      );
+    }
+    
+    if (poolStatus.exists === true) {
+      return (
+        <div className="mb-4 p-4 bg-green-50 text-green-700 border border-green-200 rounded">
+          <p>
+            <span className="font-bold">✓ Pool exists!</span> {' '}
+            You can add liquidity to the existing pool at address: {poolStatus.address}
+          </p>
+        </div>
+      );
+    }
+    
+    if (poolStatus.exists === false) {
+      return (
+        <div className="mb-4 p-4 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded">
+          <p>
+            <span className="font-bold">⚠ Pool does not exist yet.</span> {' '}
+            You will be creating a new liquidity pool with these tokens.
+          </p>
+        </div>
+      );
+    }
+    
+    return null;
+  };
 
   return (
-    <div className="w-full flex flex-col h-full">
-      <div className="py-4 mb-4 flex items-center">
-        <button
-          onClick={handleClickBack}
-          className="flex justify-center items-center text-high w-8 h-8 flex-shrink-0 mr-4 rounded-full hover:bg-surface-20"
-        >
-          ←
-        </button>
-        <h1 className="text-2 text-high font-bold tracking-tighter leading-tight">Add Liquidity</h1>
-      </div>
-      <div className="md:w-1/2">
-        <SearchInput onChange={setSearchInput} />
+    <div className="w-full h-full">
+      <div className="w-full flex justify-between py-4 border-b border-element-10 mb-8">
+        <div className="w-2/3 flex items-center">
+          <h2 className="font-bold text-1.25 text-high">Add Liquidity</h2>
+        </div>
       </div>
 
-      <div className="w-full h-full py-4 my-4">
-        <div className="flex border-b border-element-10">
-          <button
-            className={`p-2 mr-2 border-b-4 focus:outline-none text-medium ${
-              selectedTab === 'new' ? 'border-green-500' : 'border-transparent'
-            }`}
-            onClick={handleNewTabClick}
-          >
-            New
-          </button>
-          <button
-            className={`p-2 border-b-4 focus:outline-none text-medium ${
-              selectedTab === 'existing' ? 'border-green-500' : 'border-transparent'
-            }`}
-            onClick={handleExistingTabClick}
-          >
-            Existing
-          </button>
+      {error && (
+        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <p>{error}</p>
         </div>
-        <div className="py-4 h-full">
-          {selectedBaseToken !== null && selectedQuoteToken !== null && selectedFee != null ? (
-            <NewPosition
-              baseToken={selectedBaseToken as Token}
-              quoteToken={selectedQuoteToken as Token}
-              initFee={selectedFee}
-              positions={selectedPositions}
-              onCancel={handleCancelNewPosition}
-            />
-          ) : selectedTab === 'new' ? (
-            <NewPools onPoolClick={handlePoolClick} filter={searchInput} />
-          ) : (
-            <ExistingPools
-              chainId={chainId || 1}
-              onPoolClick={handlePoolClick}
-              filter={searchInput}
-              pools={pools}
-            />
-          )}
-        </div>
+      )}
+
+      {/* Tab navigation */}
+      <div className="flex border-b border-element-10 mb-4">
+        <button
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'new'
+              ? 'text-purple-700 border-b-2 border-purple-700'
+              : 'text-medium hover:text-high'
+          }`}
+          onClick={() => setActiveTab('new')}
+        >
+          New Position
+        </button>
+        <button
+          className={`px-4 py-2 font-medium ${
+            activeTab === 'existing'
+              ? 'text-purple-700 border-b-2 border-purple-700'
+              : 'text-medium hover:text-high'
+          }`}
+          onClick={() => setActiveTab('existing')}
+        >
+          Existing Positions
+        </button>
       </div>
+
+      {activeTab === 'new' && (
+        <>
+          <div className="w-full">
+            <SearchInput onChange={setSearchInput} />
+          </div>
+
+          {/* Pool Status Message */}
+          {query.baseTokenId && query.quoteTokenId && renderPoolStatus()}
+
+          <div className="w-full mt-4">
+            {query.baseTokenId && query.quoteTokenId ? (
+              // Log outside the JSX for debugging
+              (() => {
+                console.log('Rendering NewPosition with:', {
+                  baseTokenId: query.baseTokenId,
+                  quoteTokenId: query.quoteTokenId,
+                  fee: query.initFee || query.fee || 3000
+                });
+                
+                return (
+                  <NewPosition
+                    baseTokenId={query.baseTokenId as string}
+                    quoteTokenId={query.quoteTokenId as string}
+                    baseTokenDecimals={Number(query.baseTokenDecimals || 8)}
+                    quoteTokenDecimals={Number(query.quoteTokenDecimals || 8)}
+                    baseTokenSymbol={query.baseTokenSymbol as string || 'Token0'}
+                    quoteTokenSymbol={query.quoteTokenSymbol as string || 'Token1'}
+                    baseTokenName={query.baseTokenName as string || 'Base Token'}
+                    quoteTokenName={query.quoteTokenName as string || 'Quote Token'}
+                    initFee={Number(query.initFee || query.fee || 3000)}
+                    positions={null}
+                    onCancel={() => window.history.back()}
+                    poolExists={poolStatus.exists}
+                    poolAddress={poolStatus.address}
+                  />
+                );
+              })()
+            ) : isLoading ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p>Select tokens to add liquidity or provide token IDs directly in URL</p>
+                <p className="text-xs text-medium mt-2">Example: /add?baseTokenId=0.0.xxxxx&quoteTokenId=0.0.yyyyy&fee=3000</p>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {activeTab === 'existing' && (
+        <div className="w-full mt-4">
+          <ExistingPools
+            chainId={chainId || 0}
+            filter={searchInput}
+            onPoolClick={handlePoolClick}
+          />
+        </div>
+      )}
     </div>
   );
 }

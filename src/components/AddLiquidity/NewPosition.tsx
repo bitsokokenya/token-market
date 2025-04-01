@@ -1,12 +1,22 @@
+/*
+sends an api request to saucerswap api to add new position to the pool
+
+
+
+*/
+
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { TickMath, tickToPrice, Position, nearestUsableTick, priceToClosestTick, Pool } from '@uniswap/v3-sdk';
-import { Token, CurrencyAmount, Fraction, Percent, Price } from '@uniswap/sdk-core';
 import { BigNumber } from '@ethersproject/bignumber';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { Contract, ContractInterface } from '@ethersproject/contracts';
-import V3PoolABI from '@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json';
 import * as ethers from 'ethers';
+import { 
+  ContractExecuteTransaction, 
+  ContractFunctionParameters,
+  Hbar 
+} from "@hashgraph/sdk";
 
 import { useChainId } from '../../hooks/useChainId';
 import { useTokenFunctions } from '../../hooks/useTokenFunctions';
@@ -27,21 +37,72 @@ import {
 } from '../../common/constants';
 
 import { formatInput } from '../../utils/numbers';
-import { getNativeToken, isNativeToken, HederaToken } from '../../utils/tokens';
+import { 
+  HederaToken, 
+  CurrencyAmount, 
+  getNativeToken, 
+  isNativeToken, 
+  parseTokenAmount,
+  formatDisplayAmount
+} from '../../utils/tokens';
 
 import RangeInput from './RangeInput';
 import DepositInput from './DepositInput';
 import FeeButton from './FeeButton';
 import TransactionModal from '../../components/TransactionModal';
-import {
-  positionFromAmounts,
-  calculateNewAmounts,
-  positionDistance,
-  tokenAmountNeedApproval,
-  toCurrencyAmount,
-  findMatchingPosition,
-  findPositionById,
-} from './utils';
+
+// Custom minimal Pool implementation
+class SimplePool {
+  public readonly token0: HederaToken;
+  public readonly token1: HederaToken;
+  public readonly fee: number;
+  public readonly tickSpacing: number;
+  public readonly tickCurrent: number;
+  public readonly liquidity: string;
+  public readonly sqrtPriceX96: string;
+
+  constructor(
+    token0: HederaToken,
+    token1: HederaToken,
+    fee: number,
+    sqrtPriceX96: string,
+    liquidity: string,
+    tickCurrent: number
+  ) {
+    this.token0 = token0;
+    this.token1 = token1;
+    this.fee = fee;
+    this.tickCurrent = tickCurrent;
+    this.liquidity = liquidity;
+    this.sqrtPriceX96 = sqrtPriceX96;
+    
+    // Set tickSpacing based on fee tier
+    if (fee === 100) this.tickSpacing = 1;
+    else if (fee === 500) this.tickSpacing = 10;
+    else if (fee === 3000) this.tickSpacing = 60;
+    else if (fee === 10000) this.tickSpacing = 200;
+    else this.tickSpacing = 60; // Default
+  }
+
+  // Helper method to get price ratio between tokens
+  getPrice(): number {
+    // Simple price calculation based on tick - this is a simplification
+    return Math.pow(1.0001, this.tickCurrent);
+  }
+
+  // Check if two tokens are the same
+  equals(other: SimplePool): boolean {
+    return (
+      this.token0.equals(other.token0) &&
+      this.token1.equals(other.token1) &&
+      this.fee === other.fee
+    );
+  }
+}
+
+// Constants for tick math
+const MIN_TICK = -887272;
+const MAX_TICK = 887272;
 
 interface Props {
   baseTokenId: string; // Hedera token ID in 0.0.XXXXX format
@@ -55,29 +116,75 @@ interface Props {
   initFee: number;
   positions: any[] | null;
   onCancel: () => void;
+  poolExists?: boolean | null; // Pool existence status
+  poolAddress?: string | null; // Pool address if it exists
 }
 
 // Helper function to get pool address from SaucerSwap API
 async function getPoolAddress(token0Id: string, token1Id: string, fee: number): Promise<string> {
-  const response = await fetch('/api/saucerswap/pool-address', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      token0Address: token0Id,
-      token1Address: token1Id,
-      fee
-    }),
-  });
+  try {
+    const response = await fetch('/api/saucerswap/pool-address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token0Address: token0Id,
+        token1Address: token1Id,
+        fee
+      }),
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to get pool address');
+    if (!response.ok) {
+      throw new Error('Failed to get pool address');
+    }
+
+    const { poolAddress } = await response.json();
+    return poolAddress;
+  } catch (error) {
+    console.error('Error getting pool address:', error);
+    throw error;
   }
-
-  const { poolAddress } = await response.json();
-  return poolAddress;
 }
+
+// Helper to find nearest tick that's divisible by tick spacing
+function nearestUsableTick(tick: number, tickSpacing: number): number {
+  const rounded = Math.round(tick / tickSpacing) * tickSpacing;
+  if (rounded < MIN_TICK) return MIN_TICK;
+  if (rounded > MAX_TICK) return MAX_TICK;
+  return rounded;
+}
+
+// Convert Hedera ID to proper EVM address format
+const hederaIdToEvmAddress = (hederaId: string): string => {
+  // If it's already an EVM address, return as is
+  if (hederaId && hederaId.startsWith('0x') && hederaId.length >= 40) {
+    return hederaId;
+  }
+  
+  try {
+    // Parse the Hedera ID (assuming format like 0.0.12345)
+    const parts = hederaId.split('.');
+    if (parts.length === 3) {
+      // Get the last number which is the account/token number
+      const number = parseInt(parts[2], 10);
+      // Convert to hex and pad to 40 characters (20 bytes)
+      const hex = number.toString(16).padStart(40, '0');
+      return `0x${hex}`;
+    } else {
+      // If not in Hedera format but looks like a number
+      const number = parseInt(hederaId, 10);
+      if (!isNaN(number)) {
+        const hex = number.toString(16).padStart(40, '0');
+        return `0x${hex}`;
+      }
+    }
+  } catch (e) {
+    console.error("Error converting Hedera ID to EVM address:", e);
+  }
+  
+  throw new Error(`Invalid token address format: ${hederaId}`);
+};
 
 function NewPosition({ 
   baseTokenId,
@@ -90,26 +197,71 @@ function NewPosition({
   quoteTokenName,
   initFee,
   positions,
-  onCancel 
+  onCancel,
+  poolExists,
+  poolAddress
 }: Props) {
-  // Move all hooks to the top
   const chainId = useChainId();
-  const { accountId } = useHashConnect();
+  const { accountId, hashconnect } = useHashConnect();
   const router = useRouter();
   const positionId = router.query.position;
   const { convertToGlobalFormatted } = useCurrencyConversions();
+  const NFT_MANAGER_ADDRESS = process.env.NEXT_PUBLIC_SAUCERSWAP_NFT_MANAGER_ADDRESS || '0.0.123456';
 
   // Create token instances using HederaToken
-  const baseToken = new HederaToken(chainId, baseTokenId, baseTokenDecimals, baseTokenSymbol, baseTokenName);
-  const quoteToken = new HederaToken(chainId, quoteTokenId, quoteTokenDecimals, quoteTokenSymbol, quoteTokenName);
+  const baseToken = useMemo(() => {
+    if (!baseTokenId || !baseTokenDecimals) {
+      console.warn('Missing base token info', { baseTokenId, baseTokenDecimals });
+      return null;
+    }
+    try {
+      return new HederaToken(
+        chainId, 
+        baseTokenId, 
+        baseTokenDecimals, 
+        baseTokenSymbol, 
+        baseTokenName
+      );
+    } catch (error: any) {
+      console.error('Error creating base token:', error);
+      setAlert({
+        message: `Invalid base token: ${error.message}`,
+        level: AlertLevel.Error,
+      });
+      return null;
+    }
+  }, [chainId, baseTokenId, baseTokenDecimals, baseTokenSymbol, baseTokenName]);
+
+  const quoteToken = useMemo(() => {
+    if (!quoteTokenId || !quoteTokenDecimals) {
+      console.warn('Missing quote token info', { quoteTokenId, quoteTokenDecimals });
+      return null;
+    }
+    try {
+      return new HederaToken(
+        chainId, 
+        quoteTokenId, 
+        quoteTokenDecimals, 
+        quoteTokenSymbol, 
+        quoteTokenName
+      );
+    } catch (error: any) {
+      console.error('Error creating quote token:', error);
+      setAlert({
+        message: `Invalid quote token: ${error.message}`,
+        level: AlertLevel.Error,
+      });
+      return null;
+    }
+  }, [chainId, quoteTokenId, quoteTokenDecimals, quoteTokenSymbol, quoteTokenName]);
 
   // State hooks
   const [depositWrapped, setDepositWrapped] = useState<boolean>(false);
   const [baseAmount, setBaseAmount] = useState<number>(0);
   const [quoteAmount, setQuoteAmount] = useState<number>(0);
   const [fee, setFee] = useState<number>(initFee);
-  const [tickLower, setTickLower] = useState<number>(TickMath.MIN_TICK);
-  const [tickUpper, setTickUpper] = useState<number>(TickMath.MIN_TICK);
+  const [tickLower, setTickLower] = useState<number>(MIN_TICK);
+  const [tickUpper, setTickUpper] = useState<number>(MAX_TICK);
   const [baseBalance, setBaseBalance] = useState<string>('0');
   const [quoteBalance, setQuoteBalance] = useState<string>('0');
   const [baseTokenDisabled, setBaseTokenDisabled] = useState<boolean>(false);
@@ -122,65 +274,69 @@ function NewPosition({
   const [showRangeData, setShowRangeData] = useState<boolean>(false);
   const [focusedRangeInput, setFocusedRangeInput] = useState<HTMLInputElement | null>(null);
   const [alert, setAlert] = useState<{ message: string; level: AlertLevel } | null>(null);
-  const [pool, setPool] = useState<any>(null);
+  const [pool, setPool] = useState<SimplePool | null>(null);
 
   // Other hooks
-  const { getBalances, getAllowances, approveToken } = useTokenFunctions(baseToken);
+  const { getBalances, getAllowances, approveToken } = useTokenFunctions(baseToken || undefined);
 
   // Initialize pool
   useEffect(() => {
     const initializePool = async () => {
+      if (!baseToken || !quoteToken) return;
+      
       try {
         // Set up provider
         const provider = new JsonRpcProvider(process.env.NEXT_PUBLIC_HEDERA_JSON_RPC_URL);
 
-        // Get pool contract
-        const poolAddress = await getPoolAddress(baseTokenId, quoteTokenId, fee);
-        console.log('Pool address:', poolAddress);
+        // If we already know the pool address from the parent component, use it
+        // otherwise, get it from the API
+        let poolAddr;
+        if (poolExists === true && poolAddress) {
+          poolAddr = poolAddress;
+          console.log('Using existing pool address:', poolAddr);
+        } else {
+          poolAddr = await getPoolAddress(baseTokenId, quoteTokenId, fee);
+          console.log('Got pool address from API:', poolAddr);
+        }
 
-        // Create pool contract instance
-        const poolContract = new Contract(poolAddress, V3PoolABI.abi as ContractInterface, provider);
+        // Get pool data from API
+        const response = await fetch(`/api/saucerswap/pool-info?poolId=${poolAddr}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch pool info');
+        }
 
-        // Get pool data
-        const [slot0, poolLiquidity] = await Promise.all([
-          poolContract.slot0(),
-          poolContract.liquidity()
-        ]);
-
-        // Construct pool using the token instances
-        const newPool = new Pool(
+        const poolData = await response.json();
+        
+        // Create simplified pool with the available data
+        const newPool = new SimplePool(
           baseToken,
           quoteToken,
           fee,
-          slot0.sqrtPriceX96.toString(),
-          poolLiquidity.toString(),
-          Number(slot0.tick)
+          poolData.sqrtRatioX96 || '1',
+          poolData.liquidity || '0',
+          poolData.tickCurrent || 0
         );
 
         setPool(newPool);
 
-        // Set initial ticks based on current price
-        const currentPrice = newPool.token0Price;
-        const multiplier = new Fraction(105, 100); // 5% range
-        const priceFraction = currentPrice.asFraction.multiply(multiplier);
-        const upperPrice = new Price(
-          currentPrice.baseCurrency,
-          currentPrice.quoteCurrency,
-          priceFraction.denominator,
-          priceFraction.numerator
-        );
+        // Set initial ticks based on current price to create a reasonable range
+        const currentTick = newPool.tickCurrent;
+        const spacing = newPool.tickSpacing;
+        
+        // Create a range of ±5% from current price
+        // This is a simplified approach compared to Uniswap's implementation
+        const rangeSize = 10 * spacing; // Approximately ±5% range
+        
+        const tickLowerApprox = currentTick - rangeSize;
+        const tickUpperApprox = currentTick + rangeSize;
 
-        const tickUpperApprox = priceToClosestTick(upperPrice);
-        const tickDelta = tickUpperApprox - newPool.tickCurrent;
-        const tickLowerApprox = newPool.tickCurrent - tickDelta;
-
-        setTickUpper(nearestUsableTick(tickUpperApprox, newPool.tickSpacing));
-        setTickLower(nearestUsableTick(tickLowerApprox, newPool.tickSpacing));
+        setTickLower(nearestUsableTick(tickLowerApprox, spacing));
+        setTickUpper(nearestUsableTick(tickUpperApprox, spacing));
 
       } catch (error) {
         console.error('Error initializing pool:', error);
         setAlert({
-          message: 'Failed to initialize pool',
+          message: 'Failed to initialize pool - please check the token pair is valid',
           level: AlertLevel.Error,
         });
       }
@@ -194,25 +350,21 @@ function NewPosition({
       });
       initializePool();
     }
-  }, [baseTokenId, quoteTokenId, fee]);
+  }, [baseToken, quoteToken, baseTokenId, quoteTokenId, fee, poolExists, poolAddress]);
 
+  // Load balances
   useEffect(() => {
-    const _run = async () => {
-      if (!accountId) return;
+    const fetchBalances = async () => {
+      if (!accountId || !baseToken || !quoteToken) return;
       
       console.log('Fetching balances for account:', accountId);
-      console.log('Using tokens:', {
-        baseToken: baseToken.address,
-        quoteToken: quoteToken.address
-      });
-
       try {
         const [bal0, bal1] = await Promise.all([
           getBalances(accountId),
           getBalances(accountId)
         ]);
-      setBaseBalance(formatInput(parseFloat(bal0)));
-      setQuoteBalance(formatInput(parseFloat(bal1)));
+        setBaseBalance(formatInput(parseFloat(bal0)));
+        setQuoteBalance(formatInput(parseFloat(bal1)));
       } catch (error) {
         console.error('Error fetching balances:', error);
         setAlert({
@@ -221,33 +373,19 @@ function NewPosition({
         });
       }
     };
-    _run();
+    
+    fetchBalances();
   }, [getBalances, accountId, baseToken, quoteToken]);
 
+  // Check allowances
   useEffect(() => {
-    if (!getAllowances || !accountId) {
-      return;
-    }
-
-    const _run = async () => {
-      // Use the NFT manager contract address from SaucerSwap
-      const spender = process.env.NEXT_PUBLIC_SAUCERSWAP_NFT_MANAGER_ADDRESS;
-      if (!spender) {
-        console.error('NFT manager address not configured');
-        return;
-      }
-
-      console.log('Checking allowances:', {
-        accountId,
-        spender,
-        baseToken: baseToken.address,
-        quoteToken: quoteToken.address
-      });
+    const checkAllowances = async () => {
+      if (!getAllowances || !accountId || !baseToken || !quoteToken) return;
 
       try {
         const [val0, val1] = await Promise.all([
-          getAllowances(accountId, spender),
-          getAllowances(accountId, spender)
+          getAllowances(accountId, NFT_MANAGER_ADDRESS),
+          getAllowances(accountId, NFT_MANAGER_ADDRESS)
         ]);
         setBaseTokenAllowance(Number(val0));
         setQuoteTokenAllowance(Number(val1));
@@ -259,186 +397,118 @@ function NewPosition({
         });
       }
     };
+    
+    checkAllowances();
+  }, [getAllowances, accountId, baseToken, quoteToken, NFT_MANAGER_ADDRESS]);
 
-    _run();
-  }, [getAllowances, accountId, baseToken, quoteToken]);
-
-  const rangeReverse = useMemo(() => {
-    if (!quoteToken || !baseToken) {
-      return false;
-    }
-
-    return baseToken.sortsBefore(quoteToken);
-  }, [quoteToken, baseToken]);
-
-  const suggestedTicks = useMemo(() => {
-    let tickLower = TickMath.MIN_TICK;
-    let tickUpper = TickMath.MIN_TICK;
-    if (!pool) {
-      return [tickLower, tickUpper];
-    }
-
-    const { tickCurrent, tickSpacing } = pool;
-    if (!positions || !positions.length) {
-      tickLower = Math.round((tickCurrent - 10 * tickSpacing) / tickSpacing) * tickSpacing;
-      tickUpper = Math.round((tickCurrent + 10 * tickSpacing) / tickSpacing) * tickSpacing;
-    } else {
-      const position = findPositionById(positions, positionId as string);
-      if (position) {
-        tickLower = position.entity.tickLower;
-        tickUpper = position.entity.tickUpper;
-      } else {
-        let sortedPositions = positions.sort((posA, posB) => {
-          const disA = positionDistance(tickCurrent, posA);
-          const disB = positionDistance(tickCurrent, posB);
-          return disA - disB;
-        });
-
-        tickLower = sortedPositions[0].entity.tickLower;
-        tickUpper = sortedPositions[0].entity.tickUpper;
-      }
-    }
-
-    if (rangeReverse) {
-      return [tickUpper, tickLower];
-    }
-    return [tickLower, tickUpper];
-  }, [pool, positions, rangeReverse, positionId]);
-
-  useEffect(() => {
-    setTickLower(suggestedTicks[0]);
-    setTickUpper(suggestedTicks[1]);
-  }, [suggestedTicks]);
-
-  useEffect(() => {
-    if (!pool || !baseToken || !quoteToken) {
-      return;
-    }
-
-    const { tickCurrent } = pool;
-
-    let [lower, upper] = [tickLower, tickUpper];
-    if (rangeReverse) {
-      [lower, upper] = [tickUpper, tickLower];
-    }
-
-    const token0Disabled = tickCurrent > upper;
-    const token1Disabled = tickCurrent < lower;
-
-    setBaseTokenDisabled(pool.token0.equals(baseToken) ? token0Disabled : token1Disabled);
-    setQuoteTokenDisabled(pool.token1.equals(quoteToken) ? token1Disabled : token0Disabled);
-  }, [pool, tickLower, tickUpper, baseToken, quoteToken, rangeReverse]);
-
+  // Check if tokens need approval
   const baseTokenNeedApproval = useMemo(() => {
-    if (!baseToken) {
-      return false;
-    }
-
-    return tokenAmountNeedApproval(
-      chainId,
-      baseToken,
-      baseTokenAllowance,
-      baseAmount,
-      depositWrapped,
-    );
-  }, [chainId, baseToken, baseAmount, baseTokenAllowance, depositWrapped]);
+    if (!baseToken) return false;
+    return baseTokenAllowance < baseAmount;
+  }, [baseToken, baseAmount, baseTokenAllowance]);
 
   const quoteTokenNeedApproval = useMemo(() => {
-    if (!quoteToken) {
-      return false;
-    }
+    if (!quoteToken) return false;
+    return quoteTokenAllowance < quoteAmount;
+  }, [quoteToken, quoteAmount, quoteTokenAllowance]);
 
-    return tokenAmountNeedApproval(
-      chainId,
-      quoteToken,
-      quoteTokenAllowance,
-      quoteAmount,
-      depositWrapped,
-    );
-  }, [chainId, quoteToken, quoteAmount, quoteTokenAllowance, depositWrapped]);
-
+  // Calculate total position value
   const totalPositionValue = useMemo(() => {
-    if (!pool) {
-      return CurrencyAmount.fromRawAmount(baseToken, 0);
+    if (!pool || !baseToken || !quoteToken) {
+      return CurrencyAmount.fromRawAmount(baseToken || getNativeToken(), "0");
+    }
+    
+    if (baseAmount <= 0 && quoteAmount <= 0) {
+      return CurrencyAmount.fromRawAmount(baseToken, "0");
     }
 
-    const quoteRaw = Math.ceil(quoteAmount * Math.pow(10, quoteToken.decimals));
-    const baseRaw = Math.ceil(baseAmount * Math.pow(10, baseToken.decimals));
-    return pool
-      .priceOf(quoteToken)
-      .quote(CurrencyAmount.fromRawAmount(quoteToken, quoteRaw))
-      .add(CurrencyAmount.fromRawAmount(baseToken, baseRaw));
-  }, [pool, quoteToken, baseToken, baseAmount, quoteAmount]);
-
-  const calculateBaseAndQuoteAmounts = (val0: number, val1: number) => {
-    if (!pool) {
-      return;
-    }
-
-    if (tickLower === TickMath.MIN_TICK || tickUpper === TickMath.MIN_TICK) {
-      return;
-    }
-
-    if (val0 === 0 && val1 === 0) {
-      return;
-    }
-
-    const [newQuoteAmount, newBaseAmount] = calculateNewAmounts(
-      {
-        pool,
-        tickLower,
-        tickUpper,
-        val0,
-        val1,
-      },
-      rangeReverse,
+    // Simple calculation for position value in base token
+    const price = pool.getPrice(); 
+    const quoteAmountInBase = quoteAmount * price;
+    
+    // Create currency amount for the total value
+    return CurrencyAmount.fromRawAmount(
+      baseToken,
+      parseTokenAmount(baseAmount + quoteAmountInBase, baseToken)
     );
+  }, [pool, baseToken, quoteToken, baseAmount, quoteAmount]);
 
-    setQuoteAmount(newQuoteAmount);
-    setBaseAmount(newBaseAmount);
+  // Update amounts based on price and range
+  const calculateAmounts = (quoteVal: number, baseVal: number) => {
+    if (!pool || !baseToken || !quoteToken) return;
+    
+    if (tickLower === MIN_TICK || tickUpper === MAX_TICK) return;
+    
+    if (quoteVal === 0 && baseVal === 0) return;
+    
+    // This is a simplified calculation compared to Uniswap SDK
+    // Adjust based on price and range to get approximate values
+    const price = pool.getPrice();
+    const currentTick = pool.tickCurrent;
+    
+    if (quoteVal > 0 && baseVal === 0) {
+      // User entered quote amount, calculate base amount
+      let baseAmount = 0;
+      
+      // If price is in range, calculate proportional amount
+      if (currentTick >= tickLower && currentTick <= tickUpper) {
+        baseAmount = quoteVal * price * 0.5; // Simplified 50/50 distribution
+      } else if (currentTick < tickLower) {
+        baseAmount = 0; // All in quote token
+      } else if (currentTick > tickUpper) {
+        baseAmount = quoteVal * price; // All in base token
+      }
+      
+      setBaseAmount(baseAmount);
+    } else if (baseVal > 0 && quoteVal === 0) {
+      // User entered base amount, calculate quote amount
+      let quoteAmount = 0;
+      
+      // If price is in range, calculate proportional amount
+      if (currentTick >= tickLower && currentTick <= tickUpper) {
+        quoteAmount = baseVal / price * 0.5; // Simplified 50/50 distribution
+      } else if (currentTick < tickLower) {
+        quoteAmount = baseVal / price; // All in quote token
+      } else if (currentTick > tickUpper) {
+        quoteAmount = 0; // All in base token
+      }
+      
+      setQuoteAmount(quoteAmount);
+    }
   };
 
+  // Update tick ranges
   const tickLowerChange = (value: number) => {
     setTickLower(value);
-    calculateBaseAndQuoteAmounts(quoteAmount, baseAmount);
+    calculateAmounts(quoteAmount, baseAmount);
   };
 
   const tickUpperChange = (value: number) => {
     setTickUpper(value);
-    calculateBaseAndQuoteAmounts(quoteAmount, baseAmount);
+    calculateAmounts(quoteAmount, baseAmount);
   };
 
+  // Handle deposit input changes
   const quoteDepositChange = (value: number) => {
     setQuoteAmount(value);
-    calculateBaseAndQuoteAmounts(value, 0);
+    calculateAmounts(value, 0);
   };
 
   const baseDepositChange = (value: number) => {
     setBaseAmount(value);
-    calculateBaseAndQuoteAmounts(0, value);
+    calculateAmounts(0, value);
   };
 
+  // Get current price for display
   const currentPrice = useMemo(() => {
     if (!pool || !baseToken || !quoteToken) {
       return '0';
     }
 
-    const { tickCurrent } = pool;
-    const price = parseFloat(tickToPrice(quoteToken, baseToken, tickCurrent).toSignificant(16));
-
-    return formatInput(price, false, pool.tickSpacing === 1 ? 8 : 4);
+    return formatInput(pool.getPrice(), false, pool.tickSpacing === 1 ? 8 : 4);
   }, [pool, baseToken, quoteToken]);
 
-  // Add debug logging before the return null check
-  if (!pool || !baseToken || !quoteToken) {
-    console.log('NewPosition returning null because:', {
-      hasPool: !!pool,
-      hasBaseToken: !!baseToken,
-      hasQuoteToken: !!quoteToken
-    });
-    return null;
-  }
-
+  // Handle transaction errors
   const handleTxError = (e: any) => {
     console.error(e);
     if (e.error) {
@@ -464,13 +534,71 @@ function NewPosition({
     }
   };
 
+  // Add liquidity function
   const onAddLiquidity = async () => {
     if (!pool || !baseToken || !quoteToken || !accountId) return;
 
     setTransactionPending(true);
 
     try {
+      console.log("Starting add liquidity process...");
+      
+      // Fetch current pool token ratio before proceeding
+      console.log("Fetching current pool token ratio...");
+      const provider = new JsonRpcProvider(process.env.NEXT_PUBLIC_HEDERA_JSON_RPC_URL);
+      
+      // Get poolId from state or fetch it
+      let poolAddr = poolAddress;
+      if (!poolAddr && pool) {
+        try {
+          poolAddr = await getPoolAddress(baseToken.address, quoteToken.address, fee);
+          console.log('Got pool address for ratio check:', poolAddr);
+        } catch (error) {
+          console.warn('Could not get pool address for ratio check:', error);
+        }
+      }
+      
+      if (poolAddr) {
+        try {
+          // Load pool contract interface with minimal ABI for slot0 and liquidity
+          const poolAbi = [
+            'function slot0() external view returns (uint160 sqrtPriceX96, int24 tick, uint16 observationIndex, uint16 observationCardinality, uint16 observationCardinalityNext, uint8 feeProtocol, bool unlocked)',
+            'function liquidity() external view returns (uint128)'
+          ];
+          
+          const abiInterface = new ethers.utils.Interface(poolAbi);
+          const poolContract = new Contract(poolAddr, abiInterface, provider);
+          
+          // Get current pool data
+          const [slot0, liquidity] = await Promise.all([
+            poolContract.slot0(),
+            poolContract.liquidity()
+          ]);
+          
+          // Create tokens for SDK
+          const token0 = { chainId, address: baseToken.address, decimals: baseToken.decimals };
+          const token1 = { chainId, address: quoteToken.address, decimals: quoteToken.decimals };
+          
+          // Calculate and log price ratio
+          console.log("Current pool data:", {
+            sqrtPriceX96: slot0.sqrtPriceX96.toString(),
+            tick: Number(slot0.tick),
+            liquidity: liquidity.toString()
+          });
+          
+          // Calculate price based on tick (simplified)
+          const currentPrice = Math.pow(1.0001, Number(slot0.tick));
+          console.log(`Current price ratio: ${currentPrice} ${quoteToken.symbol} per ${baseToken.symbol}`);
+          console.log(`Current price ratio: ${1/currentPrice} ${baseToken.symbol} per ${quoteToken.symbol}`);
+        } catch (error) {
+          console.warn("Could not fetch current pool ratio:", error);
+        }
+      } else {
+        console.log("No pool address available for ratio check - creating new pool");
+      }
+
       // Validate balances
+      console.log("Validating token balances...");
       if (quoteAmount > 0 && quoteAmount > parseFloat(quoteBalance)) {
         throw new Error(`You don't have enough ${quoteToken.symbol} to complete the transaction`);
       }
@@ -479,66 +607,130 @@ function NewPosition({
         throw new Error(`You don't have enough ${baseToken.symbol} to complete the transaction`);
       }
 
-      // Create position
-      const position = Position.fromAmount0({
-        pool,
-        tickUpper,
-        tickLower,
-        amount0: BigNumber.from(baseAmount).mul(BigNumber.from(10).pow(baseToken.decimals)).toString(),
-        useFullPrecision: true
-      });
+      // Calculate token amounts
+      const baseTokenAmount = parseTokenAmount(baseAmount, baseToken);
+      const quoteTokenAmount = parseTokenAmount(quoteAmount, quoteToken);
 
-      // Get mint amounts
-      const amount0Mint = position.mintAmounts.amount0.toString();
-      const amount1Mint = position.mintAmounts.amount1.toString();
-
-      // Calculate minimum amounts with slippage
-      const slippageTolerance = baseTokenDisabled || quoteTokenDisabled ? ZERO_PERCENT : DEFAULT_SLIPPAGE;
-      const minAmounts = position.mintAmountsWithSlippage(slippageTolerance);
-      const amount0Min = minAmounts.amount0.toString();
-      const amount1Min = minAmounts.amount1.toString();
+      // Calculate minimum amounts with 0.5% slippage
+      const slippage = 0.995; // 0.5% slippage
+      const baseTokenAmountMin = BigNumber.from(baseTokenAmount).mul(BigNumber.from(Math.floor(slippage * 1000))).div(BigNumber.from(1000)).toString();
+      const quoteTokenAmountMin = BigNumber.from(quoteTokenAmount).mul(BigNumber.from(Math.floor(slippage * 1000))).div(BigNumber.from(1000)).toString();
 
       // Prepare parameters
       const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes
-      const params = {
-        token0: baseToken.address,
-        token1: quoteToken.address,
-        fee,
-        tickLower,
-        tickUpper,
-        amount0Desired: amount0Mint,
-        amount1Desired: amount1Mint,
-        amount0Min,
-        amount1Min,
-        recipient: accountId,
-        deadline
-      };
 
-      // Send transaction to API
-      const response = await fetch('/api/saucerswap/add-liquidity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          accountId,
-          params,
-          deadline,
-          slippageTolerance
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add liquidity');
+      // NFT Manager contract ID for SaucerSwap V2
+      const nftManagerContractId = NFT_MANAGER_ADDRESS;
+      
+      if (!hashconnect) {
+        throw new Error("HashConnect not initialized");
       }
-
-      const result = await response.json();
-      setTransactionHash(result.transactionHash);
-
-        setAlert({
-        message: 'Liquidity added successfully',
-          level: AlertLevel.Success,
-        });
+      
+      // Convert token addresses to proper EVM format
+      console.log("Converting token addresses to EVM format");
+      const baseTokenEvmAddress = hederaIdToEvmAddress(baseToken.address);
+      const quoteTokenEvmAddress = hederaIdToEvmAddress(quoteToken.address);
+      
+      // Convert account ID to EVM format for the recipient parameter
+      const accountIdEvmAddress = hederaIdToEvmAddress(accountId);
+      
+      console.log("EVM Addresses:", {
+        baseToken: baseTokenEvmAddress,
+        quoteToken: quoteTokenEvmAddress,
+        account: accountIdEvmAddress
+      });
+      
+      // Determine if we're adding to an existing position or creating a new one
+      if (poolExists && positionId) {
+        // ADDING TO EXISTING POSITION
+        console.log("Adding to existing position:", positionId);
+        
+        // Build parameters for increaseLiquidity function
+        const params = new ContractFunctionParameters()
+          .addUint256(Number(positionId)) // tokenSN (position ID)
+          .addUint256(Number(baseTokenAmount))  // amount0Desired
+          .addUint256(Number(quoteTokenAmount)) // amount1Desired
+          .addUint256(Number(baseTokenAmountMin)) // amount0Min
+          .addUint256(Number(quoteTokenAmountMin)) // amount1Min
+          .addUint256(deadline); // deadline
+        
+        // Create the contract execute transaction
+        const transaction = new ContractExecuteTransaction()
+          .setContractId(nftManagerContractId)
+          .setGas(330000) // Recommended gas for this operation
+          .setFunction("increaseLiquidity", params)
+          .setPayableAmount(new Hbar(0)); // Change if one token is HBAR
+        
+        console.log("Sending transaction to increase liquidity...");
+        
+        // Use HashConnect to sign and execute transaction
+        try {
+          const response = await hashconnect.sendTransaction(
+            accountId,
+            transaction
+          );
+          
+          if (response && response.success) {
+            setTransactionHash(response.response.transactionId);
+            setAlert({
+              message: 'Liquidity added successfully to existing position',
+              level: AlertLevel.Success,
+            });
+          } else {
+            throw new Error(response?.error || "Transaction failed");
+          }
+        } catch (txError) {
+          console.error("HashConnect transaction error:", txError);
+          throw new Error(`HashConnect transaction failed: ${txError}`);
+        }
+      } else {
+        // CREATING A NEW POSITION
+        console.log("Creating new position with tokens:", baseToken.address, quoteToken.address);
+        
+        // Build parameters for mint function
+        const params = new ContractFunctionParameters()
+          .addAddress(baseTokenEvmAddress) // token0 - use EVM format
+          .addAddress(quoteTokenEvmAddress) // token1 - use EVM format
+          .addUint24(fee) // fee tier
+          .addInt24(tickLower) // tickLower
+          .addInt24(tickUpper) // tickUpper
+          .addUint256(Number(baseTokenAmount)) // amount0Desired
+          .addUint256(Number(quoteTokenAmount)) // amount1Desired
+          .addUint256(Number(baseTokenAmountMin)) // amount0Min
+          .addUint256(Number(quoteTokenAmountMin)) // amount1Min
+          .addAddress(accountIdEvmAddress) // recipient - use EVM format
+          .addUint256(deadline); // deadline
+        
+        // Create the contract execute transaction
+        const transaction = new ContractExecuteTransaction()
+          .setContractId(nftManagerContractId)
+          .setGas(600000) // Higher gas for new position creation
+          .setFunction("mint", params)
+          .setPayableAmount(new Hbar(0)); // Change if one token is HBAR
+        
+        console.log("Sending transaction to create new position...");
+        
+        // Use HashConnect to sign and execute transaction
+        try {
+          const response = await hashconnect.sendTransaction(
+            accountId,
+            transaction
+          );
+          
+          if (response && response.success) {
+            setTransactionHash(response.response.transactionId);
+            setAlert({
+              message: 'New liquidity position created successfully',
+              level: AlertLevel.Success,
+            });
+          } else {
+            throw new Error(response?.error || "Transaction failed");
+          }
+        } catch (txError) {
+          console.error("HashConnect transaction error:", txError);
+          throw new Error(`HashConnect transaction failed: ${txError}`);
+        }
+      }
 
     } catch (e: any) {
       handleTxError(e);
@@ -547,20 +739,24 @@ function NewPosition({
     }
   };
 
-  const onApprove = async (token: Token, amount: number, spender: string) => {
+  // Approve token spending
+  const onApprove = async (token: HederaToken, amount: number) => {
     setTransactionPending(true);
     try {
-      // Send approval transaction to SaucerSwap API using Hedera account ID format
+      // Calculate token amount with decimals
+      const tokenAmount = parseTokenAmount(amount, token);
+
+      // Send approval transaction to SaucerSwap API
       const response = await fetch('/api/saucerswap/approve', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          accountId, // Already in Hedera format (0.0.XXXXX)
-          tokenAddress: token.address, // Already in Hedera format
-          spender, // Already in Hedera format (0.0.XXXXX)
-          amount,
+          accountId,
+          tokenAddress: token.address,
+          spender: NFT_MANAGER_ADDRESS,
+          amount: tokenAmount,
         }),
       });
 
@@ -571,17 +767,25 @@ function NewPosition({
       const result = await response.json();
       setTransactionHash(result.transactionHash);
 
-        setAlert({
-          message: 'Token approval confirmed.',
-          level: AlertLevel.Success,
-        });
-        setTransactionPending(false);
+      setAlert({
+        message: 'Token approval confirmed.',
+        level: AlertLevel.Success,
+      });
+      
+      // Refresh allowances
+      if (baseToken && token.equals(baseToken)) {
+        setBaseTokenAllowance(amount);
+      } else {
+        setQuoteTokenAllowance(amount);
+      }
     } catch (e: any) {
       handleTxError(e);
+    } finally {
       setTransactionPending(false);
     }
   };
 
+  // UI interaction handlers
   const resetAlert = () => {
     setAlert(null);
   };
@@ -606,6 +810,16 @@ function NewPosition({
   const toggleDepositWrapped = () => {
     setDepositWrapped(!depositWrapped);
   };
+
+  // Add debug logging before the return null check
+  if (!pool || !baseToken || !quoteToken) {
+    console.log('NewPosition returning null because:', {
+      hasPool: !!pool,
+      hasBaseToken: !!baseToken,
+      hasQuoteToken: !!quoteToken
+    });
+    return null;
+  }
 
   return (
     <div className="w-full flex text-high">
@@ -666,23 +880,23 @@ function NewPosition({
           <div className="w-1/3 my-2 flex justify-between">
             <RangeInput
               label="Min"
-              initTick={suggestedTicks[0]}
+              initTick={tickLower}
               baseToken={baseToken}
               quoteToken={quoteToken}
               tickSpacing={pool.tickSpacing}
               tabIndex={4}
-              reverse={rangeReverse}
+              reverse={false}
               onChange={tickLowerChange}
               onFocus={(el) => setFocusedRangeInput(el)}
             />
             <RangeInput
               label="Max"
-              initTick={suggestedTicks[1]}
+              initTick={tickUpper}
               baseToken={baseToken}
               quoteToken={quoteToken}
               tickSpacing={pool.tickSpacing}
               tabIndex={5}
-              reverse={rangeReverse}
+              reverse={false}
               onChange={tickUpperChange}
               onFocus={(el) => setFocusedRangeInput(el)}
             />
@@ -724,9 +938,7 @@ function NewPosition({
         <div className="w-64 my-2 flex">
           {baseTokenNeedApproval ? (
             <Button
-              onClick={() =>
-                onApprove(baseToken, baseAmount, "0.0.123456") // Replace with actual Hedera contract ID
-              }
+              onClick={() => onApprove(baseToken, baseAmount)}
               disabled={transactionPending}
               tabIndex={8}
               size="lg"
@@ -736,9 +948,7 @@ function NewPosition({
             </Button>
           ) : quoteTokenNeedApproval ? (
             <Button
-              onClick={() =>
-                onApprove(quoteToken, quoteAmount, "0.0.123456") // Replace with actual Hedera contract ID
-              }
+              onClick={() => onApprove(quoteToken, quoteAmount)}
               disabled={transactionPending}
               tabIndex={8}
               size="lg"
@@ -754,7 +964,7 @@ function NewPosition({
               size="lg"
               className="mr-2"
             >
-              Add Liquidity
+              Add some Liquidity
             </Button>
           )}
 
@@ -799,6 +1009,26 @@ function NewPosition({
           </div>
         )}
       </div>
+
+      {/* Pool status indicator - only show if we have the info */}
+      {poolExists !== null && (
+        <div className={`mb-4 p-4 rounded ${
+          poolExists 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+        }`}>
+          <p>
+            {poolExists ? (
+              <>
+                <span className="font-bold">✓ Adding to existing pool</span>
+                {poolAddress && <span className="text-xs block mt-1">Pool Address: {poolAddress}</span>}
+              </>
+            ) : (
+              <span className="font-bold">⚠ Creating a new liquidity pool with these tokens</span>
+            )}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,122 +1,94 @@
-import { useMemo } from 'react';
-import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-import { Token } from '@uniswap/sdk-core';
-import { tickToPrice } from '@uniswap/v3-sdk';
-import format from 'date-fns/format';
+import { useState, useEffect, useMemo } from 'react';
+import { HederaToken } from '../utils/tokens';
+import { format, subDays } from 'date-fns';
 
-import { getClient } from '../lib/apollo';
-
-const QUERY_POOL_DAY_DATA = gql`
-  query pool_day_data($poolAddress: String!, $days: Int!, $hours: Int!) {
-    pool(id: $poolAddress) {
-      id
-      poolDayData(first: $days, orderBy: date, orderDirection: desc) {
-        id
-        date
-        tick
-      }
-      poolHourData(first: $hours, orderBy: periodStartUnix, orderDirection: desc) {
-        id
-        periodStartUnix
-        tick
-      }
-    }
-  }
-`;
+interface PriceDataPoint {
+  date: string;
+  price: number;
+}
 
 export function usePoolPriceData(
   chainId: number,
-  poolAddress: string | null,
-  quoteToken: Token | null,
-  baseToken: Token | null,
-  period: number,
+  poolAddress: string,
+  quoteToken: HederaToken,
+  baseToken: HederaToken,
+  period: number = 30
 ) {
-  let days = period <= 30 ? 30 : 365;
-  let hours = 1;
+  const [loading, setLoading] = useState(true);
+  const [priceData, setPriceData] = useState<PriceDataPoint[]>([]);
 
-  if (period === 0) {
-    days = 1;
-    hours = 24;
-  }
-  const { loading, error, data } = useQuery(QUERY_POOL_DAY_DATA, {
-    variables: { poolAddress, days, hours },
-    fetchPolicy: 'network-only',
-    client: getClient(chainId),
-  });
+  useEffect(() => {
+    const fetchPriceData = async () => {
+      if (!chainId || !poolAddress || !quoteToken || !baseToken) {
+        setPriceData([]);
+        setLoading(false);
+        return;
+      }
 
-  const poolData = useMemo(() => {
-    if (loading || error || !data || !data.pool) {
-      return [];
+      try {
+        // Mock data for now - this would be replaced with actual API call
+        setLoading(true);
+        
+        // Generate some mock price data
+        const today = new Date();
+        const mockData: PriceDataPoint[] = [];
+        
+        // Generate a random starting price
+        let price = 10 + Math.random() * 40;
+        
+        // Create daily price data for the specified period
+        for (let i = period; i >= 0; i--) {
+          const currentDate = subDays(today, i);
+          
+          // Add some random movement each day
+          price = price * (0.95 + Math.random() * 0.1);
+          
+          mockData.push({
+            date: format(currentDate, 'MMM dd'),
+            price
+          });
+        }
+        
+        setPriceData(mockData);
+      } catch (err) {
+        console.error('Error fetching price data', err);
+        setPriceData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPriceData();
+  }, [chainId, poolAddress, quoteToken, baseToken, period]);
+
+  // Calculate statistics
+  const stats = useMemo(() => {
+    if (!priceData.length) {
+      return { minPrice: 0, maxPrice: 0, meanPrice: 0, stdev: 0 };
     }
-
-    if (period === 0) {
-      return data.pool.poolHourData.map(({ id, periodStartUnix, tick }: any) => {
-        return {
-          id,
-          date: parseInt(periodStartUnix, 10),
-          tick: parseInt(tick, 10),
-        };
-      });
-    }
-
-    return data.pool.poolDayData.map(({ id, date, tick }: any) => {
-      return {
-        id,
-        date: parseInt(date, 10),
-        tick: parseInt(tick, 10),
-      };
+    
+    const prices = priceData.map(p => p.price);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    
+    // Calculate mean
+    const sum = prices.reduce((acc, price) => acc + price, 0);
+    const meanPrice = sum / prices.length;
+    
+    // Calculate standard deviation
+    const squareDiffs = prices.map(price => {
+      const diff = price - meanPrice;
+      return diff * diff;
     });
-  }, [loading, error, period, data]);
-
-  const priceData = useMemo(() => {
-    if (!baseToken || !quoteToken || !poolData || !poolData.length) {
-      return [];
-    }
-
-    const formatDate = (date: number) => {
-      const dt = new Date(date * 1000);
-      return period === 0 ? format(dt, 'HH:mm') : format(dt, 'dd.MMM');
-    };
-
-    const items = period === 0 ? 24 : period;
-    return poolData
-      .filter(({ tick }: { tick: number }) => !Number.isNaN(tick))
-      .map(({ date, tick }: { date: number; tick: number }) => ({
-        date: formatDate(date),
-        price: parseFloat(tickToPrice(quoteToken, baseToken, tick).toSignificant(8)),
-      }))
-      .slice(0, items)
-      .reverse();
-  }, [poolData, baseToken, quoteToken, period]);
-
-  const [minPrice, maxPrice, meanPrice, stdev] = useMemo(() => {
-    if (!priceData || !priceData.length) {
-      return [0, 0, 0, 0];
-    }
-
-    const prices = priceData.map((d: { price: number }) => d.price);
-
-    const sum = (values: number[]) => {
-      return values.reduce((s: number, p: number) => {
-        return s + p;
-      }, 0);
-    };
-
-    const pricesSum = sum(prices);
-
-    const pricesSorted = prices.sort((a: number, b: number) => a - b);
-
-    const minPrice = pricesSorted[0];
-    const maxPrice = pricesSorted[pricesSorted.length - 1];
-    const meanPrice = pricesSum / prices.length;
-
-    const variance =
-      sum(prices.map((price: number) => Math.pow(price - meanPrice, 2))) / prices.length;
-    const stdev = Math.sqrt(variance);
-
-    return [minPrice, maxPrice, meanPrice, stdev];
+    const avgSquareDiff = squareDiffs.reduce((acc, val) => acc + val, 0) / squareDiffs.length;
+    const stdev = Math.sqrt(avgSquareDiff);
+    
+    return { minPrice, maxPrice, meanPrice, stdev };
   }, [priceData]);
 
-  return { priceData, minPrice, maxPrice, meanPrice, stdev };
+  return { 
+    priceData, 
+    loading, 
+    ...stats 
+  };
 }
