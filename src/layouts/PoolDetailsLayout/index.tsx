@@ -4,6 +4,9 @@ import { ROUTES } from '../../common/constants';
 import { useCurrencyConversions } from '../../providers/CurrencyConversionProvider';
 import { usePools } from '../../providers/CombinedPoolsProvider';
 import { HederaToken } from '../../utils/tokens';
+import { useFetchPositions } from '../../hooks/fetch';
+import { useHashConnect } from '../../providers/HashConnectProvider';
+import { usePositionsByPool } from '../../services/positionsByPool';
 
 import BackArrow from '../../components/icons/LeftArrow';
 import Card from '../../components/Card';
@@ -24,24 +27,28 @@ const PoolDetailsPage = () => {
   const { loading: loadingPools, pools, lastLoaded, refresh, refreshingList } = usePools();
   const { convertToGlobalFormatted } = useCurrencyConversions();
   const { query } = useRouter();
+  const { accountId } = useHashConnect();
+  const { loading: positionsLoading, positions } = usePositionsByPool(accountId, query.id as string, 1); // Using chainId 1 for Hedera
 
   const id = query.id as string;
 
-  // Enhanced debugging for pool loading
-  useEffect(() => {
-    console.log('Pool Details Debug:', {
-      loadingPools,
-      poolId: id,
-      availablePools: pools?.map(p => ({
-        id: p.address,
-        tokens: `${p.baseToken?.symbol}/${p.quoteToken?.symbol}`,
-        baseTokenId: p.baseToken instanceof HederaToken ? p.baseToken.getHederaAccountId() : p.baseToken?.address || 'unknown',
-        quoteTokenId: p.quoteToken instanceof HederaToken ? p.quoteToken.getHederaAccountId() : p.quoteToken?.address || 'unknown',
-      }))
-    });
-  }, [loadingPools, pools, id]);
+  // Enhanced debugging for pool loading - memoize the debug data
+  const debugData = useMemo(() => ({
+    loadingPools,
+    poolId: id,
+    availablePools: pools?.map(p => ({
+      id: p.address,
+      tokens: `${p.baseToken?.symbol}/${p.quoteToken?.symbol}`,
+      baseTokenId: p.baseToken instanceof HederaToken ? p.baseToken.getHederaAccountId() : p.baseToken?.address || 'unknown',
+      quoteTokenId: p.quoteToken instanceof HederaToken ? p.quoteToken.getHederaAccountId() : p.quoteToken?.address || 'unknown',
+    }))
+  }), [loadingPools, pools, id]);
 
-  // Select a single pool
+  useEffect(() => {
+    console.log('Pool Details Debug:', debugData);
+  }, [debugData]);
+
+  // Select a single pool - memoize the pool finding logic
   const pool = useMemo(() => {
     if (loadingPools) {
       console.log('Still loading pools...');
@@ -100,13 +107,19 @@ const PoolDetailsPage = () => {
     return foundPool;
   }, [loadingPools, pools, id]);
 
-  if (!pool?.positions) {
-    console.log('Pool loading state:', {
+  // Memoize the loading state check
+  const isLoading = useMemo(() => {
+    const state = {
       hasPool: !!pool,
-      hasPositions: !!pool?.positions,
+      positionsLoading,
       poolId: id,
       loadingPools
-    });
+    };
+    console.log('Pool loading state:', state);
+    return !pool || positionsLoading;
+  }, [pool, positionsLoading, id, loadingPools]);
+
+  if (isLoading) {
     return (
       <div className="flex flex-col space-y-4">
         <div className="flex items-center">
@@ -135,7 +148,6 @@ const PoolDetailsPage = () => {
     entity,
     quoteToken,
     baseToken,
-    positions,
     currentPrice,
     rawPoolLiquidity,
     poolLiquidity,

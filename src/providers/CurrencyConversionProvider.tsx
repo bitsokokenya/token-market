@@ -3,15 +3,15 @@ import { HEDERA_TOKENS } from "../common/constants";
 import { ChainID } from "../types/enums";
 import { formatCurrency } from "../utils/numbers";
 import { useAppSettings } from "./AppSettingsProvider";
-import { HederaToken, CurrencyAmount } from "../utils/tokens";
+import { HederaToken } from "../utils/tokens";
 
 import { useFetchPriceFeed } from "../hooks/fetch";
 
 const CurrencyConversionsContext = React.createContext({
-  convertToGlobal: (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): number => {
+  convertToGlobal: (val: any): number => {
     return 0;
   },
-  convertToGlobalFormatted: (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): string => {
+  convertToGlobalFormatted: (val: any): string => {
     return "$0";
   },
   formatCurrencyWithSymbol: (val: number, chainId: number): string => {
@@ -30,23 +30,25 @@ interface Props {
 // Base tokens for Hedera using HederaToken class
 const baseTokens: { [key: string]: HederaToken } = {
   USDC: new HederaToken(
-    ChainID.HederaTestnet,
     HEDERA_TOKENS.USDC.tokenId,
     HEDERA_TOKENS.USDC.decimals,
     HEDERA_TOKENS.USDC.symbol,
-    HEDERA_TOKENS.USDC.name
+    HEDERA_TOKENS.USDC.name,
+    undefined,
+    ChainID.HederaTestnet
   ),
   HBAR: new HederaToken(
-    ChainID.HederaTestnet,
     HEDERA_TOKENS.HBAR.tokenId,
     HEDERA_TOKENS.HBAR.decimals,
     HEDERA_TOKENS.HBAR.symbol,
-    HEDERA_TOKENS.HBAR.name
+    HEDERA_TOKENS.HBAR.name,
+    undefined,
+    ChainID.HederaTestnet
   ),
 };
 
-// Update to use Hedera account IDs
-const baseTokenAddresses = Object.values(baseTokens).map((t) => t.getHederaAccountId());
+// Update to use Hedera token addresses
+const baseTokenAddresses = Object.values(baseTokens).map((t) => t.address);
 
 export const CurrencyConversionsProvider = ({ children }: Props) => {
   const { getGlobalCurrencyToken } = useAppSettings();
@@ -66,12 +68,12 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
         return 0;
       }
 
-      const tokenId = token.getHederaAccountId();
-      const tick = priceFeed[tokenId];
+      const tokenAddress = token.address;
+      const tick = priceFeed[tokenAddress];
       
       if (!tick) {
         console.error("No matching price pool found for token:", {
-          id: token.getHederaAccountId(),
+          address: tokenAddress,
           symbol: token.symbol
         });
         return 0;
@@ -84,7 +86,7 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
   );
 
   const convertToGlobal = useCallback(
-    (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): number => {
+    (val: any): number => {
       if (!val) {
         console.warn('Attempted to convert undefined value');
         return 0;
@@ -122,7 +124,7 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
             price = 1;
           } else {
             // Try to find the token by symbol first
-            let token = baseTokens[val.token.symbol];
+            let token = val.token.symbol ? baseTokens[val.token.symbol] : undefined;
             
             if (!token) {
               // If not found by symbol, try to find by token ID
@@ -176,7 +178,7 @@ export const CurrencyConversionsProvider = ({ children }: Props) => {
   );
 
   const convertToGlobalFormatted = useCallback(
-    (val: CurrencyAmount | string | number | { toExact: () => string; valueOf?: () => number }): string => {
+    (val: any): string => {
       if (!val) {
         console.warn('Attempted to format undefined CurrencyAmount or token');
         return formatCurrencyWithSymbol(0, ChainID.HederaTestnet);

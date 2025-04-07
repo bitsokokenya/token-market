@@ -6,7 +6,7 @@ sends an api request to saucerswap api to add new position to the pool
 */
 
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { BigNumber } from '@ethersproject/bignumber';
 import { JsonRpcProvider } from '@ethersproject/providers';
@@ -31,9 +31,15 @@ import ChartButton from './ChartButton';
 import FeeTierData from './FeeTierData';
 import RangeData from './RangeData';
 
+import { ABI } from '../../abis/abi'
 import {
   DEFAULT_SLIPPAGE,
   ZERO_PERCENT,
+  ISTESTNET,
+  SAUCERSWAP_API_URL,
+  FACTORY_ADDRESS,
+  HEDERA_RPC_URL,
+  MIRROR_NODE_URL
 } from '../../common/constants';
 
 import { formatInput } from '../../utils/numbers';
@@ -50,6 +56,8 @@ import RangeInput from './RangeInput';
 import DepositInput from './DepositInput';
 import FeeButton from './FeeButton';
 import TransactionModal from '../../components/TransactionModal';
+import { useFetchPositions } from '../../hooks/fetch';
+import { Position as FetchPosition } from '../../hooks/fetch';
 
 // Custom minimal Pool implementation
 class SimplePool {
@@ -104,6 +112,72 @@ class SimplePool {
 const MIN_TICK = -887272;
 const MAX_TICK = 887272;
 
+// Global pool data interface
+interface PoolData {
+  exists: boolean;
+  address: string | null;
+  fee: number;
+  token0: string;
+  token1: string;
+  liquidity: string;
+  tickCurrent: number;
+  sqrtPriceX96: string;
+  positions?: any[]; // Add positions array to pool data
+}
+
+// Add proper type definitions
+interface Position {
+  token0: {
+    id: string;
+  };
+  token1: {
+    id: string;
+  };
+  fee: number;
+  deleted: boolean;
+  liquidity: {
+    gt: (value: number) => boolean;
+  };
+}
+
+interface AlertComponentProps {
+  level: AlertLevel;
+  children: React.ReactNode;
+  onClose?: () => void;
+}
+
+interface FeeButtonComponentProps {
+  fee: number;
+  onChange: (newFee: number) => void;
+  disabled: boolean;
+}
+
+interface RangeInputComponentProps {
+  pool: SimplePool;
+  tickLower: number;
+  tickUpper: number;
+  onTickLowerChange: (value: number) => void;
+  onTickUpperChange: (value: number) => void;
+  disabled: boolean;
+}
+
+interface RangeDataComponentProps {
+  pool: SimplePool;
+  chainId: number;
+  tickLower: number;
+  tickUpper: number;
+  baseToken: HederaToken;
+  quoteToken: HederaToken;
+}
+
+interface DepositInputComponentProps {
+  token: HederaToken;
+  amount: number;
+  onChange: (value: number) => void;
+  balance: string;
+  disabled: boolean;
+}
+
 interface Props {
   baseTokenId: string; // Hedera token ID in 0.0.XXXXX format
   quoteTokenId: string; // Hedera token ID in 0.0.XXXXX format
@@ -120,39 +194,90 @@ interface Props {
   poolAddress?: string | null; // Pool address if it exists
 }
 
-// Helper function to get pool address from SaucerSwap API
-async function getPoolAddress(token0Id: string, token1Id: string, fee: number): Promise<string> {
+// Helper function to get pool data from SaucerSwap API
+async function getPoolData(token0Id: string, token1Id: string, fee: number, isTestnet: boolean): Promise<PoolData | null> {
   try {
-    const response = await fetch('/api/saucerswap/pool-address', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token0Address: token0Id,
-        token1Address: token1Id,
-        fee
-      }),
-    });
+    // Verify this path segment -> "/v2/pools/"
+    const apiUrl = `${SAUCERSWAP_API_URL}/v2/pools/`;
+    console.log(`Fetching pool data from: ${apiUrl}`); // Check console output
+    const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error('Failed to get pool address');
+        throw new Error(`API request failed with status ${response.status}`);
     }
+    const pools = await response.json();
 
-    const { poolAddress } = await response.json();
-    return poolAddress;
+    // Find matching pool
+    const matchingPool = pools.find((pool: any) => {
+      const tokenAId = pool.tokenA.id;
+      const tokenBId = pool.tokenB.id;
+      const poolFee = pool.fee;
+      
+      return (
+        ((tokenAId === token0Id && tokenBId === token1Id) ||
+         (tokenAId === token1Id && tokenBId === token0Id)) &&
+        poolFee === fee
+      );
+    });
+
+    if (matchingPool) {
+      // Fetch positions using the correct API URL constant
+      const positionsUrl = `${SAUCERSWAP_API_URL}/v2/positions?poolId=${matchingPool.contractId}`;
+      console.log(`Fetching positions from: ${positionsUrl}`); // Add log for debugging
+      const positionsResponse = await fetch(positionsUrl);
+      const positionsData = await positionsResponse.json();
+
+      return {
+        exists: true,
+        address: matchingPool.contractId,
+        fee: matchingPool.fee,
+        token0: matchingPool.tokenA.id,
+        token1: matchingPool.tokenB.id,
+        liquidity: matchingPool.liquidity,
+        tickCurrent: matchingPool.tickCurrent,
+        sqrtPriceX96: matchingPool.sqrtRatioX96,
+        positions: positionsData?.positions || [] // Use optional chaining and provide default
+      };
+    }
+    return null;
   } catch (error) {
-    console.error('Error getting pool address:', error);
-    throw error;
+    console.error('Error getting pool data from API:', error);
+    return null;
   }
 }
 
-// Helper to find nearest tick that's divisible by tick spacing
-function nearestUsableTick(tick: number, tickSpacing: number): number {
-  const rounded = Math.round(tick / tickSpacing) * tickSpacing;
-  if (rounded < MIN_TICK) return MIN_TICK;
-  if (rounded > MAX_TICK) return MAX_TICK;
-  return rounded;
+// Helper function to get pool address from ethers
+async function getPoolAddressFromEthers(
+  token0Id: string,
+  token1Id: string,
+  fee: number,
+  networkConfig: any
+): Promise<string | null> {
+  try {
+    const provider = new ethers.providers.JsonRpcProvider(
+      networkConfig.rpcUrl,
+      {
+        name: networkConfig.isTestnet ? 'hedera-testnet' : 'hedera-mainnet',
+        chainId: networkConfig.chainId,
+      }
+    );
+
+    const factoryInterface = new ethers.utils.Interface(ABI);
+    const factoryContract = new ethers.Contract(
+      FACTORY_ADDRESS,
+      factoryInterface,
+      provider
+    );
+
+    const token0Evm = hederaIdToEvmAddress(token0Id);
+    const token1Evm = hederaIdToEvmAddress(token1Id);
+
+    const poolAddress = await factoryContract.getPool(token0Evm, token1Evm, fee);
+    return poolAddress !== '0x0000000000000000000000000000000000000000' ? poolAddress : null;
+  } catch (error) {
+    console.error('Error getting pool address from ethers:', error);
+    return null;
+  }
 }
 
 // Convert Hedera ID to proper EVM address format
@@ -186,6 +311,18 @@ const hederaIdToEvmAddress = (hederaId: string): string => {
   throw new Error(`Invalid token address format: ${hederaId}`);
 };
 
+// Placeholder for the missing function - needs implementation
+async function calculatePoolCreateFee(isTestnet: boolean): Promise<string> {
+  console.warn("calculatePoolCreateFee function needs implementation");
+  return "0 HBAR"; // Return a default value
+}
+
+// Placeholder for the missing function - needs implementation
+async function getPoolAddress(token0Id: string, token1Id: string, fee: number): Promise<string | null> {
+    console.warn("getPoolAddress function needs implementation");
+    return null; // Return a default value
+}
+
 function NewPosition({ 
   baseTokenId,
   quoteTokenId,
@@ -198,8 +335,8 @@ function NewPosition({
   initFee,
   positions,
   onCancel,
-  poolExists,
-  poolAddress
+  poolExists: poolExistsProp,
+  poolAddress: poolAddressProp
 }: Props) {
   const chainId = useChainId();
   const { accountId, hashconnect } = useHashConnect();
@@ -207,6 +344,9 @@ function NewPosition({
   const positionId = router.query.position;
   const { convertToGlobalFormatted } = useCurrencyConversions();
   const NFT_MANAGER_ADDRESS = process.env.NEXT_PUBLIC_SAUCERSWAP_NFT_MANAGER_ADDRESS || '0.0.123456';
+
+  // Use the useFetchPositions hook
+  const { loading: positionsLoading, positions: userPositions } = useFetchPositions(accountId);
 
   // Create token instances using HederaToken
   const baseToken = useMemo(() => {
@@ -256,10 +396,12 @@ function NewPosition({
   }, [chainId, quoteTokenId, quoteTokenDecimals, quoteTokenSymbol, quoteTokenName]);
 
   // State hooks
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [poolCreateFee, setPoolCreateFee] = useState<string>('Calculating...');
   const [depositWrapped, setDepositWrapped] = useState<boolean>(false);
   const [baseAmount, setBaseAmount] = useState<number>(0);
   const [quoteAmount, setQuoteAmount] = useState<number>(0);
-  const [fee, setFee] = useState<number>(initFee);
+  const [fee, setFee] = useState<number>(initFee || 3000);
   const [tickLower, setTickLower] = useState<number>(MIN_TICK);
   const [tickUpper, setTickUpper] = useState<number>(MAX_TICK);
   const [baseBalance, setBaseBalance] = useState<string>('0');
@@ -273,84 +415,155 @@ function NewPosition({
   const [showFeeTierData, setShowFeeTierData] = useState<boolean>(false);
   const [showRangeData, setShowRangeData] = useState<boolean>(false);
   const [focusedRangeInput, setFocusedRangeInput] = useState<HTMLInputElement | null>(null);
-  const [alert, setAlert] = useState<{ message: string; level: AlertLevel } | null>(null);
+  const [alert, setAlert] = useState<{ level: AlertLevel; message: string } | null>(null);
   const [pool, setPool] = useState<SimplePool | null>(null);
+
+  // Global pool data state
+  const [poolData, setPoolData] = useState<PoolData | null>(null);
 
   // Other hooks
   const { getBalances, getAllowances, approveToken } = useTokenFunctions(baseToken || undefined);
+
+  // New state for loading status
+  const [loadingPool, setLoadingPool] = useState<boolean>(false);
+
+  // State for pool existence status
+  const [internalPoolExists, setInternalPoolExists] = useState<boolean | null>(poolExistsProp === undefined ? null : poolExistsProp);
+
+  // --- Define poolAddress state ---
+  const [poolAddress, setPoolAddress] = useState<string | null>(poolAddressProp || null);
+
+  // Step 1: Check if pool exists and get creation fee
+  useEffect(() => {
+    const checkPoolAndFee = async () => {
+      if (!baseToken || !quoteToken) {
+        console.log('Base or quote token not ready, skipping pool check.');
+        return;
+      }
+
+      console.log('Tokens ready, proceeding with pool check and fee calculation.');
+      setLoadingPool(true);
+      setPoolData(null);
+      setCurrentStep(1);
+      // --- Use renamed state setter ---
+      setInternalPoolExists(null);
+      setPoolAddress(null); // Use the defined setter
+
+      try {
+        const feeHbar = await calculatePoolCreateFee(ISTESTNET);
+        setPoolCreateFee(feeHbar);
+        console.log('Pool create fee calculated:', feeHbar);
+
+        const ethersPoolAddress = await getPoolAddressFromEthers(
+          baseToken.address,
+          quoteToken.address,
+          fee,
+          ISTESTNET
+        );
+        console.log('Ethers check result:', ethersPoolAddress);
+
+        const apiPoolData = await getPoolData(
+          baseToken.address,
+          quoteToken.address,
+          fee,
+          ISTESTNET
+        );
+        console.log('API check result:', apiPoolData);
+
+        if (apiPoolData) {
+          console.log('Using API pool data');
+          setPoolData(apiPoolData);
+          // --- Use renamed state setter ---
+          setInternalPoolExists(true);
+          setPoolAddress(apiPoolData.address); // Use defined setter
+          setCurrentStep(2);
+        } else if (ethersPoolAddress) {
+          console.log('API data missing, using ethers address. Pool likely exists but needs data fetch.');
+          setPoolData({
+            exists: true,
+            address: ethersPoolAddress,
+            fee: fee,
+            token0: baseToken.address,
+            token1: quoteToken.address,
+            liquidity: '0',
+            tickCurrent: 0,
+            sqrtPriceX96: '0',
+            positions: []
+          });
+          // --- Use renamed state setter ---
+          setInternalPoolExists(true);
+          setPoolAddress(ethersPoolAddress); // Use defined setter
+          setCurrentStep(2);
+        } else {
+          console.log('Pool does not exist according to both methods.');
+          // --- Use renamed state setter ---
+          setInternalPoolExists(false);
+          setPoolAddress(null); // Use defined setter
+          setCurrentStep(2);
+        }
+      } catch (error: any) {
+        console.error('Error checking pool existence or calculating fee:', error);
+        setAlert({ level: AlertLevel.Error, message: `Error checking pool status: ${error.message}` });
+        // --- Use renamed state setter ---
+        setInternalPoolExists(false);
+      } finally {
+        setLoadingPool(false);
+      }
+    };
+
+    checkPoolAndFee();
+
+  }, [baseToken, quoteToken, fee, accountId]);
 
   // Initialize pool
   useEffect(() => {
     const initializePool = async () => {
       if (!baseToken || !quoteToken) return;
       
+      // Use the state variable `poolAddress` which is set in the previous effect
+      const currentPoolAddress = poolAddress;
+      console.log('Initializing pool with address:', currentPoolAddress);
+
+      // Fetch pool data only if address exists but poolData is not yet set
+      let dataToUse = poolData;
+      if (currentPoolAddress && !dataToUse) {
+          console.log('Fetching pool data again for initialization as it was missing...');
+          dataToUse = await getPoolData(baseToken.address, quoteToken.address, fee, ISTESTNET);
+      }
+
+      if (!dataToUse || !dataToUse.exists) {
+          console.log('Pool data not available or pool does not exist, cannot initialize pool object yet.');
+          // Maybe set pool to null explicitly if needed
+          // setPool(null);
+          return; // Don't proceed if pool data is missing
+      }
+
       try {
-        // Set up provider
-        const provider = new JsonRpcProvider(process.env.NEXT_PUBLIC_HEDERA_JSON_RPC_URL);
-
-        // If we already know the pool address from the parent component, use it
-        // otherwise, get it from the API
-        let poolAddr;
-        if (poolExists === true && poolAddress) {
-          poolAddr = poolAddress;
-          console.log('Using existing pool address:', poolAddr);
-        } else {
-          poolAddr = await getPoolAddress(baseTokenId, quoteTokenId, fee);
-          console.log('Got pool address from API:', poolAddr);
-        }
-
-        // Get pool data from API
-        const response = await fetch(`/api/saucerswap/pool-info?poolId=${poolAddr}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch pool info');
-        }
-
-        const poolData = await response.json();
-        
         // Create simplified pool with the available data
         const newPool = new SimplePool(
           baseToken,
           quoteToken,
           fee,
-          poolData.sqrtRatioX96 || '1',
-          poolData.liquidity || '0',
-          poolData.tickCurrent || 0
+          // Use optional chaining and provide default for potentially missing properties
+          dataToUse.sqrtPriceX96 ?? '0',
+          dataToUse.liquidity ?? '0',
+          dataToUse.tickCurrent ?? 0
         );
 
         setPool(newPool);
-
-        // Set initial ticks based on current price to create a reasonable range
-        const currentTick = newPool.tickCurrent;
-        const spacing = newPool.tickSpacing;
-        
-        // Create a range of ±5% from current price
-        // This is a simplified approach compared to Uniswap's implementation
-        const rangeSize = 10 * spacing; // Approximately ±5% range
-        
-        const tickLowerApprox = currentTick - rangeSize;
-        const tickUpperApprox = currentTick + rangeSize;
-
-        setTickLower(nearestUsableTick(tickLowerApprox, spacing));
-        setTickUpper(nearestUsableTick(tickUpperApprox, spacing));
-
-      } catch (error) {
+        setShowFeeTierData(true); // Show fee tier data after pool is initialized
+      } catch (error: any) { // Catch unknown error type
         console.error('Error initializing pool:', error);
         setAlert({
-          message: 'Failed to initialize pool - please check the token pair is valid',
+          message: `Error initializing pool: ${error.message || 'Unknown error'}`,
           level: AlertLevel.Error,
         });
       }
     };
 
-    if (baseTokenId && quoteTokenId) {
-      console.log('Initializing pool with tokens:', {
-        baseTokenId,
-        quoteTokenId,
-        fee
-      });
-      initializePool();
-    }
-  }, [baseToken, quoteToken, baseTokenId, quoteTokenId, fee, poolExists, poolAddress]);
+    // Rerun initialization if poolData changes or if the determined address changes
+    initializePool();
+  }, [baseToken, quoteToken, fee, poolData, poolAddress]); // Depend on poolData and poolAddress state
 
   // Load balances
   useEffect(() => {
@@ -641,7 +854,7 @@ function NewPosition({
       });
       
       // Determine if we're adding to an existing position or creating a new one
-      if (poolExists && positionId) {
+      if (internalPoolExists && positionId) {
         // ADDING TO EXISTING POSITION
         console.log("Adding to existing position:", positionId);
         
@@ -811,6 +1024,47 @@ function NewPosition({
     setDepositWrapped(!depositWrapped);
   };
 
+  // Update pool status display with proper typing
+  const poolStatusDisplay = useMemo(() => {
+    if (!poolData) {
+      return (
+        <div className="text-yellow-600">
+          ⚠ New pool will be created (Fee: {poolCreateFee} HBAR)
+        </div>
+      );
+    }
+
+    // Filter positions for this specific pool with proper typing
+    const poolPositions = userPositions.filter((position: FetchPosition) => {
+      const positionToken0Id = position.token0.id;
+      const positionToken1Id = position.token1.id;
+      const positionFee = position.fee;
+      
+      return (
+        ((positionToken0Id === poolData.token0 && positionToken1Id === poolData.token1) ||
+         (positionToken0Id === poolData.token1 && positionToken1Id === poolData.token0)) &&
+        positionFee === poolData.fee &&
+        !position.deleted &&
+        !position.liquidity.isZero()
+      );
+    });
+
+    const hasActivePositions = poolPositions.length > 0;
+
+    return (
+      <div className="space-y-2">
+        <div className="text-green-600">
+          ✓ Pool exists at address: {poolData.address}
+        </div>
+        {hasActivePositions && (
+          <div className="text-blue-600">
+            • {poolPositions.length} active position{poolPositions.length !== 1 ? 's' : ''} in this pool
+          </div>
+        )}
+      </div>
+    );
+  }, [poolData, poolCreateFee, userPositions]);
+
   // Add debug logging before the return null check
   if (!pool || !baseToken || !quoteToken) {
     console.log('NewPosition returning null because:', {
@@ -822,212 +1076,105 @@ function NewPosition({
   }
 
   return (
-    <div className="w-full flex text-high">
-      <div className="lg:w-1/2">
-        <div className="flex flex-col my-2">
-          <div className="text-xl">Pair</div>
-          <div className="w-80 my-2 p-2 text-lg border rounded border-blue-400 dark:border-slate-700 bg-blue-100 dark:bg-slate-700">
-            <PoolButton
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              onClick={() => {}}
-              tabIndex={0}
-              size="md"
-            />
-          </div>
+    <div className="w-full">
+      {alert && (
+        <Alert level={alert.level} onClose={() => setAlert(null)}>
+          {alert.message}
+        </Alert>
+      )}
+
+      {/* Step 1: Pool Status */}
+      <div className={`mb-4 p-4 bg-gray-50 rounded-lg ${currentStep >= 1 ? 'opacity-100' : 'opacity-50'}`}>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold">Step 1: Pool Status</h3>
+          {currentStep > 1 && <span className="text-green-500">✓</span>}
         </div>
-
-        <div className="w-72 flex flex-col my-3">
-          <div className="flex items-center justify-between">
-            <div className="text-xl">Fee tier</div>
-            <div className="mx-2">
-              <ChartButton selected={showFeeTierData} onClick={handleFeeTierDataClick} />
-            </div>
-          </div>
-          <div className="my-2 flex justify-between">
-            <FeeButton fee={0.01} selected={fee === 100} onClick={() => setFee(100)} tabIndex={1} />
-            <FeeButton fee={0.05} selected={fee === 500} onClick={() => setFee(500)} tabIndex={2} />
-            <FeeButton
-              fee={0.3}
-              selected={fee === 3000}
-              onClick={() => setFee(3000)}
-              tabIndex={3}
-            />
-            <FeeButton
-              fee={1}
-              selected={fee === 10000}
-              onClick={() => setFee(10000)}
-              tabIndex={4}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col my-2 w-5/6">
-          <div className="flex items-center justify-between">
-            <div className="text-xl">Range</div>
-            <div className="px-6">
-              <ChartButton selected={showRangeData} onClick={handleRangeDataClick} />
-            </div>
-          </div>
-
-          <div className="py-1 text-center">
-            Current price:{' '}
-            <button onClick={handleCurrentPriceClick} className="font-bold">
-              {currentPrice}&nbsp;
-            </button>
-            <TokenLabel name={baseToken.name} symbol={baseToken.symbol} />
-          </div>
-          <div className="w-1/3 my-2 flex justify-between">
-            <RangeInput
-              label="Min"
-              initTick={tickLower}
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              tickSpacing={pool.tickSpacing}
-              tabIndex={4}
-              reverse={false}
-              onChange={tickLowerChange}
-              onFocus={(el) => setFocusedRangeInput(el)}
-            />
-            <RangeInput
-              label="Max"
-              initTick={tickUpper}
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              tickSpacing={pool.tickSpacing}
-              tabIndex={5}
-              reverse={false}
-              onChange={tickUpperChange}
-              onFocus={(el) => setFocusedRangeInput(el)}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col my-6">
-          <div className="lg:w-3/4 flex justify-between">
-            <div className="text-xl">Deposit</div>
-          </div>
-          <div className="lg:w-3/4 my-2">
-            <DepositInput
-              token={quoteToken}
-              value={quoteAmount}
-              balance={quoteBalance}
-              tabIndex={6}
-              disabled={quoteTokenDisabled}
-              wrapped={depositWrapped}
-              onChange={quoteDepositChange}
-              onWrapToggle={toggleDepositWrapped}
-            />
-            <DepositInput
-              token={baseToken}
-              value={baseAmount}
-              balance={baseBalance}
-              tabIndex={7}
-              disabled={baseTokenDisabled}
-              wrapped={depositWrapped}
-              onChange={baseDepositChange}
-              onWrapToggle={toggleDepositWrapped}
-            />
-          </div>
-          <div className="w-64 mb-2 text-sm">
-            Total position value:{' '}
-            <span className="font-bold">{convertToGlobalFormatted(totalPositionValue)}</span>
-          </div>
-        </div>
-
-        <div className="w-64 my-2 flex">
-          {baseTokenNeedApproval ? (
-            <Button
-              onClick={() => onApprove(baseToken, baseAmount)}
-              disabled={transactionPending}
-              tabIndex={8}
-              size="lg"
-              className="mr-2"
-            >
-              Approve {baseToken.symbol}
-            </Button>
-          ) : quoteTokenNeedApproval ? (
-            <Button
-              onClick={() => onApprove(quoteToken, quoteAmount)}
-              disabled={transactionPending}
-              tabIndex={8}
-              size="lg"
-              className="mr-2"
-            >
-              Approve {quoteToken.symbol}
-            </Button>
-          ) : (
-            <Button
-              onClick={onAddLiquidity}
-              disabled={transactionPending}
-              tabIndex={8}
-              size="lg"
-              className="mr-2"
-            >
-              Add some Liquidity
-            </Button>
-          )}
-
-          <Button variant="ghost" onClick={onCancel} tabIndex={9}>
-            Cancel
-          </Button>
-
-          {alert && (
-            <Alert level={alert.level} onHide={resetAlert}>
-              {alert.message}
-            </Alert>
-          )}
-
-          {transactionPending && (
-            <TransactionModal chainId={chainId} transactionHash={transactionHash} />
-          )}
-        </div>
+        {poolStatusDisplay}
       </div>
 
-      <div className="lg:w-1/2">
-        <div className="h-64">
-          {showFeeTierData && (
-            <FeeTierData
-              chainId={chainId}
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              currentValue={fee}
-            />
-          )}
+      {/* Step 2: Fee Selection */}
+      <div className={`mb-4 ${currentStep >= 2 ? 'opacity-100' : 'opacity-50'}`}>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold">Step 2: Select Fee Tier</h3>
+          {currentStep > 2 && <span className="text-green-500">✓</span>}
         </div>
+        <FeeButton
+          fee={fee}
+          onChange={(newFee: number) => {
+            setFee(newFee);
+            setCurrentStep(3);
+          }}
+          disabled={currentStep < 2}
+        />
+        {showFeeTierData && <FeeTierData fee={fee} />}
+      </div>
 
+      {/* Step 3: Range Selection */}
+      <div className={`mb-4 ${currentStep >= 3 ? 'opacity-100' : 'opacity-50'}`}>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold">Step 3: Set Price Range</h3>
+          {currentStep > 3 && <span className="text-green-500">✓</span>}
+        </div>
+        <RangeInput
+          pool={pool}
+          tickLower={tickLower}
+          tickUpper={tickUpper}
+          onTickLowerChange={tickLowerChange}
+          onTickUpperChange={tickUpperChange}
+          disabled={currentStep < 3}
+        />
         {showRangeData && (
-          <div>
-            <RangeData
-              chainId={chainId}
-              tickLower={tickLower}
-              tickUpper={tickUpper}
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              pool={pool}
-            />
-          </div>
+          <RangeData
+            pool={pool}
+            chainId={chainId}
+            tickLower={tickLower}
+            tickUpper={tickUpper}
+            baseToken={baseToken}
+            quoteToken={quoteToken}
+          />
         )}
       </div>
 
-      {/* Pool status indicator - only show if we have the info */}
-      {poolExists !== null && (
-        <div className={`mb-4 p-4 rounded ${
-          poolExists 
-            ? 'bg-green-50 text-green-700 border border-green-200' 
-            : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-        }`}>
-          <p>
-            {poolExists ? (
-              <>
-                <span className="font-bold">✓ Adding to existing pool</span>
-                {poolAddress && <span className="text-xs block mt-1">Pool Address: {poolAddress}</span>}
-              </>
-            ) : (
-              <span className="font-bold">⚠ Creating a new liquidity pool with these tokens</span>
-            )}
-          </p>
+      {/* Step 4: Deposit Amounts */}
+      <div className={`mb-4 ${currentStep >= 4 ? 'opacity-100' : 'opacity-50'}`}>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold">Step 4: Enter Deposit Amounts</h3>
         </div>
+        <DepositInput
+          token={baseToken}
+          amount={baseAmount}
+          onChange={setBaseAmount}
+          balance={baseBalance}
+          disabled={currentStep < 4}
+        />
+        <DepositInput
+          token={quoteToken}
+          amount={quoteAmount}
+          onChange={setQuoteAmount}
+          balance={quoteBalance}
+          disabled={currentStep < 4}
+        />
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end space-x-4 mt-4">
+        <Button onClick={onCancel} variant="secondary">
+          Cancel
+        </Button>
+        <Button 
+          onClick={onAddLiquidity}
+          disabled={currentStep < 4 || !baseAmount || !quoteAmount}
+        >
+          Add Liquidity
+        </Button>
+      </div>
+
+      {/* Transaction Modal */}
+      {transactionPending && (
+        <TransactionModal
+          hash={transactionHash}
+          onClose={() => setTransactionPending(false)}
+        />
       )}
     </div>
   );

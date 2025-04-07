@@ -1,17 +1,25 @@
 import { BigNumber } from "@ethersproject/bignumber";
+import { Token as UniToken } from "@uniswap/sdk-core";
+import { AccountId } from '@hashgraph/sdk';
 
 import { ChainID } from "../types/enums";
 import { HEDERA_TOKENS } from "../common/constants";
 
-// Custom Hedera token class that doesn't rely on Uniswap SDK
-export class HederaToken {
+// Function to convert Hedera token ID to EVM address
+function hederaTokenIdToEvmAddress(tokenId: string): string {
+  // If it's already an EVM address, return as is
+  if (tokenId.startsWith('0x')) {
+    return tokenId;
+  }
+  
+  // Convert Hedera token ID to EVM address
+  return AccountId.fromString(tokenId).toSolidityAddress();
+}
+
+// Custom Hedera token class that extends Uniswap Token
+export class HederaToken extends UniToken {
   public readonly tokenId: string; // Hedera token ID format: 0.0.12345
-  public readonly address: string; // HTS format
-  public readonly decimals: number;
-  public readonly symbol: string;
-  public readonly name: string;
   public readonly logoURI?: string;
-  public readonly chainId: number; // Added to maintain compatibility
 
   constructor(
     tokenIdOrChainId: string | number,
@@ -26,39 +34,46 @@ export class HederaToken {
     // 2. (chainId, tokenId, decimals, symbol, name)
     
     // Detect which format is being used based on the first parameter type
+    let chainId: number;
+    let tokenId: string;
+    let decimals: number;
+    let symbol: string;
+    let logoURI: string | undefined;
+
     if (typeof tokenIdOrChainId === 'number') {
       // Format 2: old format with chainId first
-      this.chainId = tokenIdOrChainId;
-      this.tokenId = decimalsOrTokenId as string;
-      this.decimals = symbolOrDecimals as number;
-      this.symbol = logoURIOrSymbol as string || '';
-      this.name = chainIdOrName as string || '';
-      this.logoURI = undefined;
+      chainId = tokenIdOrChainId;
+      tokenId = decimalsOrTokenId as string;
+      decimals = symbolOrDecimals as number;
+      symbol = logoURIOrSymbol as string || '';
+      logoURI = undefined;
     } else {
       // Format 1: new format with tokenId first
-      this.tokenId = tokenIdOrChainId;
-      this.decimals = decimalsOrTokenId as number;
-      this.symbol = symbolOrDecimals as string;
-      this.name = name;
-      this.logoURI = logoURIOrSymbol as string;
-      this.chainId = chainIdOrName as number || ChainID.HederaTestnet;
+      tokenId = tokenIdOrChainId;
+      decimals = decimalsOrTokenId as number;
+      symbol = symbolOrDecimals as string;
+      chainId = chainIdOrName as number || ChainID.HederaTestnet;
+      logoURI = logoURIOrSymbol as string;
     }
     
-    // Convert tokenId to address format - make sure it's a string first
-    if (typeof this.tokenId === 'string' && this.tokenId.includes('.')) {
-      this.address = this.tokenId.split('.').join('');
-    } else {
-      // Fall back to using tokenId as the address if it doesn't contain dots
-      this.address = String(this.tokenId);
-    }
+    // Convert tokenId to EVM address format
+    const address = hederaTokenIdToEvmAddress(tokenId);
+
+    // Call parent constructor
+    super(chainId, address, decimals, symbol, name);
+
+    this.tokenId = tokenId;
+    this.logoURI = logoURI;
   }
 
-  public equals(other?: HederaToken): boolean {
+  public equals(other: UniToken): boolean {
     if (!other) return false;
+    if (!(other instanceof HederaToken)) return super.equals(other);
     return this.tokenId === other.tokenId;
   }
 
-  public sortsBefore(other: HederaToken): boolean {
+  public sortsBefore(other: UniToken): boolean {
+    if (!(other instanceof HederaToken)) return super.sortsBefore(other);
     return this.tokenId.toLowerCase() < other.tokenId.toLowerCase();
   }
 

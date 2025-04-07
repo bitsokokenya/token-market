@@ -12,12 +12,12 @@ export function useTokenFunctions(token: HederaToken | undefined) {
 
     try {
       // Create Hedera client
-      const client = Client.forMainnet(); // or forTestnet() based on your network
-
+      const client = Client.forTestnet(); // or forTestnet() based on your network
+      console.log('accountId', accountId);
       // Create the balance query using the account ID directly (already in 0.0.XXXX format)
       const query = new AccountBalanceQuery()
         .setAccountId(AccountId.fromString(accountId));
-
+      console.log('query', query);
       // Execute the query
       const tokenBalance = await query.execute(client);
       

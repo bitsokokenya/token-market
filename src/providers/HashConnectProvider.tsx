@@ -27,61 +27,94 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [connected, setConnected] = useState(false);
   const [accountId, setAccountId] = useState<string | null>(null);
   const [topic, setTopic] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const initializeHashConnect = async () => {
+      if (isInitialized) return;
+
       try {
         const { HashConnect } = await import('hashconnect');
         const hashconnectInstance = new HashConnect(LedgerId.TESTNET, "9df3e28adeb5dbd1df0939d8dfe489f0", {
           name: "BITS | finance",
           description: "token market for managing SME's investments",
-          icons: ["https://tm.bitsoko.org/favicon128.png"],
+          icons: ["https://54879-hedhack.bitsoko.org/favicon128.png"],
           url: "http://tm.bitsoko.org"
         }, true);
+
+        if (!isMounted) return;
 
         setHashconnect(hashconnectInstance);
 
         // Set up event listeners
         hashconnectInstance.pairingEvent.on((data: any) => {
+          if (!isMounted) return;
+          
           console.log("Paired", data);
           if (data.accountIds && data.accountIds.length > 0) {
+            const sessionData = {
+              accountIds: data.accountIds,
+              topic: data.topic,
+              metadata: data.metadata,
+              network: data.network,
+              pairingString: pairingString
+            };
+            localStorage.setItem("hashconnectSession", JSON.stringify(sessionData));
+            
             setAccountId(data.accountIds[0]);
             setConnected(true);
             setTopic(data.topic);
-            console.log("Paired:", data);
-            // Save session data so it can be reused after a reload
-            localStorage.setItem("hashconnectSession", JSON.stringify(data));
           }
         });
 
-        // Handle connection status changes
-        hashconnectInstance.connectionStatusChangeEvent.on((connectionStatus: string) => {
-          console.log("Connection status changed:", connectionStatus);
-          setConnected(connectionStatus === "connected");
+        hashconnectInstance.connectionStatusChangeEvent.on(async (connectionStatus: string) => {
+          if (!isMounted) return;
           
-          // Handle disconnection via the connection status change
-          if (connectionStatus !== "connected") {
+          console.log("Connection status changed:", connectionStatus);
+          
+          if (connectionStatus === "connected") {
+            const existingSession = localStorage.getItem("hashconnectSession");
+            if (existingSession) {
+              try {
+                const sessionData = JSON.parse(existingSession);
+                console.log("Existing session found, reconnecting...", sessionData);
+                
+                if (sessionData.accountIds && sessionData.accountIds.length > 0) {
+                  setAccountId(sessionData.accountIds[0]);
+                  setConnected(true);
+                  setTopic(sessionData.topic);
+                  
+                  if (sessionData.topic) {
+                    try {
+                      await hashconnectInstance.connect();
+                      console.log("Successfully reconnected to existing session");
+                    } catch (error) {
+                      console.error("Failed to reconnect:", error);
+                      localStorage.removeItem("hashconnectSession");
+                      setConnected(false);
+                      setAccountId(null);
+                      setTopic(null);
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error("Failed to parse session:", error);
+                localStorage.removeItem("hashconnectSession");
+              }
+            }
+          } else if (connectionStatus === "disconnected") {
+            setConnected(false);
             setAccountId(null);
             setTopic(null);
             localStorage.removeItem("hashconnectSession");
           }
         });
 
-        // Initialize HashConnect
         await hashconnectInstance.init();
+        setIsInitialized(true);
 
-        // Check for existing session
-        const existingSession = localStorage.getItem("hashconnectSession");
-        if (existingSession) {
-          const sessionData = JSON.parse(existingSession);
-          console.log("Existing session found, reconnecting...");
-          setAccountId(sessionData.accountIds[0]);
-          setTopic(sessionData.topic);
-          setConnected(true);
-        } else {
-          console.log("No existing session found");
-          setConnected(false);
-        }
       } catch (error) {
         console.error("Failed to initialize HashConnect:", error);
       }
@@ -90,16 +123,20 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
     initializeHashConnect();
 
     return () => {
-      if (hashconnect) {
-        //  hashconnect.disconnect();
-      }
+      isMounted = false;
     };
-  }, []);
+  }, [isInitialized]);
 
   const connect = async () => {
     if (hashconnect) {
       try {
-        await hashconnect.openPairingModal();
+        const pairingData = await hashconnect.openPairingModal();
+        if (pairingData && pairingData.pairingString) {
+          setPairingString(pairingData.pairingString);
+          const sessionData = JSON.parse(localStorage.getItem("hashconnectSession") || "{}");
+          sessionData.pairingString = pairingData.pairingString;
+          localStorage.setItem("hashconnectSession", JSON.stringify(sessionData));
+        }
       } catch (error) {
         console.error("Failed to connect:", error);
       }
@@ -131,10 +168,8 @@ export const HashConnectProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       console.log("Sending transaction via HashConnect...");
       
-      // Create transaction data
       const transactionBytes = await transaction.freezeWithSigner(() => { });
       
-      // Request signature from the wallet
       const response = await hashconnect.sendTransaction(topic, {
         topic: topic,
         byteArray: transactionBytes,

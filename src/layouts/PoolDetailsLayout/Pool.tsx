@@ -2,8 +2,10 @@ import { useMemo } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Token, CurrencyAmount } from "@uniswap/sdk-core";
 import { Pool as UniPool } from "@uniswap/v3-sdk";
+import { HederaPool } from "../../utils/pools";
 
 import { useCurrencyConversions } from '../../providers/CurrencyConversionProvider';
+import { useHashConnect } from '../../providers/HashConnectProvider';
 import { HederaToken } from '../../utils/tokens';
 
 import LoadingSpinner from "../../components/Spinner";
@@ -59,14 +61,15 @@ function Pool({
   entity,
   quoteToken,
   baseToken,
-  positions,
   poolLiquidity,
   rawPoolLiquidity,
   currencyPoolUncollectedFees,
   poolUncollectedFees,
+  positions,
   poolInfo,
 }: PoolProps) {
   const { convertToGlobalFormatted } = useCurrencyConversions();
+  const { accountId } = useHashConnect();
 
   const totalValue = useMemo(() => {
     if (!poolLiquidity || !poolUncollectedFees) {
@@ -79,13 +82,65 @@ function Pool({
     let amount0 = CurrencyAmount.fromRawAmount(entity.token0, "0");
     let amount1 = CurrencyAmount.fromRawAmount(entity.token1, "0");
 
-    positions.forEach((position) => {
-      amount0 = amount0.add(position.entity.amount0);
-      amount1 = amount1.add(position.entity.amount1);
+    // Create HederaToken instances from the pool tokens
+    const hederaToken0 = new HederaToken(
+      entity.token0.chainId,
+      entity.token0.address,
+      entity.token0.decimals,
+      entity.token0.symbol || 'TOKEN0',
+      entity.token0.name || 'Token 0',
+      entity.token0.address // Using address as tokenId for now
+    );
+
+    const hederaToken1 = new HederaToken(
+      entity.token1.chainId,
+      entity.token1.address,
+      entity.token1.decimals,
+      entity.token1.symbol || 'TOKEN1',
+      entity.token1.name || 'Token 1',
+      entity.token1.address // Using address as tokenId for now
+    );
+
+    // Create a HederaPool instance for calculations
+    const hederaPool = new HederaPool(
+      hederaToken0,
+      hederaToken1,
+      entity.fee,
+      60, // tickSpacing
+      poolInfo?.liquidity || "0",
+      poolInfo?.sqrtRatioX96 || "0",
+      poolInfo?.tickCurrent || 0
+    );
+
+    positions.forEach((customPosition) => {
+      // Convert position liquidity to token amounts using HederaPool
+      const [token0Amount, token1Amount] = hederaPool.getTokenAmountsForLiquidity(
+        customPosition.entity.liquidity.toString(),
+        customPosition.entity.tickLower,
+        customPosition.entity.tickUpper
+      );
+      
+      // Convert decimal amounts to raw amounts based on token decimals
+      const token0RawAmount = BigInt(
+        Math.floor(parseFloat(token0Amount.toExact()) * Math.pow(10, entity.token0.decimals))
+      );
+      const token1RawAmount = BigInt(
+        Math.floor(parseFloat(token1Amount.toExact()) * Math.pow(10, entity.token1.decimals))
+      );
+
+      // Convert raw amounts to CurrencyAmount
+      amount0 = amount0.add(CurrencyAmount.fromRawAmount(
+        entity.token0,
+        token0RawAmount.toString()
+      ));
+      amount1 = amount1.add(CurrencyAmount.fromRawAmount(
+        entity.token1,
+        token1RawAmount.toString()
+      ));
     });
 
     return [amount0, amount1];
-  }, [entity, positions]);
+  }, [entity, positions, poolInfo]);
 
   const totalFees = useMemo(() => {
     if (!poolUncollectedFees) return CurrencyAmount.fromRawAmount(entity.token0, "0");

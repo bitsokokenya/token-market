@@ -231,7 +231,7 @@ const HomeLayout = () => {
           <>
             <table className="table-auto w-full text-high text-0.875 overflow-x-auto">
               <thead className="border-b border-element-10">
-                <tr className="align-middle">
+                <tr className="align-middle"> 
                   <th className="md:px-6 py-4 whitespace-nowrap font-medium text-left">Pool</th>
                   <th className="text-right px-6 py-4 whitespace-nowrap font-medium">
                     Current Price
@@ -278,7 +278,7 @@ const HomeLayout = () => {
                     currencyPoolUncollectedFees,
                   }: PoolState) => (
                     <PoolRow
-                      key={key}
+                      key={address}
                       onClick={() => handleRowClick(address)}
                       entity={entity}
                       quoteToken={quoteToken}

@@ -215,6 +215,56 @@ export function useFetchPositions(accountId: string | null) {
         }
 
         const data = await response.json();
+        /*
+        sample response:
+        [
+  {
+    "tokenSN": 160,
+    "accountId": "0.0.12345",
+    "deleted": false,
+    "createdAt": "1697779560.762467685",
+    "updatedAt": "1698287867.747005303",
+    "token0": {
+      "decimals": 8,
+      "icon": "/images/tokens/hbar.png",
+      "id": "0.0.59042",
+      "name": "WHBAR [new]",
+      "price": "100000000",
+      "priceUsd": 0.0598982,
+      "symbol": "HBAR",
+      "dueDiligenceComplete": true,
+      "isFeeOnTransferToken": false,
+      "description": "Hedera is a public, open source, proof-of-stake network, with native cryptocurrency HBAR...",
+      "website": "https://hedera.com/",
+      "twitterHandle": "hedera",
+      "timestampSecondsLastListingChange": 0
+    },
+    "token1": {
+      "decimals": 6,
+      "icon": "/images/tokens/sauce.png",
+      "id": "0.0.61266",
+      "name": "SAUCE",
+      "price": "24609831",
+      "priceUsd": 0.0147408436767304,
+      "symbol": "SAUCE",
+      "dueDiligenceComplete": true,
+      "isFeeOnTransferToken": false,
+      "description": "SaucerSwap is an open source and non-custodial AMM protocol native to Hedera...",
+      "website": "https://www.saucerswap.finance/",
+      "twitterHandle": "SaucerSwapLabs",
+      "timestampSecondsLastListingChange": 1
+    },
+    "fee": 3000,
+    "tickUpper": -1620,
+    "tickLower": -2820,
+    "liquidity": "3249809842",
+    "feeGrowthInside0LastX128": "2546890053379859378523505791149585",
+    "feeGrowthInside1LastX128": "1232345435623984092384092380932840",
+    "tokensOwed0": "10",
+    "tokensOwed1": "20"
+  }
+]
+        */
         console.log('Raw API Response:', data);
 
         // Check if data is an array
@@ -286,6 +336,53 @@ export function useFetchPools(
         const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/full`;
         console.log('Fetching from URL:', url);
         const res = await fetch(url);
+
+        /*
+        sample response:
+        [
+  {
+    "id": 1,
+    "contractId": "0.0.3948521",
+    "tokenA": {
+      "decimals": 6,
+      "icon": "/images/tokens/usdc.png",
+      "id": "0.0.456858",
+      "name": "USD Coin",
+      "price": "1678944894",
+      "priceUsd": 1.00375771,
+      "symbol": "USDC",
+      "dueDiligenceComplete": true,
+      "isFeeOnTransferToken": false,
+      "description": "USDC is a fully collateralized U.S. dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges...",
+      "website": "https://www.circle.com/en/usdc-multichain/hedera",
+      "twitterHandle": "circle",
+      "timestampSecondsLastListingChange": 0
+    },
+    "tokenB": {
+      "decimals": 6,
+      "icon": "/images/tokens/usdc.png",
+      "id": "0.0.1055459",
+      "name": "USD Coin",
+      "price": "1681384187",
+      "priceUsd": 1.00521604,
+      "symbol": "USDC[hts]",
+      "dueDiligenceComplete": true,
+      "isFeeOnTransferToken": false,
+      "description": "USDC is a fully collateralized U.S. dollar stablecoin...",
+      "website": "https://www.circle.com/en/usdc-multichain/ethereum",
+      "twitterHandle": "circle",
+      "timestampSecondsLastListingChange": 0
+    },
+    "amountA": "6313040",
+    "amountB": "6313042",
+    "fee": 500,
+    "sqrtRatioX96": "79228162514992909706099547250",
+    "tickCurrent": 0,
+    "liquidity": "10878982596"
+  }
+]
+
+        */
         if (!res.ok) {
           console.error('Failed to fetch pools:', {
             status: res.status,
@@ -514,20 +611,24 @@ async function fetchTokenMetadata(): Promise<Map<string, any>> {
 
 export function useFetchTokenBalances(
   chainId: number,
-  address: string,
+  address: string | null,
 ): { loading: boolean; tokenBalances: TokenBalance[] } {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
   const { accountId, hashconnect } = useHashConnect();
 
   useEffect(() => {
     const _call = async () => {
-      setLoading(true);
+      if (!address) {
+        setTokenBalances([]);
+        return;
+      }
 
+      setLoading(true);
+      try {
         // Get token metadata from cache or fetch if needed
         const tokenMetadataMap = await fetchTokenMetadata();
 
-      try {
         // Use the accountId from HashConnect provider if available, otherwise fallback to the provided address
         
         // To-Do
@@ -680,4 +781,37 @@ export function useFetchPoolData(poolId: number): { loading: boolean; poolData: 
   }, [poolId]);
 
   return { loading, poolData };
+}
+
+export function useFilteredPools(
+  pools: any[],
+  positions: Position[],
+  showOnlyUserPositions: boolean
+): any[] {
+  // If we're showing all pools or have no positions data, return all pools
+  if (!showOnlyUserPositions || !positions.length) {
+    return pools;
+  }
+
+  // Extract token pairs from positions
+  const userPositionPairs = positions.map(position => ({
+    token0Id: position.token0.id,
+    token1Id: position.token1.id
+  }));
+
+  // Filter pools to only include those where the user has a position
+  return pools.filter(pool => {
+    // Extract pool token IDs
+    const poolTokenAId = pool.token0?.address || pool.tokenA?.id;
+    const poolTokenBId = pool.token1?.address || pool.tokenB?.id;
+
+    // Check if any user position matches this pool's tokens (in either order)
+    return userPositionPairs.some(
+      pair => (
+        // Check both possible token orderings
+        (pair.token0Id === poolTokenAId && pair.token1Id === poolTokenBId) ||
+        (pair.token0Id === poolTokenBId && pair.token1Id === poolTokenAId)
+      )
+    );
+  });
 }

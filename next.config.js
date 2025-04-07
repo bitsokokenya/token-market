@@ -39,6 +39,7 @@ const nextConfig = {
   devServer: {
     allowedHosts: ['54879-hedhack.bitsoko.org'],
   },
+  allowedDevOrigins: ['*.bitsoko.org'],
 };
 
 module.exports = nextConfig;

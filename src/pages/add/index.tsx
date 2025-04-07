@@ -41,29 +41,29 @@ function hederaIdToEvmAddress(hederaId: string): string {
   return `0x${hex}`;
 }
 
-// Add function to check if a pool exists
+// Add function to check if a pool exists and get creation fee
 async function checkIfPoolExists(
   token0: string, 
   token1: string, 
   fee: number, 
   isTestnet = ISTESTNET
-): Promise<{ exists: boolean; address: string | null; error?: any }> {
+): Promise<{ exists: boolean; address: string | null; feeInHbar?: string; error?: any }> {
   try {
     // Get appropriate network configuration based on environment
+    // accordion start step 1
     const networkConfig = isTestnet 
       ? {
           rpcUrl: HEDERA_TESTNET_RPC,
-          factoryAddress: FACTORY_TESTNET_ADDRESS, // Testnet factory
+          factoryAddress: FACTORY_TESTNET_ADDRESS,
           chainId: 296
         }
       : {
           rpcUrl: HEDERA_MAINNET_RPC,
-          factoryAddress: FACTORY_MAINNET_ADDRESS, // Mainnet factory
+          factoryAddress: FACTORY_MAINNET_ADDRESS,
           chainId: 295
         };
     
-        console.log('USING config:'+JSON.stringify(networkConfig));
-    // Set up ethers provider
+    // ethers provider
     const ethers = require('ethers');
     const provider = new ethers.providers.JsonRpcProvider(
       networkConfig.rpcUrl,
@@ -82,7 +82,8 @@ async function checkIfPoolExists(
       factoryInterface, 
       provider
     );
-    
+
+
     // Convert Hedera token IDs to EVM addresses
     const token0Evm = hederaIdToEvmAddress(token0);
     const token1Evm = hederaIdToEvmAddress(token1);
@@ -92,10 +93,43 @@ async function checkIfPoolExists(
     
     // If the pool doesn't exist, this will be the zero address
     if (poolAddress === '0x0000000000000000000000000000000000000000') {
-      return { exists: false, address: null };
+      console.log({ exists: false, address: null, });
+      //return { exists: false, address: null };
     }
     
-    return { exists: true, address: poolAddress };
+    console.log({ exists: true, address: poolAddress });
+    //return { exists: true, address: poolAddress };
+
+    // accordion end step 1
+
+    // accordion start step 2
+
+
+    // Get pool creation fee in tinycent
+    //const result = await factoryContract.mintFee();
+    //const tinycent = Number(result);
+    const tinycent = 3000;
+    // Get the current exchange rate via REST API
+    const url = `https://${isTestnet ? 'testnet' : 'mainnet'}.mirrornode.hedera.com/api/v1/network/exchangerate`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const currentRate = data.current_rate;
+    const centEquivalent = Number(currentRate.cent_equivalent);
+    const hbarEquivalent = Number(currentRate.hbar_equivalent);
+    const centToHbarRatio = centEquivalent/hbarEquivalent;
+
+    // Calculate the fee in terms of HBAR
+    const tinybar = Math.floor(tinycent / centToHbarRatio);
+    const poolCreateFeeInHbar = (tinybar / 100_000_000).toFixed(8); // Convert tinybar to HBAR
+
+
+    console.log({ feeInHbar: poolCreateFeeInHbar });
+
+    // accordion end step 2
+
+    // accordion start step 3
+
+
   } catch (error) {
     console.error('Error checking if pool exists:', error);
     return { exists: false, address: null, error };
@@ -103,7 +137,8 @@ async function checkIfPoolExists(
 }
 
 function AddLiquidity() {
-  const chainId = useChainId();
+  //const chainId = useChainId();
+  const chainId = 296;
   const { query } = useRouter();
   const router = useRouter();
   const { baseToken: baseTokenSymbol, quoteToken: quoteTokenSymbol, fee, tab } = query;

@@ -33,24 +33,9 @@ export class HederaToken {
   public equals(other: HederaToken): boolean {
     return this.tokenId === other.tokenId;
   }
-
-  get hederaAccountId(): string {
-    return this.tokenId;
-  }
-
-  getEvmAddress(): string {
-    return this.address;
-  }
-
-  getHederaAccountId(): string {
-    return this.tokenId;
-  }
 }
 
-export const ISTESTNET = true;
-
 // Hedera token definitions
-//  HBAR: new HederaToken('0.0.1183558', 18, 'HBAR', 'Hedera') > ('tokenid', decimals, 'symbol', 'name')
 export const HEDERA_TOKENS = {
   HBAR: new HederaToken('0.0.1183558', 18, 'HBAR', 'Hedera'),
   USDC: new HederaToken('0.0.1183558', 6, 'USDC', 'USD Coin'),
@@ -73,24 +58,8 @@ export const BLOCK_EXPLORER_URL: { [key: number]: string } = {
 };
 
 // SaucerSwap API URL
-// testnet
 export const SAUCERSWAP_TESTNET_API_URL = 'https://test-api.saucerswap.finance';
-// mainnet
 export const SAUCERSWAP_MAINNET_API_URL = 'https://api.saucerswap.finance';
-
-
-    // Factory address
-  export  const FACTORY_TESTNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b';
-  export  const FACTORY_MAINNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b';
-    
-    // Hedera testnet JSON RPC URL
-  export  const HEDERA_TESTNET_RPC = 'https://testnet.hashio.io/api';
-  // Hedera testnet JSON RPC URL
-export  const HEDERA_MAINNET_RPC = 'https://mainnet.hashio.io/api';
-
-
-    
-
 
 // Application routes
 export const ROUTES = {
@@ -123,3 +92,18 @@ export const LABELS = {
   },
   LIQUIDITY: 'Total liquidity for a position, excluding fees',
 };
+
+// Factory contract addresses
+export const FACTORY_TESTNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b'; // Replace with actual testnet factory address
+export const FACTORY_MAINNET_ADDRESS = '0x0000000000000000000000000000000000000000'; // Replace with actual mainnet factory address
+
+// Hedera RPC URLs
+export const HEDERA_TESTNET_RPC = 'https://testnet.hashio.io/api';
+export const HEDERA_MAINNET_RPC = 'https://mainnet.hashio.io/api';
+
+// Environment flag
+export const ISTESTNET = true; // Or false for mainnet
+
+export const SAUCERSWAP_API_URL = ISTESTNET
+  ? 'https://test-api.saucerswap.finance' // Verify this URL
+  : 'https://api.saucerswap.finance';     // Verify this URL
