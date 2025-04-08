@@ -7,6 +7,7 @@ A decentralized platform built on Hedera blockchain enabling SMEs (Small, Medium
 <div style="display:inline-block;">
 <img src="screenshot/bits-home.png" alt="home" width="200"/>
 <img src="screenshot/bits-existing.png" alt="existing" width="200"/>
+<img src="screenshot/bits-pool.png" alt="pool" width="200"/>
 
 </div>
 
