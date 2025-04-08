@@ -1,6 +1,8 @@
 # Token Market Platform
 
 A decentralized platform built on Hedera blockchain enabling SMEs (Small, Medium, and Micro Enterprises) to raise funding through tokenization against Bitcoin and HBAR using automated market maker (AMM) algorithms.
+
+
 <img src="screenshot/bits-landing.png" alt="landing" width="600"/>
 <div style="display:inline-block;">
 <img src="screenshot/bits-home.png" alt="home" width="200"/>

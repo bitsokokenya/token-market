@@ -1,7 +1,36 @@
 import { Token, Percent } from '@uniswap/sdk-core';
 import { BigNumber } from '@ethersproject/bignumber';
-import { ChainID } from '../types/enums';
 import { AccountId } from '@hashgraph/sdk';
+
+// --- Ensure these are exported ---
+export const HEDERA_TESTNET_CHAIN_ID = 296;
+export const HEDERA_MAINNET_CHAIN_ID = 295;
+
+// Environment flag - THIS SHOULD BE THE SOURCE OF TRUTH
+export const ISTESTNET = true; // Or false for mainnet
+
+// Determine current Chain ID based on ISTESTNET flag
+export const CURRENT_CHAIN_ID = ISTESTNET ? HEDERA_TESTNET_CHAIN_ID : HEDERA_MAINNET_CHAIN_ID;
+
+// Hedera RPC URLs - Use ISTESTNET flag
+export const HEDERA_RPC_URL = ISTESTNET
+  ? 'https://testnet.hashio.io/api'
+  : 'https://mainnet.hashio.io/api';
+
+// Factory contract addresses - Use ISTESTNET flag
+export const FACTORY_ADDRESS = ISTESTNET
+  ? '0x99e7ad739dd689cc8df36ed24ae876a989238b6b' // Actual testnet factory address
+  : '0x0000000000000000000000000000000000000000'; // Replace with actual mainnet factory address
+
+// Mirror Node API URL - Use ISTESTNET flag
+export const MIRROR_NODE_URL = ISTESTNET
+  ? 'https://testnet.mirrornode.hedera.com'
+  : 'https://mainnet.mirrornode.hedera.com';
+
+export const SAUCERSWAP_API_URL = ISTESTNET
+  ? 'https://test-api.saucerswap.finance'
+  : 'https://api.saucerswap.finance';
+// --- End Exports ---
 
 // Function to convert Hedera token ID to EVM address
 export function hederaTokenIdToEvmAddress(tokenId: string): string {
@@ -22,7 +51,7 @@ export class HederaToken {
   public readonly address: string;
 
   constructor(tokenId: string, decimals: number, symbol: string, name: string) {
-    this.chainId = ChainID.HederaTestnet;
+    this.chainId = CURRENT_CHAIN_ID;
     this.tokenId = tokenId;
     this.decimals = decimals;
     this.symbol = symbol;
@@ -53,8 +82,8 @@ export const Q128 = BigNumber.from(2).pow(128);
 
 // Block explorer URL for Hedera
 export const BLOCK_EXPLORER_URL: { [key: number]: string } = {
-  [ChainID.HederaTestnet]: 'https://hashscan.io/testnet',
-  [ChainID.HederaMainnet]: 'https://hashscan.io/mainnet',
+  [HEDERA_TESTNET_CHAIN_ID]: 'https://hashscan.io/testnet',
+  [HEDERA_MAINNET_CHAIN_ID]: 'https://hashscan.io/mainnet',
 };
 
 // SaucerSwap API URL
@@ -92,18 +121,3 @@ export const LABELS = {
   },
   LIQUIDITY: 'Total liquidity for a position, excluding fees',
 };
-
-// Factory contract addresses
-export const FACTORY_TESTNET_ADDRESS = '0x99e7ad739dd689cc8df36ed24ae876a989238b6b'; // Replace with actual testnet factory address
-export const FACTORY_MAINNET_ADDRESS = '0x0000000000000000000000000000000000000000'; // Replace with actual mainnet factory address
-
-// Hedera RPC URLs
-export const HEDERA_TESTNET_RPC = 'https://testnet.hashio.io/api';
-export const HEDERA_MAINNET_RPC = 'https://mainnet.hashio.io/api';
-
-// Environment flag
-export const ISTESTNET = true; // Or false for mainnet
-
-export const SAUCERSWAP_API_URL = ISTESTNET
-  ? 'https://test-api.saucerswap.finance' // Verify this URL
-  : 'https://api.saucerswap.finance';     // Verify this URL

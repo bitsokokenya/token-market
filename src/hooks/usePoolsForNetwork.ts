@@ -1,25 +1,18 @@
 import { useMemo, useEffect, useState } from 'react';
 import { CurrencyAmount, Currency, Token } from '@uniswap/sdk-core';
 import { Position, Pool, tickToPrice } from '@uniswap/v3-sdk';
-import { useFetchPools, Position as FetchPosition, PoolStateV2 } from './fetch';
+import { useFetchPools, Position as APIPosition, PoolStateV2, PoolData } from './fetch';
 import { useFetchPositions } from './fetch';
 import { HederaToken } from '../utils/tokens';
-import { getQuoteAndBaseToken } from '../utils/tokens';
 import { BigNumber } from 'ethers';
+import { CustomPosition } from '../types/seedle';
+import JSBI from 'jsbi';
 
-interface SaucerSwapPosition {
-  positionId: number;
-  token0: {
-    id: string;
-  };
-  token1: {
-    id: string;
-  };
-  fee: number;
-  liquidity: CurrencyAmount<Currency>;
-  tickLower: number;
-  tickUpper: number;
-  poolAddress: string;
+export interface FinalPoolData extends Omit<PoolStateV2, 'token0' | 'token1'> {
+  entity: Pool;
+  token0: HederaToken;
+  token1: HederaToken;
+  positions: CustomPosition[];
 }
 
 export function usePoolsForNetwork(
@@ -28,14 +21,17 @@ export function usePoolsForNetwork(
   onlyForInjected: boolean,
   addresses?: string[],
   injectedAddress?: string,
-) {
-  const [poolsLoading, setPoolsLoading] = useState(false);
+): {
+  pools: FinalPoolData[];
+  loading: boolean;
+  poolAddresses: string[];
+} {
+  const [poolsLoading, setPoolsLoading] = useState(true);
   const [pools, setPools] = useState<PoolStateV2[]>([]);
   const [poolAddresses, setPoolAddresses] = useState<string[]>([]);
-  const [allPositions, setAllPositions] = useState<SaucerSwapPosition[]>([]);
-  const [positionsLoading, setPositionsLoading] = useState(false);
+  const [allPositions, setAllPositions] = useState<APIPosition[]>([]);
+  const [positionsLoading, setPositionsLoading] = useState(true);
 
-  // Memoize the addresses array to prevent unnecessary re-renders
   const memoizedAddresses = useMemo(() => {
     if (onlyForInjected && injectedAddress) {
       return [injectedAddress];
@@ -46,115 +42,105 @@ export function usePoolsForNetwork(
     return ['all'];
   }, [onlyForInjected, injectedAddress, addresses]);
 
-  // Fetch pools with memoized parameters
   const { loading: poolsFetching, poolStates: fetchedPools } = useFetchPools(
     chainId,
     memoizedAddresses,
   );
 
-  // Update pools state only when fetchedPools changes
+  useEffect(() => setPoolsLoading(poolsFetching), [poolsFetching]);
   useEffect(() => {
     if (fetchedPools) {
       setPools(fetchedPools);
-      setPoolsLoading(false);
     }
   }, [fetchedPools]);
 
-  // Fetch positions only when needed
-  const { loading: positionsFetching, positions } = useFetchPositions(
-    onlyForInjected ? injectedAddress || null : null
+  const { loading: positionsFetching, positions: fetchedRawPositions } = useFetchPositions(
+    injectedAddress && onlyForInjected ? injectedAddress : null
   );
 
-  // Update positions when they change
+  useEffect(() => setPositionsLoading(positionsFetching), [positionsFetching]);
   useEffect(() => {
-    if (positions) {
-      // Convert Position[] to SaucerSwapPosition[]
-      const convertedPositions: SaucerSwapPosition[] = positions.map(pos => {
-        const token0 = new Token(
-          chainId,
-          pos.token0.id,
-          parseInt(pos.token0.decimals.toString(), 10),
-          pos.token0.symbol,
-          pos.token0.name,
-        );
-        const token1 = new Token(
-          chainId,
-          pos.token1.id,
-          parseInt(pos.token1.decimals.toString(), 10),
-          pos.token1.symbol,
-          pos.token1.name,
-        );
-
-        return {
-          positionId: pos.positionId,
-          token0: { id: pos.token0.id },
-          token1: { id: pos.token1.id },
-          fee: pos.fee,
-          liquidity: CurrencyAmount.fromRawAmount(token0, pos.liquidity.toString()),
-          tickLower: pos.tickLower,
-          tickUpper: pos.tickUpper,
-          poolAddress: `${pos.token0.id}-${pos.token1.id}-${pos.fee}`,
-        };
-      });
-      setAllPositions(convertedPositions);
-      setPositionsLoading(false);
+    if (fetchedRawPositions) {
+      setAllPositions(fetchedRawPositions);
     }
-  }, [positions, chainId]);
+  }, [fetchedRawPositions]);
 
-  // Memoize the pool addresses calculation
   const memoizedPoolAddresses = useMemo(() => {
-    if (!allPositions.length) return [];
-    return Array.from(new Set(allPositions.map((p) => p.poolAddress)));
-  }, [allPositions]);
+    if (!pools.length) return [];
+    return Array.from(new Set(pools.map((p) => p.address)));
+  }, [pools]);
 
-  // Update pool addresses only when memoizedPoolAddresses changes
-  useEffect(() => {
-    setPoolAddresses(memoizedPoolAddresses);
-  }, [memoizedPoolAddresses]);
+  useEffect(() => setPoolAddresses(memoizedPoolAddresses), [memoizedPoolAddresses]);
 
-  // Memoize the final pools array
   const finalPools = useMemo(() => {
     if (!pools.length) return [];
+    console.log('Recalculating finalPools...', { numPools: pools.length, numPositions: allPositions.length });
 
-    return pools.map((pool) => {
+    return pools.map((poolState) => {
       const token0 = new HederaToken(
         chainId,
-        pool.token0.address,
-        parseInt(pool.token0.decimals, 10),
-        pool.token0.symbol,
-        pool.token0.name,
+        poolState.token0.address,
+        poolState.token0.decimals,
+        poolState.token0.symbol ?? '',
+        poolState.token0.name ?? 'Unknown'
       );
       const token1 = new HederaToken(
         chainId,
-        pool.token1.address,
-        parseInt(pool.token1.decimals, 10),
-        pool.token1.symbol,
-        pool.token1.name,
+        poolState.token1.address,
+        poolState.token1.decimals,
+        poolState.token1.symbol ?? '',
+        poolState.token1.name ?? 'Unknown'
       );
 
       const entity = new Pool(
         token0,
         token1,
-        pool.fee,
-        pool.sqrtPriceX96,
-        pool.liquidity,
-        pool.tick,
+        poolState.fee,
+        poolState.sqrtPriceX96,
+        poolState.liquidity,
+        poolState.tick,
       );
 
-      const { quoteToken, baseToken } = getQuoteAndBaseToken(token0, token1);
-      const positions = allPositions.filter((p) => p.poolAddress === pool.address);
+      const associatedApiPositions = allPositions.filter((p: APIPosition) => {
+        return (
+          (p.token0.id === token0.hederaId && p.token1.id === token1.hederaId) ||
+          (p.token0.id === token1.hederaId && p.token1.id === token0.hederaId)
+        ) && p.fee === poolState.fee;
+      });
+
+      console.log(`Pool ${poolState.address} (${token0.symbol}/${token1.symbol}) matched ${associatedApiPositions.length} positions.`);
+
+      const finalAssociatedPositions: CustomPosition[] = associatedApiPositions.map((p: APIPosition) => {
+        const liquidity = JSBI.BigInt(p.liquidity.toString());
+        const positionEntity = new Position({
+          pool: entity,
+          tickLower: p.tickLower,
+          tickUpper: p.tickUpper,
+          liquidity: liquidity,
+        });
+        
+        return {
+          id: p.positionId,
+          entity: positionEntity,
+          tickLower: p.tickLower,
+          tickUpper: p.tickUpper,
+          positionLiquidity: p.liquidity.toString(),
+          uncollectedFees: [p.tokensOwed0 || '0', p.tokensOwed1 || '0'],
+          positionUncollectedFees: p.tokensOwed0 || '0',
+          transactions: p.transactions || []
+        } as unknown as CustomPosition;
+      });
 
       return {
-        ...pool,
+        ...poolState,
         entity,
-        baseToken,
-        quoteToken,
-        positions,
+        token0: token0,
+        token1: token1,
+        positions: finalAssociatedPositions,
       };
     });
   }, [pools, allPositions, chainId]);
 
-  // Debug logging
   useEffect(() => {
     console.log('Pool fetching status:', {
       poolsLoading,
@@ -166,7 +152,7 @@ export function usePoolsForNetwork(
 
   return {
     pools: finalPools,
-    loading: poolsLoading || positionsLoading || poolsFetching || positionsFetching,
+    loading: poolsLoading || positionsLoading,
     poolAddresses,
   };
 }

@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { uniqBy } from 'lodash';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useHashConnect } from '../providers/HashConnectProvider';
-import { AccountBalanceQuery, Long, TokenId } from '@hashgraph/sdk';
+import { AccountBalanceQuery, Long, TokenId, AccountId } from '@hashgraph/sdk';
 import { Client } from '@hashgraph/sdk';
+import { Token } from '@uniswap/sdk-core';
 
 import { TxTypes } from '../types/enums';
-import { SAUCERSWAP_TESTNET_API_URL, SAUCERSWAP_MAINNET_API_URL } from '../common/constants';
+import { SAUCERSWAP_API_URL } from '../common/constants';
 
 export interface TransactionV2 {
   id: string;
@@ -38,8 +39,8 @@ export interface PoolStateV2 {
   address: string;
   tickSpacing: number;
   fee: number;
-  token0: any;
-  token1: any;
+  token0: Token;
+  token1: Token;
   sqrtPriceX96: string;
   liquidity: string;
   tick: number;
@@ -66,7 +67,12 @@ interface UncollectedFeesResult {
 export interface TokenBalance {
   address: string;
   balance: string;
-  metadata: { symbol: string; name: string; logo: string; decimals: number };
+  metadata: {
+    symbol: string;
+    name: string;
+    logo: string;
+    decimals: number;
+  };
   priceTick: number | null;
 }
 
@@ -194,7 +200,7 @@ export function useFetchPositions(accountId: string | null) {
       setError(null);
 
       try {
-        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/nfts/${accountId}/positions`;
+        const url = `${SAUCERSWAP_API_URL}/v2/nfts/${accountId}/positions`;
         console.log('Fetching positions from URL:', url);
         
         const response = await fetch(url, {
@@ -316,7 +322,7 @@ export function useFetchPools(
   addresses: string[],
 ): { loading: boolean; poolStates: PoolStateV2[] } {
   const [loading, setLoading] = useState(true);
-  const [poolStates, setPoolStates] = useState([]);
+  const [poolStates, setPoolStates] = useState<PoolStateV2[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -333,7 +339,7 @@ export function useFetchPools(
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/full`;
+        const url = `${SAUCERSWAP_API_URL}/v2/pools/full`;
         console.log('Fetching from URL:', url);
         const res = await fetch(url);
 
@@ -398,35 +404,56 @@ export function useFetchPools(
         const pools = await res.json();
         console.log('Received pools:', {
           totalPools: pools.length,
-          samplePool: pools[0]
+          samplePool: pools[0],
+          samplePool2: pools[3]
         });
-
+        console.log('Pools:', pools);
 
         // Filter pools if not fetching all
         const filteredPools = addresses.includes('all') 
           ? pools 
-          : pools.filter((pool: any) => addresses.includes(pool.contractId.toLowerCase()));
+          : pools.filter((pool: PoolData) => addresses.includes(pool.contractId.toLowerCase()));
 
-        const formattedPools = filteredPools.map((pool: any) => ({
-          address: pool.contractId,
-          tickSpacing: 1, // SaucerSwap uses fixed tick spacing
-          fee: pool.fee,
-          token0: {
-            address: pool.tokenA.id,
-            decimals: pool.tokenA.decimals,
-            symbol: pool.tokenA.symbol,
-            name: pool.tokenA.name,
-          },
-          token1: {
-            address: pool.tokenB.id,
-            decimals: pool.tokenB.decimals,
-            symbol: pool.tokenB.symbol,
-            name: pool.tokenB.name,
-          },
-          sqrtPriceX96: pool.sqrtRatioX96,
-          liquidity: pool.liquidity,
-          tick: pool.tickCurrent,
-        }));
+        console.log('Filtered pools:', filteredPools);
+
+        const formattedPools: PoolStateV2[] = filteredPools.map((pool: PoolData) => {
+          if (!pool.tokenA || !pool.tokenB) {
+             console.warn('Pool missing token data:', pool);
+             return null;
+          }
+
+          console.log(AccountId.fromString(pool.tokenA.id).toSolidityAddress(), pool.tokenA.id);
+          console.log(AccountId.fromString(pool.tokenB.id).toSolidityAddress(), pool.tokenB.id);
+          // convert token id to solidity address
+
+          // Create Token instances
+          const token0 = new Token(
+            chainId,
+            AccountId.fromString(pool.tokenA.id).toSolidityAddress(),
+            pool.tokenA.decimals,
+            pool.tokenA.symbol,
+            pool.tokenA.name
+          );
+
+          const token1 = new Token(
+            chainId,
+            AccountId.fromString(pool.tokenB.id).toSolidityAddress(),
+            pool.tokenB.decimals,
+            pool.tokenB.symbol,
+            pool.tokenB.name
+          );
+
+          return {
+            address: pool.contractId,
+            tickSpacing: 60,
+            fee: pool.fee,
+            token0: token0,
+            token1: token1,
+            sqrtPriceX96: pool.sqrtRatioX96,
+            liquidity: pool.liquidity,
+            tick: pool.tickCurrent,
+          };
+        }).filter((pool: PoolStateV2 | null): pool is PoolStateV2 => pool !== null);
 
         console.log('Formatted pools:', {
           totalFormattedPools: formattedPools.length,
@@ -512,7 +539,7 @@ export function useFetchPriceFeed(
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/full`;
+        const url = `${SAUCERSWAP_API_URL}/v2/pools/full`;
         const res = await fetch(url);
         if (!res.ok) {
           console.error('Failed to fetch price feed');
@@ -572,7 +599,7 @@ async function fetchTokenMetadata(): Promise<Map<string, any>> {
   }
 
   try {
-    const response = await fetch(`${SAUCERSWAP_TESTNET_API_URL}/tokens/full`);
+    const response = await fetch(`${SAUCERSWAP_API_URL}/tokens/full`);
     if (!response.ok) {
       throw new Error('Failed to fetch token metadata');
     }
@@ -611,7 +638,7 @@ async function fetchTokenMetadata(): Promise<Map<string, any>> {
 
 export function useFetchTokenBalances(
   chainId: number,
-  address: string | null,
+  addressProp: string | null,
 ): { loading: boolean; tokenBalances: TokenBalance[] } {
   const [loading, setLoading] = useState(false);
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
@@ -619,70 +646,51 @@ export function useFetchTokenBalances(
 
   useEffect(() => {
     const _call = async () => {
-      if (!address) {
+      let targetAddress: string | null = null;
+      if (!addressProp) {
         setTokenBalances([]);
         return;
       }
 
+      if (!addressProp.startsWith('0.0.')) {
+        const tokenMetadataMap = await fetchTokenMetadata();
+        const foundToken = Array.from(tokenMetadataMap.values()).find(token => token.symbol === addressProp || token.name === addressProp);
+        if (foundToken) {
+          targetAddress = foundToken.id;
+        }
+      } else {
+        targetAddress = addressProp;
+      }
+
+      if (!targetAddress) {
+        console.error('No account ID available');
+        setTokenBalances([]);
+        setLoading(false);
+        return;
+      }
+
+      let resolvedTargetAddress: string = targetAddress;
+
       setLoading(true);
       try {
-        // Get token metadata from cache or fetch if needed
-        const tokenMetadataMap = await fetchTokenMetadata();
-
-        // Use the accountId from HashConnect provider if available, otherwise fallback to the provided address
+        await fetchTokenMetadata(); // Ensure cache is populated
         
-        // To-Do
-        // if targetAddress is not a valid Hedera address, search  from tokenMetadataMap where the symbol or name is the same as the targetAddress
-        // if found, set targetAddress to the Hedera address
-        // if not found, set targetAddress to null
-        // check if targetAddress is a valid Hedera address
-        //get address from url. for example
-        //  ?addr=0.0....
-        // if found, set address to the Hedera address
-        // if not found, set address to null
-        const urlParams = new URLSearchParams(window.location.search);
-        var address = urlParams.get('addr');
-        address = address || accountId;
-        console.log('address', address, 'accountId', accountId);
-        
-        console.log(JSON.stringify(Array.from(tokenMetadataMap.values())),address);
-
-        if (!address.startsWith('0.0.')) {
-          const foundToken = Array.from(tokenMetadataMap.values()).find(token => token.symbol === address || token.name === address);
-          if (foundToken) {
-            address = foundToken.id;
-          }
+        if (!resolvedTargetAddress.startsWith('0.0.')) { 
+           const foundToken = Array.from(tokenMetadataCache.values()).find(
+              token => token.symbol === resolvedTargetAddress || token.name === resolvedTargetAddress
+           );
+           if (foundToken) {
+              resolvedTargetAddress = foundToken.id; // Update with Hedera ID if found
+              console.log(`Resolved to Hedera ID: ${resolvedTargetAddress}`);
+           } else {
+             console.warn(`Could not resolve symbol/name: ${resolvedTargetAddress}`);
+             setTokenBalances([]); setLoading(false); return; // Stop if resolution fails
+           }
         }
-        const targetAddress = address;
-
         
-
-        console.log('url', urlParams.get('addr'),'address', address, 'accountId', accountId);
-
-
-
-
-
-
-
-
-
-
-        if (!targetAddress) {
-          console.error('No account ID available');
-          setTokenBalances([]);
-          setLoading(false);
-          return;
-        }
-
-        // Create a client instance
+        console.log(`Fetching balances for final address: ${resolvedTargetAddress}`);
         const client = Client.forTestnet();
-        
-        // Create the query
-        const query = new AccountBalanceQuery()
-          .setAccountId(targetAddress);
-
-        // Execute the query
+        const query = new AccountBalanceQuery().setAccountId(resolvedTargetAddress);
         const balance = await query.execute(client);
 
         if (!balance.tokens) {
@@ -691,14 +699,13 @@ export function useFetchTokenBalances(
           return;
         }
 
-        // Format the token balances
         const formattedBalances: TokenBalance[] = [];
         const tokenIds = Array.from(balance.tokens.keys());
         
         tokenIds.forEach((tokenId: TokenId) => {
           const tokenBalance = balance.tokens?.get(tokenId);
           const tokenIdStr = tokenId.toString();
-          const metadata = tokenMetadataMap.get(tokenIdStr) || {
+          const metadata = tokenMetadataCache.get(tokenIdStr) || {
             symbol: 'Unknown',
             name: 'Unknown Token',
             decimals: 18,
@@ -731,14 +738,14 @@ export function useFetchTokenBalances(
       }
     };
 
-    if (!address && !accountId) {
+    if (!addressProp && !accountId) {
       setTokenBalances([]);
       setLoading(false);
       return;
     }
 
     _call();
-  }, [chainId, address, accountId]);
+  }, [chainId, addressProp, accountId]);
 
   return { loading, tokenBalances };
 }
@@ -752,7 +759,7 @@ export function useFetchPoolData(poolId: number): { loading: boolean; poolData: 
       setLoading(true);
 
       try {
-        const url = `${SAUCERSWAP_TESTNET_API_URL}/v2/pools/${poolId}`;
+        const url = `${SAUCERSWAP_API_URL}/v2/pools/${poolId}`;
         const res = await fetch(url);
         if (!res.ok) {
           console.error('Failed to fetch pool data');

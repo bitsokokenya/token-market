@@ -10,13 +10,16 @@ import { useChainId } from '../../hooks/useChainId';
 import { loadTokens, findTokens, TokenListItem } from '../../components/AddLiquidity/utils';
 import { useHashConnect } from '../../providers/HashConnectProvider';
 
-import { FACTORY_TESTNET_ADDRESS,
-   FACTORY_MAINNET_ADDRESS,
-   HEDERA_MAINNET_RPC,
-   HEDERA_TESTNET_RPC,
+import { FACTORY_ADDRESS,
+   HEDERA_RPC_URL,
    ISTESTNET } from '../../common/constants';
 
-import { ABI } from '../../abis/abi'
+import ABI from '../../abis/abi';
+
+import * as ethers from 'ethers';
+import { BigNumber } from 'ethers';
+import { Hbar, HbarUnit } from '@hashgraph/sdk';
+import axios from 'axios';
 
 
 // Import the Hedera ID to EVM address conversion function
@@ -49,40 +52,24 @@ async function checkIfPoolExists(
   isTestnet = ISTESTNET
 ): Promise<{ exists: boolean; address: string | null; feeInHbar?: string; error?: any }> {
   try {
-    // Get appropriate network configuration based on environment
-    // accordion start step 1
-    const networkConfig = isTestnet 
-      ? {
-          rpcUrl: HEDERA_TESTNET_RPC,
-          factoryAddress: FACTORY_TESTNET_ADDRESS,
-          chainId: 296
-        }
-      : {
-          rpcUrl: HEDERA_MAINNET_RPC,
-          factoryAddress: FACTORY_MAINNET_ADDRESS,
-          chainId: 295
-        };
-    
+    // Get appropriate network configuration based on imported constants
+    const rpcUrl = HEDERA_RPC_URL;
+    const factoryAddress = FACTORY_ADDRESS;
+    const chainId = isTestnet ? 296 : 295;
+    const mirrorNodeBaseUrl = isTestnet ? 'https://testnet.mirrornode.hedera.com' : 'https://mainnet.mirrornode.hedera.com';
+
     // ethers provider
-    const ethers = require('ethers');
-    const provider = new ethers.providers.JsonRpcProvider(
-      networkConfig.rpcUrl,
-      {
-        name: isTestnet ? 'hedera-testnet' : 'hedera-mainnet',
-        chainId: networkConfig.chainId,
-      }
-    );
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl, chainId);
     
-    // Create contract interface
+    // Create contract interface using the Factory ABI
     const factoryInterface = new ethers.utils.Interface(ABI);
     
     // Initialize the factory contract
     const factoryContract = new ethers.Contract(
-      networkConfig.factoryAddress, 
+      factoryAddress, 
       factoryInterface, 
       provider
     );
-
 
     // Convert Hedera token IDs to EVM addresses
     const token0Evm = hederaIdToEvmAddress(token0);
@@ -91,48 +78,54 @@ async function checkIfPoolExists(
     // Call getPool function to check if pool exists
     const poolAddress = await factoryContract.getPool(token0Evm, token1Evm, fee);
     
-    // If the pool doesn't exist, this will be the zero address
-    if (poolAddress === '0x0000000000000000000000000000000000000000') {
-      console.log({ exists: false, address: null, });
-      //return { exists: false, address: null };
+    // Check if pool exists (address is not zero address)
+    const poolExists = poolAddress && poolAddress !== ethers.constants.AddressZero;
+
+    let poolCreateFeeInHbar: string | undefined = undefined;
+
+    // Calculate creation fee ONLY if the pool does NOT exist
+    if (!poolExists) {
+      console.log('Pool does not exist, calculating creation fee...');
+      try {
+        // Get pool creation fee in tinycent
+        const mintFeeResult = await factoryContract.mintFee();
+        const tinycent = Number(mintFeeResult);
+
+        // Get the current exchange rate via REST API
+        const exchangeRateUrl = `${mirrorNodeBaseUrl}/api/v1/network/exchangerate`;
+        const response = await axios.get(exchangeRateUrl);
+        const currentRate = response.data.current_rate;
+        const centEquivalent = Number(currentRate.cent_equivalent);
+        const hbarEquivalent = Number(currentRate.hbar_equivalent);
+        
+        if (hbarEquivalent > 0 && centEquivalent > 0) {
+          const centToHbarRatio = centEquivalent / hbarEquivalent;
+          const tinybarBigNum = BigNumber.from(Math.round(tinycent / centToHbarRatio));
+          poolCreateFeeInHbar = Hbar.fromTinybars(tinybarBigNum.toString()).toString();
+          console.log('Calculated pool creation fee:', poolCreateFeeInHbar);
+        } else {
+          console.warn('Invalid exchange rate data received.');
+          poolCreateFeeInHbar = 'Error calculating fee';
+        }
+      } catch (feeError) {
+        console.error('Error calculating pool creation fee:', feeError);
+        poolCreateFeeInHbar = 'Error calculating fee';
+      }
+    } else {
+        console.log('Pool exists at address:', poolAddress);
     }
-    
-    console.log({ exists: true, address: poolAddress });
-    //return { exists: true, address: poolAddress };
 
-    // accordion end step 1
-
-    // accordion start step 2
-
-
-    // Get pool creation fee in tinycent
-    //const result = await factoryContract.mintFee();
-    //const tinycent = Number(result);
-    const tinycent = 3000;
-    // Get the current exchange rate via REST API
-    const url = `https://${isTestnet ? 'testnet' : 'mainnet'}.mirrornode.hedera.com/api/v1/network/exchangerate`;
-    const response = await fetch(url);
-    const data = await response.json();
-    const currentRate = data.current_rate;
-    const centEquivalent = Number(currentRate.cent_equivalent);
-    const hbarEquivalent = Number(currentRate.hbar_equivalent);
-    const centToHbarRatio = centEquivalent/hbarEquivalent;
-
-    // Calculate the fee in terms of HBAR
-    const tinybar = Math.floor(tinycent / centToHbarRatio);
-    const poolCreateFeeInHbar = (tinybar / 100_000_000).toFixed(8); // Convert tinybar to HBAR
-
-
-    console.log({ feeInHbar: poolCreateFeeInHbar });
-
-    // accordion end step 2
-
-    // accordion start step 3
-
+    // --- ADDED RETURN STATEMENT --- 
+    return {
+       exists: poolExists,
+       address: poolExists ? poolAddress : null,
+       feeInHbar: poolCreateFeeInHbar
+    };
 
   } catch (error) {
     console.error('Error checking if pool exists:', error);
-    return { exists: false, address: null, error };
+    // Ensure error return matches the Promise type
+    return { exists: false, address: null, error: error instanceof Error ? error : new Error(String(error)) };
   }
 }
 

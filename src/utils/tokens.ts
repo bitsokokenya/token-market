@@ -1,89 +1,57 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { Token as UniToken } from "@uniswap/sdk-core";
+import { Token, TokenConstructorArgs } from '@uniswap/sdk-core';
 import { AccountId } from '@hashgraph/sdk';
 
 import { ChainID } from "../types/enums";
 import { HEDERA_TOKENS } from "../common/constants";
 
-// Function to convert Hedera token ID to EVM address
-function hederaTokenIdToEvmAddress(tokenId: string): string {
-  // If it's already an EVM address, return as is
-  if (tokenId.startsWith('0x')) {
-    return tokenId;
+// Helper function (keep if not already defined/imported elsewhere)
+function hederaIdToEvmAddress(hederaId: string): string {
+ 
+  try {
+    return AccountId.fromString(hederaId).toSolidityAddress();
+  } catch (e) {
+    console.error(`Failed to convert Hedera ID ${hederaId} to EVM address:`, e);
+    return '0x0000000000000000000000000000000000000000'; // Return zero address on error
   }
-  
-  // Convert Hedera token ID to EVM address
-  return AccountId.fromString(tokenId).toSolidityAddress();
 }
 
-// Custom Hedera token class that extends Uniswap Token
-export class HederaToken extends UniToken {
-  public readonly tokenId: string; // Hedera token ID format: 0.0.12345
+// Extend the Uniswap Token class
+export class HederaToken extends Token {
+  public readonly hederaId: string; // Store original Hedera ID
+  // The 'address' property inherited from Token will store the EVM address
   public readonly logoURI?: string;
 
+  // Adjust constructor arguments if needed, but ensure hederaId is captured
   constructor(
-    tokenIdOrChainId: string | number,
-    decimalsOrTokenId: number | string,
-    symbolOrDecimals: string | number,
-    name: string,
-    logoURIOrSymbol?: string | string,
-    chainIdOrName?: number | string
+    chainId: number,
+    hederaId: string, // Expect Hedera ID here
+    decimals: number,
+    symbol?: string,
+    name?: string,
+    bypassChecksum?: boolean,
+    logoURI?: string
   ) {
-    // Handle both constructor forms:
-    // 1. (tokenId, decimals, symbol, name, logoURI?, chainId?)
-    // 2. (chainId, tokenId, decimals, symbol, name)
+    // Convert Hedera ID to EVM address for the parent Token constructor
+    const evmAddress = hederaIdToEvmAddress(hederaId);
+    console.log('evmAddress', evmAddress, 'hederaId', hederaId);
+    // Call the parent constructor with the EVM address
+    super(chainId, '0x'+evmAddress, decimals, symbol, name, bypassChecksum);
+    //super(chainId, hederaId, decimals, symbol, name, bypassChecksum);
     
-    // Detect which format is being used based on the first parameter type
-    let chainId: number;
-    let tokenId: string;
-    let decimals: number;
-    let symbol: string;
-    let logoURI: string | undefined;
-
-    if (typeof tokenIdOrChainId === 'number') {
-      // Format 2: old format with chainId first
-      chainId = tokenIdOrChainId;
-      tokenId = decimalsOrTokenId as string;
-      decimals = symbolOrDecimals as number;
-      symbol = logoURIOrSymbol as string || '';
-      logoURI = undefined;
-    } else {
-      // Format 1: new format with tokenId first
-      tokenId = tokenIdOrChainId;
-      decimals = decimalsOrTokenId as number;
-      symbol = symbolOrDecimals as string;
-      chainId = chainIdOrName as number || ChainID.HederaTestnet;
-      logoURI = logoURIOrSymbol as string;
-    }
-    
-    // Convert tokenId to EVM address format
-    const address = hederaTokenIdToEvmAddress(tokenId);
-
-    // Call parent constructor
-    super(chainId, address, decimals, symbol, name);
-
-    this.tokenId = tokenId;
+    // Store the original Hedera ID
+    this.hederaId = hederaId;
     this.logoURI = logoURI;
   }
 
-  public equals(other: UniToken): boolean {
-    if (!other) return false;
-    if (!(other instanceof HederaToken)) return super.equals(other);
-    return this.tokenId === other.tokenId;
-  }
+  // Optional: Override equals if necessary, though parent might suffice
+  // public equals(other: HederaToken): boolean {
+  //   return super.equals(other) && this.hederaId === other.hederaId;
+  // }
 
-  public sortsBefore(other: UniToken): boolean {
-    if (!(other instanceof HederaToken)) return super.sortsBefore(other);
-    return this.tokenId.toLowerCase() < other.tokenId.toLowerCase();
-  }
-
-  public toString(): string {
-    return this.tokenId;
-  }
-
-  // Get the Hedera account ID (same as address)
-  getHederaAccountId(): string {
-    return this.address;
+  // Optional: Method to easily get Hedera ID
+  public getHederaAccountId(): string {
+      return this.hederaId;
   }
 }
 
@@ -146,25 +114,30 @@ export class CurrencyAmount {
   }
 }
 
-// Get a token pair in the correct order
+// Keep getQuoteAndBaseToken if used elsewhere, otherwise remove
 export function getQuoteAndBaseToken(token0: HederaToken, token1: HederaToken): [HederaToken, HederaToken] {
-  // Sort tokens by address to ensure consistent ordering
-  if (token0.address.toLowerCase() < token1.address.toLowerCase()) {
-    return [token0, token1];
-  } else {
-    return [token1, token0];
+  // Simplified logic: Assume HBAR or stablecoin is quote
+  const quoteSymbols = ['HBAR', 'WHBAR', 'USDC', 'USDT', 'DAI']; 
+  if (quoteSymbols.includes(token0.symbol ?? '')) {
+      return [token1, token0]; // token0 is quote, token1 is base
   }
+  if (quoteSymbols.includes(token1.symbol ?? '')) {
+      return [token0, token1]; // token1 is quote, token0 is base
+  }
+  // Default or further logic needed if neither is a common quote token
+  return [token0, token1]; // Default: token0 is base, token1 is quote
 }
 
 export function getNativeToken(): HederaToken {
   // For Hedera, return HBAR token
   return new HederaToken(
+    ChainID.HederaTestnet,
     '0.0.1', // HBAR token ID
     8,       // HBAR has 8 decimals
     'HBAR',
     'Hedera',
-    'https://cryptologos.cc/logos/hedera-hashgraph-hbar-logo.png',
-    ChainID.HederaTestnet // Hedera testnet
+    false,
+    'https://cryptologos.cc/logos/hedera-hashgraph-hbar-logo.png'
   );
 }
 
@@ -269,21 +242,23 @@ export function oneTokenUnit(token: HederaToken): string {
 
 // Predefined tokens
 export const HBAR = new HederaToken(
+  ChainID.HederaTestnet,
   '0.0.1', // HBAR token ID
   8,       // HBAR has 8 decimals
   'HBAR',
   'Hedera',
-  'https://cryptologos.cc/logos/hedera-hashgraph-hbar-logo.png',
-  ChainID.HederaTestnet // Hedera testnet
+  false,
+  'https://cryptologos.cc/logos/hedera-hashgraph-hbar-logo.png'
 );
 
 export const USDC = new HederaToken(
+  ChainID.HederaTestnet,
   '0.0.456', // Example token ID for USDC on Hedera
   6,         // USDC has 6 decimals
   'USDC',
   'USD Coin',
-  'https://cryptologos.cc/logos/usd-coin-usdc-logo.png',
-  ChainID.HederaTestnet // Hedera testnet
+  false,
+  'https://cryptologos.cc/logos/usd-coin-usdc-logo.png'
 );
 
 // Add other common tokens as needed

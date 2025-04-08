@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useCallback, useState } from "react";
-import { HEDERA_TOKENS } from "../common/constants";
+import { HEDERA_TOKENS, CURRENT_CHAIN_ID } from "../common/constants";
 import { ChainID } from "../types/enums";
 import { formatCurrency } from "../utils/numbers";
 import { useAppSettings } from "./AppSettingsProvider";
@@ -30,20 +30,18 @@ interface Props {
 // Base tokens for Hedera using HederaToken class
 const baseTokens: { [key: string]: HederaToken } = {
   USDC: new HederaToken(
+    CURRENT_CHAIN_ID,
     HEDERA_TOKENS.USDC.tokenId,
     HEDERA_TOKENS.USDC.decimals,
     HEDERA_TOKENS.USDC.symbol,
-    HEDERA_TOKENS.USDC.name,
-    undefined,
-    ChainID.HederaTestnet
+    HEDERA_TOKENS.USDC.name
   ),
   HBAR: new HederaToken(
+    CURRENT_CHAIN_ID,
     HEDERA_TOKENS.HBAR.tokenId,
     HEDERA_TOKENS.HBAR.decimals,
     HEDERA_TOKENS.HBAR.symbol,
-    HEDERA_TOKENS.HBAR.name,
-    undefined,
-    ChainID.HederaTestnet
+    HEDERA_TOKENS.HBAR.name
   ),
 };
 

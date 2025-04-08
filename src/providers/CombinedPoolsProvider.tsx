@@ -1,10 +1,11 @@
 import React, { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
-import { usePoolsForNetwork } from '../hooks/usePoolsForNetwork';
+import { usePoolsForNetwork, FinalPoolData } from '../hooks/usePoolsForNetwork';
 import { ChainID } from '../types/enums';
+import { useHashConnect } from './HashConnectProvider';
 
 const PoolsContext = React.createContext({
-  pools: [] as any[],
+  pools: [] as FinalPoolData[],
   loading: true,
   empty: false,
   lastLoaded: +new Date(),
@@ -21,29 +22,31 @@ interface Props {
 export const CombinedPoolsProvider = ({ children }: Props) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [lastLoaded, setLastLoaded] = useState(+new Date());
+  const { accountId } = useHashConnect();
 
   const {
     loading: hederaLoading,
     pools: hederaPools,
-    feesLoading: hederaFeesLoading,
-  } = usePoolsForNetwork(ChainID.HederaTestnet, lastLoaded);
+  } = usePoolsForNetwork(
+    ChainID.HederaTestnet,
+    lastLoaded,
+    false,
+    undefined,
+    accountId ?? undefined
+  );
 
   useEffect(() => {
     console.log('CombinedPoolsProvider Debug:', {
       hederaLoading,
       hederaPoolsLength: hederaPools?.length,
-      hederaFeesLoading,
-      initialLoading
+      initialLoading,
+      accountId
     });
-  }, [hederaLoading, hederaPools, hederaFeesLoading, initialLoading]);
+  }, [hederaLoading, hederaPools, initialLoading, accountId]);
 
   const loading = useMemo(() => {
     return hederaLoading;
   }, [hederaLoading]);
-
-  const feesLoading = useMemo(() => {
-    return hederaFeesLoading;
-  }, [hederaFeesLoading]);
 
   useEffect(() => {
     if (initialLoading && !loading) {
@@ -52,15 +55,15 @@ export const CombinedPoolsProvider = ({ children }: Props) => {
   }, [initialLoading, loading]);
 
   const refreshingList = useMemo(() => {
-    return loading || feesLoading;
-  }, [loading, feesLoading]);
+    return loading;
+  }, [loading]);
 
   const pools = useMemo(() => {
     console.log('Setting pools:', {
       hederaPoolsLength: hederaPools?.length,
       hederaPools
     });
-    return [...hederaPools];
+    return hederaPools || [];
   }, [hederaPools]);
 
   const empty = useMemo(() => {
